@@ -1,15 +1,78 @@
-use rusqlite::{Result};
+// use r2d2::Error;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
-use r2d2::Error;
+use rusqlite::params;
+use rusqlite::Result;
 
-pub fn init_database() -> Result<PooledConnection<SqliteConnectionManager>, Error> {
+pub fn init_database(
+) -> Result<PooledConnection<SqliteConnectionManager>, Box<dyn std::error::Error>> {
     let manager = SqliteConnectionManager::file("database.db");
-    let pool = r2d2::Pool::builder()
-        .build(manager)?;
+    let pool = r2d2::Pool::builder().build(manager)?;
 
     // Obter uma conexão do pool
     let db = pool.get()?;
 
+    build_database(&db)?;
+
     Ok(db)
+}
+
+fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()> {
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY,
+                username TEXT NOT NULL,
+                password TEXT NOT NULL
+                account_id INTEGER NOT NULL
+                FOREIGN KEY (account_id) REFERENCES accounts(id)
+            )",
+        params![],
+    )?;
+
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS products (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                price REAL NOT NULL
+            )",
+        params![],
+    )?;
+
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS accounts (
+                id INTEGER PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )",
+        params![],
+    )?;
+
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS items (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                quantity INTEGER NOT NULL,
+                product_id INTEGER NOT NULL,
+                price REAL NOT NULL,
+                notes TEXT,
+                account_id INTEGER NOT NULL,
+                FOREIGN KEY (product_id) REFERENCES products(id),
+                FOREIGN KEY (account_id) REFERENCES accounts(id)
+            )",
+        params![],
+    )?;
+
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS payments (
+                id INTEGER PRIMARY KEY,
+                amount INTEGER NOT NULL,
+                account_id INTEGER NOT NULL,
+                FOREIGN KEY (account_id) REFERENCES accounts(id)
+            )",
+        params![],
+    )?;
+
+    println!("Build Ok.");
+
+    Ok(())
 }

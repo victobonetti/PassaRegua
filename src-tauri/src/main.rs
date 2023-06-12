@@ -12,22 +12,19 @@ mod db {
     pub mod models {
         #[allow(non_snake_case)]
         pub mod Product;
+        pub mod Item;
+        pub mod User;
+        pub mod Account;
+        pub mod Payment;
     }
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+
     let pool = db::db::init_database()?;
 
-    let product_name = "Example Product";
-    let product_price = 9.99;
 
-    // Cria um novo produto
-    db::models::Product::Product::create_one(&pool, product_name, product_price)?;
-    println!("Product created successfully.");
-
-    // Obtém todos os produtos
-    db::models::Product::Product::find_all(&pool)?;
-
+    
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![greet])
