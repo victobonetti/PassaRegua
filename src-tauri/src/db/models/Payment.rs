@@ -3,13 +3,13 @@ use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 
 #[derive(Debug)]
-pub struct Payment {
+pub struct payment {
     pub id: i32,
     pub amount: i32,
     pub account_id: i32,
 }
 
-impl Payment {
+impl payment {
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         amount: i32,

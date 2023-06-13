@@ -10,26 +10,19 @@ fn greet(name: &str) -> String {
 mod db {
     pub mod db;
     pub mod models {
-        #[allow(non_snake_case)]
-        pub mod Product;
-        pub mod Item;
-        pub mod User;
-        pub mod Account;
-        pub mod Payment;
+        // pub mod account;
     }
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-
     let pool = db::db::init_database()?;
 
+    // db::models::user::user::create_one(&pool, "victor".to_owned(), "1234".to_owned())?;
 
-    
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-
     Ok(())
 }

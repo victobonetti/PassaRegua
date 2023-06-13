@@ -5,13 +5,13 @@ use rusqlite::{params, Result};
 // Estrutura para o produto
 #[allow(dead_code)]
 #[derive(Debug)]
-pub struct Product {
+pub struct product {
     id: i32,
     name: String,
     price: f64,
 }
 
-impl Product {
+impl product {
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         name: &str,

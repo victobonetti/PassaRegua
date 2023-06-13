@@ -2,25 +2,23 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 
-use crate::db::models::Account::Account;
-
 // Estrutura para o usuário
 #[derive(Debug)]
-pub struct User {
+pub struct user {
     id: i32,
     username: String,
     password: String,
     account_id: Option<String>,
 }
 
-impl User {
+impl user {
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         username: String,
         password: String,
     ) -> Result<(), rusqlite::Error> {
         conn.execute(
-            "INSERT INTO products (name, price) VALUES (?1, ?2)",
+            "INSERT INTO users (username, password) VALUES (?1, ?2)",
             params![username, password],
         )?;
 

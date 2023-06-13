@@ -22,8 +22,8 @@ fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()
         "CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY,
                 username TEXT NOT NULL,
-                password TEXT NOT NULL
-                account_id INTEGER NOT NULL
+                password TEXT NOT NULL,
+                account_id INTEGER,
                 FOREIGN KEY (account_id) REFERENCES accounts(id)
             )",
         params![],

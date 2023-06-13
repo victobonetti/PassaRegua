@@ -3,7 +3,7 @@ use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::params;
 
 #[derive(Debug)]
-pub struct Item {
+pub struct item {
     pub id: i32,
     pub name: String,
     pub quantity: i32,
@@ -13,7 +13,7 @@ pub struct Item {
     pub product_id: i32,
 }
 
-impl Item {
+impl item {
     fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         name: String,
