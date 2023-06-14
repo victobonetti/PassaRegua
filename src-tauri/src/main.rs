@@ -10,12 +10,20 @@ fn greet(name: &str) -> String {
 mod db {
     pub mod db;
     pub mod models {
-        // pub mod account;
+        pub mod user;
+        pub mod product;
     }
 }
 
+
+use crate::db::models::user::User;
+use crate::db::models::product::Product;
+
+#[cfg(test)]
+mod tests;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let pool = db::db::init_database()?;
+    let _pool = db::db::init_database()?;
 
     // db::models::user::user::create_one(&pool, "victor".to_owned(), "1234".to_owned())?;
 

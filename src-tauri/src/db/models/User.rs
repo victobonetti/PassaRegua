@@ -1,30 +1,37 @@
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
+use uuid::Uuid;
 
 // Estrutura para o usuário
 #[derive(Debug)]
-pub struct user {
-    id: i32,
-    username: String,
-    password: String,
-    account_id: Option<String>,
+#[allow(dead_code)]
+pub struct User {
+    pub id: String,
+    pub username: String,
+    pub password: String,
+    pub account_id: Option<String>,
 }
 
-impl user {
+impl User {
+    #[allow(dead_code)]
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         username: String,
         password: String,
-    ) -> Result<(), rusqlite::Error> {
+    ) -> Result<String, rusqlite::Error> {
+
+        let uuid = Uuid::new_v4().to_string();
+
         conn.execute(
-            "INSERT INTO users (username, password) VALUES (?1, ?2)",
-            params![username, password],
+            "INSERT INTO users (id, username, password) VALUES (?1, ?2, ?3)",
+            params![uuid, username, password],
         )?;
 
-        Ok(())
+        Ok(uuid)
     }
 
+    #[allow(dead_code)]
     pub fn find_all(
         conn: &PooledConnection<SqliteConnectionManager>,
     ) -> Result<Vec<User>, rusqlite::Error> {
@@ -39,13 +46,14 @@ impl user {
         })?;
 
         let users: Result<Vec<_>, rusqlite::Error> = rows.collect();
-        println!("Users found: {:?}", users);
+        println!("users found: {:?}", users);
         users
     }
 
+    #[allow(dead_code)]
     pub fn find_one(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: i32,
+        id: String,
     ) -> Result<Option<User>, rusqlite::Error> {
         let mut stmt = conn.prepare("SELECT * FROM users WHERE id = ?1")?;
         let mut rows = stmt.query(params![id])?;
@@ -63,11 +71,14 @@ impl user {
         }
     }
 
+    #[allow(dead_code)]
     pub fn delete_one(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: i32,
+        id: String,
     ) -> Result<(), rusqlite::Error> {
-        conn.execute("DELETE * FROM users WHERE id = ?1", params![id])?;
+        conn.execute("DELETE FROM users WHERE id = ?1", params![id])?;
         Ok(())
     }
+
+    
 }

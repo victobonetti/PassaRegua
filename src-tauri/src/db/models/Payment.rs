@@ -3,13 +3,13 @@ use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 
 #[derive(Debug)]
-pub struct payment {
-    pub id: i32,
+pub struct Payment {
+    pub id: String,
     pub amount: i32,
     pub account_id: i32,
 }
 
-impl payment {
+impl Payment {
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         amount: i32,
@@ -37,7 +37,7 @@ impl payment {
 
     pub fn update_amount(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: i32,
+        id: String,
         amount: i32,
     ) -> Result<(), rusqlite::Error> {
         conn.execute(
@@ -50,7 +50,7 @@ impl payment {
 
     pub fn delete_one(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: i32,
+        id: String,
     ) -> Result<(), rusqlite::Error> {
         conn.execute("DELETE FROM payments WHERE id = ?1", params![id])?;
         Ok(())

@@ -6,8 +6,8 @@ use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 
 #[derive(Debug)]
-pub struct account {
-    id: i32,
+pub struct Account {
+    id: String,
     user_id: i32,
     items: Option<Vec<Item>>,
     payments: Option<Vec<Payment>>,
@@ -15,7 +15,7 @@ pub struct account {
     account_total: f64,
 }
 
-impl account {
+impl Account {
     fn get_payments(
         conn: &PooledConnection<SqliteConnectionManager>,
         account_id: i32,

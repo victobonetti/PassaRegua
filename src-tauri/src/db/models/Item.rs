@@ -3,8 +3,8 @@ use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::params;
 
 #[derive(Debug)]
-pub struct item {
-    pub id: i32,
+pub struct Item {
+    pub id: String,
     pub name: String,
     pub quantity: i32,
     pub price: f64,
@@ -13,7 +13,7 @@ pub struct item {
     pub product_id: i32,
 }
 
-impl item {
+impl Item {
     fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         name: String,
@@ -55,7 +55,7 @@ impl item {
 
     pub fn edit_note(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: i32,
+        id: String,
         notes: Option<String>,
     ) -> Result<(), rusqlite::Error> {
         conn.execute(
@@ -68,7 +68,7 @@ impl item {
 
     pub fn edit_price(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: i32,
+        id: String,
         price: f64,
     ) -> Result<(), rusqlite::Error> {
         conn.execute(
@@ -81,7 +81,7 @@ impl item {
 
     pub fn edit_name(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: i32,
+        id: String,
         name: String,
     ) -> Result<(), rusqlite::Error> {
         conn.execute(
@@ -94,7 +94,7 @@ impl item {
 
     pub fn delete_one(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: i32,
+        id: String,
     ) -> Result<(), rusqlite::Error> {
         conn.execute("DELETE FROM items WHERE id = ?1", params![id])?;
         Ok(())
