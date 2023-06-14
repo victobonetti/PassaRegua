@@ -9,8 +9,8 @@ pub struct Item {
     pub quantity: i32,
     pub price: f64,
     pub notes: Option<String>,
-    pub account_id: i32,
-    pub product_id: i32,
+    pub account_id: String,
+    pub product_id: String,
 }
 
 impl Item {
@@ -19,8 +19,8 @@ impl Item {
         name: String,
         quantity: i32,
         price: f64,
-        account_id: i32,
-        product_id: i32,
+        account_id: String,
+        product_id: String,
     ) -> Result<(), rusqlite::Error> {
         // Verificar se o ID do produto é válido
         let product_exists: bool = conn.query_row(

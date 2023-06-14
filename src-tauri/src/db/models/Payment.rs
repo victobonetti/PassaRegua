@@ -5,15 +5,15 @@ use rusqlite::{params, Result};
 #[derive(Debug)]
 pub struct Payment {
     pub id: String,
-    pub amount: i32,
-    pub account_id: i32,
+    pub amount: f64,
+    pub account_id: String,
 }
 
 impl Payment {
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
-        amount: i32,
-        account_id: i32,
+        amount: f64,
+        account_id: String,
     ) -> Result<(), rusqlite::Error> {
         // Verificar se o ID da conta é válido
         let account_exists: bool = conn.query_row(
@@ -38,7 +38,7 @@ impl Payment {
     pub fn update_amount(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
-        amount: i32,
+        amount: f64,
     ) -> Result<(), rusqlite::Error> {
         conn.execute(
             "UPDATE payments SET amount = ?1 WHERE id = ?2",

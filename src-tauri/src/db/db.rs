@@ -65,7 +65,7 @@ fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()
     conn.execute(
         "CREATE TABLE IF NOT EXISTS payments (
             id TEXT PRIMARY KEY,
-                amount INTEGER NOT NULL,
+                amount REAL NOT NULL,
                 account_id INTEGER NOT NULL,
                 FOREIGN KEY (account_id) REFERENCES accounts(id)
             )",

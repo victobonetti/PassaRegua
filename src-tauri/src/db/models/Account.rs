@@ -8,7 +8,7 @@ use rusqlite::{params, Result};
 #[derive(Debug)]
 pub struct Account {
     id: String,
-    user_id: i32,
+    user_id: String,
     items: Option<Vec<Item>>,
     payments: Option<Vec<Payment>>,
     paid_amount: f64,
@@ -18,7 +18,7 @@ pub struct Account {
 impl Account {
     fn get_payments(
         conn: &PooledConnection<SqliteConnectionManager>,
-        account_id: i32,
+        account_id: String,
     ) -> Result<Vec<Payment>, rusqlite::Error> {
         let mut stmt = conn.prepare("SELECT * FROM payments WHERE account_id = ?1")?;
         let rows = stmt.query_map(params![account_id], |row| {
@@ -36,7 +36,7 @@ impl Account {
 
     fn get_items(
         conn: &PooledConnection<SqliteConnectionManager>,
-        account_id: i32,
+        account_id: String,
     ) -> Result<Vec<Item>, rusqlite::Error> {
         let mut stmt = conn.prepare("SELECT * FROM items WHERE account_id = ?1")?;
         let rows = stmt.query_map(params![account_id], |row| {
@@ -58,7 +58,7 @@ impl Account {
 
     pub fn find_one(
         conn: &PooledConnection<SqliteConnectionManager>,
-        account_id: i32,
+        account_id: String,
     ) -> Result<Account, rusqlite::Error> {
         let items = Account::get_items(conn, account_id)?;
         let payments = Account::get_payments(conn, account_id)?;
@@ -81,7 +81,7 @@ impl Account {
 
     pub fn delete_account(
         conn: &PooledConnection<SqliteConnectionManager>,
-        account_id: i32,
+        account_id: String,
     ) -> Result<(), rusqlite::Error> {
         // Excluir os registros da tabela payments relacionados à conta
         conn.execute(
@@ -99,7 +99,7 @@ impl Account {
         let mut stmt = conn.prepare("SELECT id FROM users WHERE account_id = ?1 LIMIT 1")?;
         let mut rows = stmt.query(params![account_id])?;
         if let Some(row) = rows.next()? {
-            let user_id: i32 = row.get(0)?;
+            let user_id: String = row.get(0)?;
             // Atualizar o usuário, removendo o valor da coluna account_id
             conn.execute(
                 "UPDATE users SET account_id = NULL WHERE id = ?1",
@@ -115,7 +115,7 @@ impl Account {
 
     fn find_one_by_user(
         conn: &PooledConnection<SqliteConnectionManager>,
-        user_id: i32,
+        user_id: String,
     ) -> Result<Option<Account>, rusqlite::Error> {
         let mut stmt = conn.prepare("SELECT * FROM accounts WHERE user_id = ?1 LIMIT 1")?;
         let mut rows = stmt.query(params![user_id])?;
@@ -137,7 +137,7 @@ impl Account {
 
     pub fn create_account(
         conn: &PooledConnection<SqliteConnectionManager>,
-        user_id: i32,
+        user_id: String,
     ) -> Result<i32, rusqlite::Error> {
         // Verificar se o usuário já possui uma conta cadastrada
         let existing_account = Account::find_one_by_user(conn, user_id)?;
