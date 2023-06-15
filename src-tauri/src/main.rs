@@ -12,12 +12,22 @@ mod db {
     pub mod models {
         pub mod user;
         pub mod product;
+        pub mod payment;
+        pub mod account;
+        pub mod item;
     }
 }
 
-
+#[allow(unused_imports)]
 use crate::db::models::user::User;
+#[allow(unused_imports)]
 use crate::db::models::product::Product;
+#[allow(unused_imports)]
+use crate::db::models::payment::Payment;
+#[allow(unused_imports)]
+use crate::db::models::item::Item;
+#[allow(unused_imports)]
+use crate::db::models::account::Account;
 
 #[cfg(test)]
 mod tests;

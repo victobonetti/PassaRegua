@@ -1,6 +1,7 @@
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::params;
+use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct Item {
@@ -44,10 +45,12 @@ impl Item {
             return Err(rusqlite::Error::QueryReturnedNoRows);
         }
 
+        let uuid = Uuid::new_v4().to_string();
+
         // Inserir o item na tabela items
         conn.execute(
-            "INSERT INTO items (name, quantity, price, account_id, product_id) VALUES (?1, ?2, ?3, ?4, ?5)",
-            params![name, quantity, price, account_id, product_id],
+            "INSERT INTO items (id, name, quantity, price, account_id, product_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            params![uuid, name, quantity, price, account_id, product_id],
         )?;
 
         Ok(())

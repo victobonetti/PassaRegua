@@ -2,6 +2,7 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 use uuid::Uuid;
+use rusqlite::types::Null;
 
 // Estrutura para o usuário
 #[derive(Debug)]
@@ -24,8 +25,8 @@ impl User {
         let uuid = Uuid::new_v4().to_string();
 
         conn.execute(
-            "INSERT INTO users (id, username, password) VALUES (?1, ?2, ?3)",
-            params![uuid, username, password],
+            "INSERT INTO users (id, username, password, account_id) VALUES (?1, ?2, ?3, ?4)",
+            params![uuid, username, password, Null],
         )?;
 
         Ok(uuid)

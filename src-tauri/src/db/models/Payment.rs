@@ -1,6 +1,7 @@
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
+use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct Payment {
@@ -14,7 +15,7 @@ impl Payment {
         conn: &PooledConnection<SqliteConnectionManager>,
         amount: f64,
         account_id: String,
-    ) -> Result<(), rusqlite::Error> {
+    ) -> Result<String, rusqlite::Error> {
         // Verificar se o ID da conta é válido
         let account_exists: bool = conn.query_row(
             "SELECT COUNT(*) FROM accounts WHERE id = ?1",
@@ -26,13 +27,31 @@ impl Payment {
             return Err(rusqlite::Error::QueryReturnedNoRows);
         }
 
+        let uuid = Uuid::new_v4().to_string();
+
         // Inserir o pagamento na tabela payments
         conn.execute(
-            "INSERT INTO payments (amount, account_id) VALUES (?1, ?2)",
-            params![amount, account_id],
+            "INSERT INTO payments (id, amount, account_id) VALUES (?1, ?2, ?3)",
+            params![uuid, amount, account_id],
         )?;
 
-        Ok(())
+        Ok(uuid)
+    }
+
+    pub fn find_one(conn: &PooledConnection<SqliteConnectionManager>, id: String) -> Result<Option<Payment>, rusqlite::Error> {
+        let mut stmt = conn.prepare("SELECT * FROM payments WHERE id = ?1")?;
+        let mut rows = stmt.query(params![id])?;
+
+        if let Some(row) = rows.next()? {
+            let payment = Payment {
+                id: row.get(0)?,
+                amount: row.get(1)?,
+                account_id: row.get(2)?,
+            };
+            Ok(Some(payment))
+        } else {
+            Ok(None)
+        }
     }
 
     pub fn update_amount(

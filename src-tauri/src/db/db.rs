@@ -23,7 +23,7 @@ fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()
             id TEXT PRIMARY KEY,
                 username TEXT NOT NULL,
                 password TEXT NOT NULL,
-                account_id INTEGER,
+                account_id TEXT,
                 FOREIGN KEY (account_id) REFERENCES accounts(id)
             )",
         params![],
@@ -41,7 +41,7 @@ fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()
     conn.execute(
         "CREATE TABLE IF NOT EXISTS accounts (
             id TEXT PRIMARY KEY,
-                user_id INTEGER NOT NULL,
+                user_id TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )",
         params![],
@@ -52,10 +52,10 @@ fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()
             id TEXT PRIMARY KEY,
                 name TEXT NOT NULL,
                 quantity INTEGER NOT NULL,
-                product_id INTEGER NOT NULL,
+                product_id TEXT NOT NULL,
                 price REAL NOT NULL,
                 notes TEXT,
-                account_id INTEGER NOT NULL,
+                account_id TEXT NOT NULL,
                 FOREIGN KEY (product_id) REFERENCES products(id),
                 FOREIGN KEY (account_id) REFERENCES accounts(id)
             )",
@@ -66,7 +66,7 @@ fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()
         "CREATE TABLE IF NOT EXISTS payments (
             id TEXT PRIMARY KEY,
                 amount REAL NOT NULL,
-                account_id INTEGER NOT NULL,
+                account_id TEXT NOT NULL,
                 FOREIGN KEY (account_id) REFERENCES accounts(id)
             )",
         params![],

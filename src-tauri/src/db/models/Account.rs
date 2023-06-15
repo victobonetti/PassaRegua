@@ -1,16 +1,18 @@
 // Estrutura para a conta de fiado
-use crate::db::models::Item::Item;
-use crate::db::models::Payment::Payment;
+use crate::db::models::item::Item;
+use crate::db::models::payment::Payment;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
+use uuid::Uuid;
+use rusqlite::types::Null;
 
 #[derive(Debug)]
 pub struct Account {
-    id: String,
-    user_id: String,
-    items: Option<Vec<Item>>,
-    payments: Option<Vec<Payment>>,
+    pub id: String,
+    pub user_id: String,
+    pub items: Option<Vec<Item>>,
+    pub payments: Option<Vec<Payment>>,
     paid_amount: f64,
     account_total: f64,
 }
@@ -59,9 +61,9 @@ impl Account {
     pub fn find_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         account_id: String,
-    ) -> Result<Account, rusqlite::Error> {
-        let items = Account::get_items(conn, account_id)?;
-        let payments = Account::get_payments(conn, account_id)?;
+    ) -> Result<Option<Account>, rusqlite::Error> {
+        let items = Account::get_items(conn, account_id.clone())?;
+        let payments = Account::get_payments(conn, account_id.clone())?;
 
         let paid_amount = payments.iter().map(|payment| payment.amount as f64).sum();
         let account_total = items
@@ -69,14 +71,22 @@ impl Account {
             .map(|item| item.price * item.quantity as f64)
             .sum();
 
-        Ok(Account {
-            id: account_id,
-            user_id: 0, // Insira o valor correto aqui
-            items: Some(items),
-            payments: Some(payments),
-            paid_amount,
-            account_total,
-        })
+        let mut stmt = conn.prepare("SELECT * FROM accounts WHERE id = ?1")?;
+        let mut rows = stmt.query(params![account_id.clone()])?;
+
+        if let Some(row) = rows.next()? {
+            let account = Account {
+                id: row.get(0)?,
+                user_id: row.get(1)?,
+                items: Some(items),
+                payments: Some(payments),
+                paid_amount,
+                account_total,
+            };                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+            Ok(Some(account))
+        } else {
+            Ok(None)
+        }
     }
 
     pub fn delete_account(
@@ -113,47 +123,39 @@ impl Account {
         Ok(())
     }
 
-    fn find_one_by_user(
-        conn: &PooledConnection<SqliteConnectionManager>,
-        user_id: String,
-    ) -> Result<Option<Account>, rusqlite::Error> {
-        let mut stmt = conn.prepare("SELECT * FROM accounts WHERE user_id = ?1 LIMIT 1")?;
-        let mut rows = stmt.query(params![user_id])?;
-
-        if let Some(row) = rows.next()? {
-            let account = Account {
-                id: row.get(0)?,
-                user_id: row.get(1)?,
-                items: None,
-                payments: None,
-                paid_amount: 0.0,
-                account_total: 0.0,
-            };
-            Ok(Some(account))
-        } else {
-            Ok(None)
-        }
+    fn find_one_by_user(conn: &PooledConnection<SqliteConnectionManager>, user_id: String) -> Result<bool> {
+        let sql = "SELECT COUNT(*) FROM accounts WHERE user_id = ?1";
+        let count: i64 = conn.query_row(sql, params![user_id], |row| row.get(0))?;
+    
+        Ok(count > 0)
     }
 
     pub fn create_account(
         conn: &PooledConnection<SqliteConnectionManager>,
         user_id: String,
-    ) -> Result<i32, rusqlite::Error> {
+    ) -> Result<String, rusqlite::Error> {
         // Verificar se o usuário já possui uma conta cadastrada
-        let existing_account = Account::find_one_by_user(conn, user_id)?;
-        if existing_account.is_some() {
+
+        let existing_account = Account::find_one_by_user(conn, user_id.clone())?;
+
+        if existing_account {
             return Err(rusqlite::Error::QueryReturnedNoRows);
         }
 
+        let uuid = Uuid::new_v4().to_string();
+
         // Criar a conta
         conn.execute(
-            "INSERT INTO accounts (user_id) VALUES (?1)",
-            params![user_id],
+            "INSERT INTO accounts (id, user_id) VALUES (?1, ?2)",
+            params![uuid, user_id.clone()],
         )?;
 
-        // Obter o ID da conta recém-criada
-        let account_id = conn.last_insert_rowid() as i32;
+        // Atualizar usuário
+        conn.execute(
+            "UPDATE users SET account_id = ?1 WHERE id = ?2",
+            params![uuid, user_id.clone()],
+        )?;
 
-        Ok(account_id)
+        Ok(uuid)
     }
 }
