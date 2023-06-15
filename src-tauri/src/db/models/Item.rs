@@ -15,14 +15,14 @@ pub struct Item {
 }
 
 impl Item {
-    fn create_one(
+    pub fn create_item(
         conn: &PooledConnection<SqliteConnectionManager>,
         name: String,
         quantity: i32,
         price: f64,
         account_id: String,
         product_id: String,
-    ) -> Result<(), rusqlite::Error> {
+    ) -> Result<String, rusqlite::Error> {
         // Verificar se o ID do produto é válido
         let product_exists: bool = conn.query_row(
             "SELECT COUNT(*) FROM products WHERE id = ?1",
@@ -53,7 +53,32 @@ impl Item {
             params![uuid, name, quantity, price, account_id, product_id],
         )?;
 
-        Ok(())
+        Ok(uuid)
+    }
+
+    pub fn find_item(
+        conn: &PooledConnection<SqliteConnectionManager>,
+        item_id: String
+    ) -> Result<Option<Item>, rusqlite::Error> {
+
+        let mut stmt = conn.prepare(" SELECT * FROM items WHERE id = ?1")?;
+        let mut rows = stmt.query(params![item_id])?;
+
+        if let Some(row) = rows.next()? {
+            let item = Item {
+                id: row.get(0)?,
+                name: row.get(1)?,
+                quantity: row.get(2)?,
+                product_id: row.get(3)?,
+                price: row.get(4)?,
+                notes: row.get(5)?,
+                account_id: row.get(6)?,
+            };
+            Ok(Some(item))
+        } else {
+            Ok(None)
+        }
+
     }
 
     pub fn edit_note(

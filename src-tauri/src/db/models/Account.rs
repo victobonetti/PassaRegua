@@ -13,8 +13,8 @@ pub struct Account {
     pub user_id: String,
     pub items: Option<Vec<Item>>,
     pub payments: Option<Vec<Payment>>,
-    paid_amount: f64,
-    account_total: f64,
+    pub paid_amount: f64,
+    pub account_total: f64,
 }
 
 impl Account {
@@ -46,10 +46,10 @@ impl Account {
                 id: row.get(0)?,
                 name: row.get(1)?,
                 quantity: row.get(2)?,
-                price: row.get(3)?,
-                notes: row.get(4)?,
-                account_id: row.get(5)?,
-                product_id: row.get(6)?,
+                product_id: row.get(3)?,
+                price: row.get(4)?,
+                notes: row.get(5)?,
+                account_id: row.get(6)?,
             })
         })?;
 
@@ -89,7 +89,7 @@ impl Account {
         }
     }
 
-    pub fn delete_account(
+    pub fn delete_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         account_id: String,
     ) -> Result<(), rusqlite::Error> {
