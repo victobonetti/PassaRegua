@@ -6,7 +6,8 @@ use crate::Account;
 use crate::Item;
 use crate::Payment;
 use crate::Product;
-use crate::User; // Importe o módulo user do arquivo principal
+use crate::User;
+use crate::db::db::build_database; // Importe o módulo user do arquivo principal
 
 fn setup() -> PooledConnection<SqliteConnectionManager> {
     // Crie uma conexão do banco de dados
@@ -14,64 +15,7 @@ fn setup() -> PooledConnection<SqliteConnectionManager> {
     let pool = Pool::builder().max_size(1).build(manager).unwrap();
     let conn = pool.get().unwrap();
 
-    // Crie a tabela users
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS users (
-            id TEXT PRIMARY KEY,
-            username TEXT NOT NULL,
-            password TEXT NOT NULL,
-            account_id TEXT 
-        )",
-        params![],
-    )
-    .unwrap();
-
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS products (
-            id TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                price REAL NOT NULL
-            )",
-        params![],
-    )
-    .unwrap();
-
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS accounts (
-            id TEXT PRIMARY KEY,
-            user_id INTEGER NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(id)
-        )",
-        params![],
-    )
-    .unwrap();
-
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS payments (
-            id TEXT PRIMARY KEY,
-            amount REAL NOT NULL,
-            account_id TEXT NOT NULL,
-            FOREIGN KEY (account_id) REFERENCES accounts(id)
-        )",
-        params![],
-    )
-    .unwrap();
-
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS items (
-            id TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                quantity INTEGER NOT NULL,
-                product_id TEXT NOT NULL,
-                price REAL NOT NULL,
-                notes TEXT,
-                account_id TEXT NOT NULL,
-                FOREIGN KEY (product_id) REFERENCES products(id),
-                FOREIGN KEY (account_id) REFERENCES accounts(id)
-            )",
-        params![],
-    )
-    .unwrap();
+    build_database(&conn);
 
     return conn;
 }
@@ -342,9 +286,9 @@ fn test_account_crud() {
     )
     .unwrap();
 
-// Crie um pagamento
-let amount = 100.0;
-Payment::create_one(&conn, amount, account_id.clone()).unwrap();
+    // Crie um pagamento
+    let amount = 100.0;
+    Payment::create_one(&conn, amount, account_id.clone()).unwrap();
 
     // Atualize os pagamentos e itens da conta
     let account = Account::find_one(&conn, account_id.clone()).unwrap();

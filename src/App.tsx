@@ -4,14 +4,13 @@ import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [lifestyle, setLifestyle] = useState("")
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("Vitin");
+  const [password, setPassword] = useState("");
+  const [resposta, setResposta ] = useState("")
 
-  async function greet() {
+  async function criar() {
     // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-    setLifestyle(await invoke("lifestyle", { name }));
+    setResposta(await invoke("create_user", { username, password }));
   }
 
   return (
@@ -36,18 +35,24 @@ function App() {
         className="row"
         onSubmit={(e) => {
           e.preventDefault();
-          greet();
+          criar();
         }}
       >
         <input
           id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
+          onChange={(e) => setUsername(e.currentTarget.value)}
           placeholder="Enter a name..."
         />
-        <button type="submit">Greet</button>
+
+<input
+          id="greet-input"
+          onChange={(e) => setPassword(e.currentTarget.value)}
+          placeholder="Enter a password..."
+        />
+        <button type="submit">Enviar</button>
       </form>
 
-      <p>{greetMsg}</p>
+      <p>{resposta}</p>
     </div>
   );
 }
