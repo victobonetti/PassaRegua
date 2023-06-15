@@ -5,7 +5,6 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 use uuid::Uuid;
-use rusqlite::types::Null;
 
 #[derive(Debug)]
 pub struct Account {

@@ -2,12 +2,26 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 use uuid::Uuid;
+use serde::{Serialize, Serializer, ser::SerializeMap};
 
 #[derive(Debug)]
 pub struct Payment {
     pub id: String,
     pub amount: f64,
     pub account_id: String,
+}
+
+impl Serialize for Payment {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut payment_map = serializer.serialize_map(Some(3))?;
+        payment_map.serialize_entry("id", &self.id)?;
+        payment_map.serialize_entry("amount", &self.amount)?;
+        payment_map.serialize_entry("account_id", &self.account_id)?;
+        payment_map.end()
+    }
 }
 
 impl Payment {
