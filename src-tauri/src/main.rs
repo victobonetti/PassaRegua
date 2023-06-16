@@ -6,7 +6,6 @@
 mod db {
     pub mod db;
     pub mod models {
-        mod User;
         pub mod account;
         pub mod item;
         pub mod payment;

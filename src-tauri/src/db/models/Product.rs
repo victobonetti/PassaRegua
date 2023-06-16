@@ -12,6 +12,20 @@ pub struct Product {
     pub price: f64,
 }
 
+use serde::{Serialize, Serializer, ser::SerializeMap};
+impl Serialize for Product {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut payment_map = serializer.serialize_map(Some(3))?;
+        payment_map.serialize_entry("id", &self.id)?;
+        payment_map.serialize_entry("name", &self.name)?;
+        payment_map.serialize_entry("price", &self.price)?;
+        payment_map.end()
+    }
+}
+
 impl Product {
     #[allow(dead_code)]
     pub fn create_one(

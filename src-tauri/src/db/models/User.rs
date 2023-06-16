@@ -14,6 +14,22 @@ pub struct User {
     pub account_id: Option<String>,
 }
 
+use serde::{Serialize, Serializer, ser::SerializeMap};
+impl Serialize for User {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut payment_map = serializer.serialize_map(Some(4))?;
+        payment_map.serialize_entry("id", &self.id)?;
+        payment_map.serialize_entry("username", &self.username)?;
+        payment_map.serialize_entry("password", &self.password)?;
+        payment_map.serialize_entry("account_id", &self.account_id)?;
+        payment_map.end()
+    }
+}
+
+
 impl User {
     #[allow(dead_code)]
     pub fn create_one(

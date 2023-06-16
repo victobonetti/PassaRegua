@@ -16,6 +16,24 @@ pub struct Account {
     pub account_total: f64,
 }
 
+use serde::{Serialize, Serializer, ser::SerializeMap};
+impl Serialize for Account {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut payment_map = serializer.serialize_map(Some(6))?;
+        payment_map.serialize_entry("id", &self.id)?;
+        payment_map.serialize_entry("user_id", &self.user_id)?;
+        payment_map.serialize_entry("items", &self.items)?;
+        payment_map.serialize_entry("payments", &self.payments)?;
+        payment_map.serialize_entry("paid_amount", &self.paid_amount)?;
+        payment_map.serialize_entry("account_total", &self.account_total)?;
+        payment_map.end()
+    }
+}
+
+
 impl Account {
     fn get_payments(
         conn: &PooledConnection<SqliteConnectionManager>,

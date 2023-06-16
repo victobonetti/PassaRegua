@@ -14,6 +14,24 @@ pub struct Item {
     pub product_id: String,
 }
 
+use serde::{Serialize, Serializer, ser::SerializeMap};
+impl Serialize for Item {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut payment_map = serializer.serialize_map(Some(7))?;
+        payment_map.serialize_entry("id", &self.id)?;
+        payment_map.serialize_entry("name", &self.name)?;
+        payment_map.serialize_entry("quantity", &self.quantity)?;
+        payment_map.serialize_entry("price", &self.price)?;
+        payment_map.serialize_entry("notes", &self.notes)?;
+        payment_map.serialize_entry("account_id", &self.account_id)?;
+        payment_map.serialize_entry("product_id", &self.product_id)?;
+        payment_map.end()
+    }
+}
+
 impl Item {
     pub fn create_item(
         conn: &PooledConnection<SqliteConnectionManager>,
