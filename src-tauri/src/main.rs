@@ -33,7 +33,7 @@ mod tests;
 
 //User Service
 #[tauri::command]
- fn create_user(username: String, password: String) -> Result<String, String> {
+fn create_user(username: String, password: String) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -47,7 +47,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn find_all_users() -> Result<Vec<User>, String> {
+fn find_all_users() -> Result<Vec<User>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -60,7 +60,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn find_user_by_id(id: String) -> Result<Option<User>, String> {
+fn find_user_by_id(id: String) -> Result<Option<User>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -73,7 +73,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn delete_user_by_id(id: String) -> Result<(), String> {
+fn delete_user_by_id(id: String) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -85,10 +85,22 @@ mod tests;
     }
 }
 
+#[tauri::command]
+fn edit_user(id: String, username: String, password: String) -> Result<(), String> {
+    let conn = match db::db::init_database() {
+        Ok(conn) => conn,
+        Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
+    };
+
+    match User::edit_one(&conn, id, username, password) {
+        Ok(_) => Ok(()),
+        Err(_) => Err("Erro ao editar usuário.".to_owned()),
+    }
+}
 //ProductsService
 
 #[tauri::command]
- fn create_product(name: String, price: f64) -> Result<String, String> {
+fn create_product(name: String, price: f64) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -101,7 +113,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn find_all_products() -> Result<Vec<Product>, String> {
+fn find_all_products() -> Result<Vec<Product>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -114,7 +126,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn find_product_by_id(id: String) -> Result<Option<Product>, String> {
+fn find_product_by_id(id: String) -> Result<Option<Product>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -127,7 +139,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn delete_product_by_id(id: String) -> Result<(), String> {
+fn delete_product_by_id(id: String) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -140,7 +152,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn edit_product_price(id: String, new_price: f64) -> Result<(), String> {
+fn edit_product_price(id: String, new_price: f64) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -153,7 +165,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn edit_product_name(id: String, new_name: String) -> Result<(), String> {
+fn edit_product_name(id: String, new_name: String) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -168,7 +180,7 @@ mod tests;
 //Payments Service
 
 #[tauri::command]
- fn create_payment(amount: f64, account_id: String) -> Result<String, String> {
+fn create_payment(amount: f64, account_id: String) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -181,7 +193,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn find_payment_by_id(id: String) -> Result<Option<Payment>, String> {
+fn find_payment_by_id(id: String) -> Result<Option<Payment>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -195,7 +207,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn update_payment_amount(id: String, amount: f64) -> Result<(), String> {
+fn update_payment_amount(id: String, amount: f64) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -208,7 +220,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn delete_payment_by_id(id: String) -> Result<(), String> {
+fn delete_payment_by_id(id: String) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -222,7 +234,7 @@ mod tests;
 
 //Items Service
 #[tauri::command]
- fn create_item(
+fn create_item(
     name: String,
     quantity: i32,
     price: f64,
@@ -241,7 +253,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn find_item_by_id(id: String) -> Result<Option<Item>, String> {
+fn find_item_by_id(id: String) -> Result<Option<Item>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -254,7 +266,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn edit_item_note(id: String, notes: Option<String>) -> Result<(), String> {
+fn edit_item_note(id: String, notes: Option<String>) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -267,7 +279,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn edit_item_price(id: String, price: f64) -> Result<(), String> {
+fn edit_item_price(id: String, price: f64) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -280,7 +292,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn edit_item_name(id: String, name: String) -> Result<(), String> {
+fn edit_item_name(id: String, name: String) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -293,7 +305,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn delete_item_by_id(id: String) -> Result<(), String> {
+fn delete_item_by_id(id: String) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -308,7 +320,7 @@ mod tests;
 //Accounts Service
 
 #[tauri::command]
- fn create_account(user_id: String) -> Result<String, String> {
+fn create_account(user_id: String) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -321,7 +333,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn find_account_by_id(account_id: String) -> Result<Option<Account>, String> {
+fn find_account_by_id(account_id: String) -> Result<Option<Account>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -334,7 +346,7 @@ mod tests;
 }
 
 #[tauri::command]
- fn delete_account_by_id(account_id: String) -> Result<(), String> {
+fn delete_account_by_id(account_id: String) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
@@ -352,6 +364,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             create_user,
             find_all_users,
             find_user_by_id,
+            edit_user,
             delete_user_by_id,
             create_product,
             find_all_products,

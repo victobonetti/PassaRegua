@@ -1,8 +1,8 @@
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
+use rusqlite::types::Null;
 use rusqlite::{params, Result};
 use uuid::Uuid;
-use rusqlite::types::Null;
 
 // Estrutura para o usuário
 #[derive(Debug)]
@@ -14,7 +14,7 @@ pub struct User {
     pub account_id: Option<String>,
 }
 
-use serde::{Serialize, Serializer, ser::SerializeMap};
+use serde::{ser::SerializeMap, Serialize, Serializer};
 impl Serialize for User {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -29,7 +29,6 @@ impl Serialize for User {
     }
 }
 
-
 impl User {
     #[allow(dead_code)]
     pub fn create_one(
@@ -37,7 +36,6 @@ impl User {
         username: String,
         password: String,
     ) -> Result<String, rusqlite::Error> {
-
         let uuid = Uuid::new_v4().to_string();
 
         conn.execute(
@@ -63,7 +61,6 @@ impl User {
         })?;
 
         let users: Result<Vec<_>, rusqlite::Error> = rows.collect();
-        println!("users found: {:?}", users);
         users
     }
 
@@ -97,6 +94,26 @@ impl User {
         Ok(())
     }
 
-    
-    
+    #[allow(dead_code)]
+    pub fn edit_one(
+        conn: &PooledConnection<SqliteConnectionManager>,
+        id: String,
+        username: String,
+        password: String,
+    ) -> Result<()> {
+
+        conn.execute(
+            "UPDATE users SET username = ?, password = ? WHERE id = ?",
+            params![username, password, id],
+        )?;
+
+        let resultados = User::find_one(conn, id)?;
+        if let Some(resultados) = resultados {
+            assert_eq!(resultados.username, username);
+            println!("{:?}", resultados);
+            println!("{:?},{:?}", username, password);
+        }
+
+        Ok(())
+    }
 }

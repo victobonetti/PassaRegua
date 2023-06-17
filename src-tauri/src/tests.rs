@@ -38,6 +38,19 @@ fn test_user_crud() {
     assert_eq!(user.username, username);
     assert_eq!(user.password, password);
 
+    let new_username = "Jorge";
+    let new_password = "1234a";
+
+    //edite o usuário
+    User::edit_one(&conn, test_id.clone(), new_username.to_string(), new_password.to_string()).unwrap();
+
+     // Encontre o usuário editado
+     let found_user = User::find_one(&conn, test_id.clone()).unwrap();
+     assert!(found_user.is_some());
+     let user = found_user.unwrap();
+     assert_eq!(user.username, new_username.to_owned());
+     assert_eq!(user.password, new_password.to_owned());
+
     // Exclua o usuário
     User::delete_one(&conn, test_id.clone()).unwrap();
 
