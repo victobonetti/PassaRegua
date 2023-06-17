@@ -32,14 +32,18 @@ export default function PaginaUsuarios() {
 
 
     return (
-        <><tbody className=" text-slate-300  w-full table-auto flex flex-col ">
+        <>
+        <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
             <thead className="  font-semibold  bg-slate-900 text-center py-4 flex w-full justify-evenly text-lg">
                 <td className="text-center w-1/4 ">Nome</td>
                 <td className="text-center w-1/4 ">Senha</td>
                 <td className="text-center w-1/4 ">Conta status</td>
                 <td className="text-center w-1/4 "></td>
             </thead>
-            {resposta.map((data) => {
+
+            {resposta?.length < 1  && <h1 className=" w-full bg-slate-800 p-4 text-2xl">Não foram encontrados registros.</h1>}
+
+            {resposta?.map((data) => {
                 return (
                     <tr className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
                         <td className=" font-semibold text-center w-1/4 p-5 text-sm whitespace-nowrap ">
