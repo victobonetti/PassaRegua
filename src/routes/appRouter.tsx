@@ -9,36 +9,46 @@ import FormularioEditaUsuario from '../pages/PaginaUsuarios/FormularioEditaUsuar
 import { Feedback } from '../components/feedback/Feedback';
 import { useState } from 'react';
 
-export default function AppRouter(): JSX.Element {
+interface FeedbackInterface {
+  isErr: boolean,
+  text: string
+}
 
+e
+export default function AppRouter(): JSX.Element {
   const [feedback, setFeedback] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [text, setText] = useState('')
+  const [feedbacks, setFeedbacks] = useState<Array<FeedbackInterface>>([]);
 
   const createFeedback = (isErr: boolean, text: string) => {
-    close()
-    setText(text);
-    setIsError(isErr)
-    setFeedback(true)
-  }
+    setFeedbacks((prevFeedbacks) => [...prevFeedbacks, { isErr, text }]);
+    setFeedback(true);
+  };
 
-  const close = () => {
-    setFeedback(false)
-  }
+  const close = (self: FeedbackInterface) => {
+    setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => feedback !== self));
+    if (feedbacks.length < 1) {
+      setFeedback(false);
+    }
+  };
 
   return (
 
     <Router>
 
       {feedback &&
-        <Feedback isError={isError} text={'teste'} closeSelf={close} />
+        feedbacks?.map((f) => {
+          return (
+            <Feedback isError={f.isErr} text={f.text} closeSelf={close} />
+          )
+        })
+
       }
 
       <Routes>
         <Route path={'/'} element={<App />} >
           <Route index element={<PaginaInicial feedback={createFeedback} />} />
           <Route path='/usuarios' element={<PaginaUsuarios feedback={createFeedback} />} />
-          <Route path='/usuarios/novo' element={<FormularioCriaUsuario feedback={createFeedback} />} /> 
+          <Route path='/usuarios/novo' element={<FormularioCriaUsuario feedback={createFeedback} />} />
           <Route path='/usuarios/editar/:id/:usernameParam/:passwordParam' element={<FormularioEditaUsuario feedback={createFeedback} />} />
           <Route path='/contas' element={<PaginaContas feedback={createFeedback} />} />
           <Route path='/produtos' element={<PaginaProdutos feedback={createFeedback} />} />
