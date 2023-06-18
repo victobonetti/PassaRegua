@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function FormularioCriaUsuario() {
+export default function FormularioCriaUsuario({ feedback }: FeedbackProps) {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');

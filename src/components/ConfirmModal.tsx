@@ -1,4 +1,20 @@
-export default function ConfirmModal(titulo:string, texto:string, botaotexto:string, callbackConfirm:() => void, callbackCancel:() => void) {
+import React, { JSXElementConstructor, ReactNode } from 'react';
+
+interface ConfirmModalProps {
+    titulo: string;
+    texto: string;
+    botaotexto: string;
+    callbackConfirm: () => void;
+    callbackCancel: () => void;
+}
+
+export default function ConfirmModal({
+    titulo,
+    texto,
+    botaotexto,
+    callbackConfirm,
+    callbackCancel,
+}: ConfirmModalProps, { feedback }: FeedbackProps): JSX.Element {
     return (
         <div className=" flex flex-col items-center justify-center w-full h-full">
             <div className=" flex flex-col rounded p-8 bg-slate-300 w-1/2 m-8">

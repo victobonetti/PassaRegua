@@ -54,7 +54,7 @@ function App() {
           <Link to={'/produtos'}><li className={` ${paginaProdutos ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : ' pl-4  '}   cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Produtos</li></Link>
         </nav>
       </aside>
-      <div className=" flex justify-center w-full ">
+      <div className=" overflow-hidden flex justify-center w-full ">
         <div className=" overflow-y-scroll shadow-inner bg-slate-900 w-full mr-2 h-full">
           <Outlet />
         </div>

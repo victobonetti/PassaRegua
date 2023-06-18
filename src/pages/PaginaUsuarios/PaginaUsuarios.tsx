@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 import { User } from "../../interfaces/User";
 import { Link } from "react-router-dom";
 import ConfirmModal from "../../components/ConfirmModal";
+import { Feedback } from "../../components/feedback/Feedback";
 
-
-
-export default function PaginaUsuarios() {
+export default function PaginaUsuarios({ feedback }: FeedbackProps) {
 
     const [resposta, setResposta] = useState<User[]>([]);
     const [toDelete, setToDelete] = useState<User>();
@@ -35,8 +34,8 @@ export default function PaginaUsuarios() {
             try {
                 const data: User[] = await invoke('find_all_users', {});
                 setResposta(data);
-            } catch (error) {
-                console.error("Erro ao buscar os usuários:", error);
+            } catch {
+                let cont = 0;
             }
         };
         fetchData();
@@ -44,9 +43,18 @@ export default function PaginaUsuarios() {
 
     return (
         <>
-            {modalExcluirAberto && ConfirmModal('Tem certeza?', 'Por favor, confirme que deseja prosseguir com a exclusão do usuário clicando no botão abaixo.', 'Sim, excluir.', () => excluirUsuario(), () => fecharModalExcluir())}
+
+            {modalExcluirAberto && <ConfirmModal
+                titulo="Tem certeza?"
+                texto="Por favor, confirme que deseja prosseguir com a exclusão do usuário clicando no botão abaixo."
+                botaotexto="Sim, excluir."
+                callbackConfirm={() => excluirUsuario()}
+                callbackCancel={() => fecharModalExcluir()}
+            />
+            }
+
             {!modalExcluirAberto &&
-                <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
+                <tbody className="  text-slate-300  w-full table-auto flex flex-col ">
 
                     <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
                         <tr className="flex w-full">
@@ -56,6 +64,7 @@ export default function PaginaUsuarios() {
                             <td className="pl-5 text-slate-600 w-1/4 "></td>
                         </tr>
                     </thead>
+                    {resposta?.length < 1 && <h1 className=" w-full bg-slate-800 p-4 text-2xl">Não foram encontrados registros.</h1>}
                     {resposta.map((data, i) => {
                         return (
                             <tr key={i} className="  w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
@@ -63,7 +72,7 @@ export default function PaginaUsuarios() {
                                     {data.username}
                                 </td>
                                 <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
-                                    {data.password}
+                                    {"*".repeat(data.password.length)}
                                 </td>
                                 <td className=" font-semibold w-1/4 p-5  text-sm whitespace-nowrap">
                                     {data.account_id ? 'Tem conta em aberto' : 'Não tem conta em aberto.'}

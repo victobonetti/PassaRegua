@@ -1,3 +1,3 @@
-export default function PaginaContas(){
+export default function PaginaContas({ feedback }: FeedbackProps){
     return(<h1>Teste</h1>)
 }

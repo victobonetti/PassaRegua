@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { User } from "../../interfaces/User";
 
-export default function FormularioEditaUsuario() {
+export default function FormularioEditaUsuario({ feedback }: FeedbackProps) {
 
     const [username, setInputUsername] = useState('');
     const [password, setInputPassword] = useState('');

@@ -5,7 +5,7 @@ import Product from "../interfaces/Product";
 
 
 
-export default function PaginaProdutos() {
+export default function PaginaProdutos({ feedback }: FeedbackProps) {
 
     const [resposta, setResposta] = useState<Product[]>([]);
 
@@ -26,11 +26,13 @@ export default function PaginaProdutos() {
     return (
         <>
         <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
-            <thead className="  font-semibold  bg-slate-900 text-center py-4 flex w-full justify-evenly text-lg">
-                <td className="text-center w-1/3 ">Produto</td>
-                <td className="text-center w-1/3 ">Preço</td>
-                <td className="text-center w-1/3 "></td>
-            </thead>
+        <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
+                        <tr className="flex w-full">
+                            <td className="pl-5 text-slate-600 w-1/3 ">PRODUTO</td>
+                            <td className="pl-5 text-slate-600 w-1/3 ">PREÇO</td>
+                            <td className="pl-5 text-slate-600 w-1/3 "></td>
+                        </tr>
+                    </thead>
 
             {resposta?.length < 1  && <h1 className=" w-full bg-slate-800 p-4 text-2xl">Não foram encontrados registros.</h1>}
 
@@ -41,7 +43,7 @@ export default function PaginaProdutos() {
                             {data.name}
                         </td>
                         <td className=" font-semibold text-center w-1/3 p-5 text-sm whitespace-nowrap">
-                            {data.price}
+                            {`R$${Number(data.price).toFixed(2)}`}
                         </td>
                         <td className=" text-center w-1/3 p-4  text-sm whitespace-nowrap">
                             <button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button>
