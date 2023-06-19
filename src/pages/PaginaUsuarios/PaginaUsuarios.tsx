@@ -19,12 +19,15 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
 
     const excluirUsuario = async () => {
         let id = toDelete?.id
-        invoke('delete_user_by_id', { id }).then(() => {
-            fecharModalExcluir();
-            feedback(false, "Usuário excluído com sucesso.")
-        });
+        try {
+            invoke('delete_user_by_id', { id }).then(() => {
+                fecharModalExcluir();
+                feedback(false, "Usuário excluído com sucesso.")
+            });
+        } catch {
+            feedback(true, "Erro ao excluir usuário.")
+        }
 
-        feedback(true, "Erro ao excluir usuário.")
     }
 
     const fecharModalExcluir = () => {
