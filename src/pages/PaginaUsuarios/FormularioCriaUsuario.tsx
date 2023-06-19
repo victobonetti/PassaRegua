@@ -7,9 +7,15 @@ export default function FormularioCriaUsuario({ feedback }: FeedbackProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const criaUsuario = async (e:React.FormEvent<HTMLFormElement>) => {
+    const criaUsuario = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await invoke("create_user", {username, password});
+        try {
+            await invoke("create_user", { username, password });
+            feedback(false, "Usuário criado com sucesso!");
+        } catch {
+            feedback(true, "Erro ao criar usuário.");
+        }
+        
         window.location.href = '/usuarios';
     }
 

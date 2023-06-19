@@ -16,17 +16,18 @@ export default function AppRouter(): JSX.Element {
   const [feedbacks, setFeedbacks] = useState<Array<FeedbackInterface>>([]);
 
   const createFeedback = (isErr: boolean, text: string) => {
+    const hasDuplicateFeedback = feedbacks.some((feedback) => feedback.text == text);
+    if (feedbacks.length > 3 || hasDuplicateFeedback) {
+      return;
+    }
     setFeedbacks((prevFeedbacks) => [...prevFeedbacks, { isErr, text }]);
-    console.log(feedbacks)
     setFeedback(true);
   };
 
   const close = (self: FeedbackInterface) => {
     setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => {
-      feedback.text == self.text
+      feedback.text != self.text
     }));
-    console.log(self)
-    console.log(feedbacks)
     if (feedbacks.length < 1) {
       setFeedback(false);
     }
@@ -35,18 +36,23 @@ export default function AppRouter(): JSX.Element {
   return (
 
     <Router>
+      <div className='absolute right-4 bottom-2'>
+        {feedback &&
+          feedbacks?.map((f) => {
 
-      {feedback &&
-        feedbacks?.map((f) => {
-          return (
-            <Feedback isError={f.isErr} text={f.text} closeSelf={() => close({
-              isErr: f.isErr,
-              text: f.text
-            })} />
-          )
-        })
 
-      }
+            return (
+
+              <Feedback isError={f.isErr} text={f.text} closeSelf={() => close({
+                isErr: f.isErr,
+                text: f.text
+              })} />
+            )
+
+          })
+
+        }
+      </div>
 
       <Routes>
         <Route path={'/'} element={<App />} >
@@ -58,6 +64,6 @@ export default function AppRouter(): JSX.Element {
           <Route path='/produtos' element={<PaginaProdutos feedback={createFeedback} />} />
         </Route>
       </Routes>
-    </Router>
+    </Router >
   );
 }

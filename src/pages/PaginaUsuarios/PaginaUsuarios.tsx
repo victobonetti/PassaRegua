@@ -10,6 +10,7 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
     const [resposta, setResposta] = useState<User[]>([]);
     const [toDelete, setToDelete] = useState<User>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
+    const [handleMessage, setHandleMessage] = useState(false);
 
     const abrirModalExcluir = (user: User) => {
         setToDelete(user);
@@ -20,7 +21,10 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
         let id = toDelete?.id
         invoke('delete_user_by_id', { id }).then(() => {
             fecharModalExcluir();
+            feedback(false, "Usuário excluído com sucesso.")
         });
+
+        feedback(true, "Erro ao excluir usuário.")
     }
 
     const fecharModalExcluir = () => {
@@ -35,7 +39,7 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
                 const data: User[] = await invoke('find_all_users', {});
                 setResposta(data);
             } catch {
-                let cont = 0;
+                feedback(true, "Erro ao encontrar usuários.")
             }
         };
         fetchData();

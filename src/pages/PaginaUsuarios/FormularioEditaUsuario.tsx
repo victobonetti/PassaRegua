@@ -19,7 +19,13 @@ export default function FormularioEditaUsuario({ feedback }: FeedbackProps) {
 
     const editaUsuario = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await invoke("edit_user", {id, username, password });
+        try{
+            await invoke("edit_user", {id, username, password });
+            feedback(false, "Usuário editadp com sucesso!");
+        } catch {
+            feedback(true, "Erro ao editar usuário.");
+        }
+       
         window.location.href = '/usuarios';
     }
 
