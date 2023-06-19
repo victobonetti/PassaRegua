@@ -10,7 +10,6 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
     const [resposta, setResposta] = useState<User[]>([]);
     const [toDelete, setToDelete] = useState<User>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
-    const [handleMessage, setHandleMessage] = useState(false);
 
     const abrirModalExcluir = (user: User) => {
         setToDelete(user);

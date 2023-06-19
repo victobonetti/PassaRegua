@@ -3,12 +3,15 @@ import App from '../App';
 import PaginaInicial from '../pages/PaginaInicial';
 import PaginaUsuarios from '../pages/PaginaUsuarios/PaginaUsuarios';
 import PaginaContas from '../pages/PaginaContas';
-import PaginaProdutos from '../pages/PaginaProdutos';
+import PaginaProdutos from '../pages/PaginaProdutos/PaginaProdutos';
 import FormularioCriaUsuario from '../pages/PaginaUsuarios/FormularioCriaUsuario';
 import FormularioEditaUsuario from '../pages/PaginaUsuarios/FormularioEditaUsuario';
 import { Feedback } from '../components/feedback/Feedback';
 import { useState } from 'react';
 import FeedbackInterface from '../components/feedback/FeedbackInterface';
+import FormularioCriaProduto from '../pages/PaginaProdutos/FormularioCriaProduto';
+import FormularioEditaProduto from '../pages/PaginaProdutos/FormularioEditaProduto';
+// import FormularioEditaProduto from '../pages/PaginaProdutos/FormularioEditaProduto';
 
 
 export default function AppRouter(): JSX.Element {
@@ -39,18 +42,13 @@ export default function AppRouter(): JSX.Element {
       <div className='absolute right-4 bottom-2'>
         {feedback &&
           feedbacks?.map((f) => {
-
-
             return (
-
               <Feedback isError={f.isErr} text={f.text} closeSelf={() => close({
                 isErr: f.isErr,
                 text: f.text
               })} />
             )
-
           })
-
         }
       </div>
 
@@ -62,6 +60,8 @@ export default function AppRouter(): JSX.Element {
           <Route path='/usuarios/editar/:id/:usernameParam/:passwordParam' element={<FormularioEditaUsuario feedback={createFeedback} />} />
           <Route path='/contas' element={<PaginaContas feedback={createFeedback} />} />
           <Route path='/produtos' element={<PaginaProdutos feedback={createFeedback} />} />
+          <Route path='produtos/novo' element={<FormularioCriaProduto feedback={createFeedback} />} />
+          <Route path='produtos/editar/:id/:nameParam/:priceParam' element={<FormularioEditaProduto feedback={createFeedback} />} />
         </Route>
       </Routes>
     </Router >
