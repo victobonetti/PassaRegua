@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import './feedback.css'
+import FeedbackInterface from "./FeedbackInterface";
 
-export function Feedback({ isError, text, closeSelf }: { isError: boolean, text: string, closeSelf: () => void }): JSX.Element {
+export function Feedback({ isError, text, closeSelf }: { isError: boolean, text: string, closeSelf: (props:FeedbackInterface) => void }): JSX.Element {
 
     const [playFadeOut, setPlayFadeOut] = useState(false);
 
@@ -26,7 +27,7 @@ export function Feedback({ isError, text, closeSelf }: { isError: boolean, text:
     const close = () => {
         clearTimeout(timeout);
         clearTimeout(secondTimeout);
-        closeSelf();
+        closeSelf({isErr: isError, text: text});
     }
 
     return (

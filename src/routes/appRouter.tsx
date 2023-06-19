@@ -8,24 +8,25 @@ import FormularioCriaUsuario from '../pages/PaginaUsuarios/FormularioCriaUsuario
 import FormularioEditaUsuario from '../pages/PaginaUsuarios/FormularioEditaUsuario';
 import { Feedback } from '../components/feedback/Feedback';
 import { useState } from 'react';
+import FeedbackInterface from '../components/feedback/FeedbackInterface';
 
-interface FeedbackInterface {
-  isErr: boolean,
-  text: string
-}
 
-e
 export default function AppRouter(): JSX.Element {
   const [feedback, setFeedback] = useState(false);
   const [feedbacks, setFeedbacks] = useState<Array<FeedbackInterface>>([]);
 
   const createFeedback = (isErr: boolean, text: string) => {
     setFeedbacks((prevFeedbacks) => [...prevFeedbacks, { isErr, text }]);
+    console.log(feedbacks)
     setFeedback(true);
   };
 
   const close = (self: FeedbackInterface) => {
-    setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => feedback !== self));
+    setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => {
+      feedback.text == self.text
+    }));
+    console.log(self)
+    console.log(feedbacks)
     if (feedbacks.length < 1) {
       setFeedback(false);
     }
@@ -38,7 +39,10 @@ export default function AppRouter(): JSX.Element {
       {feedback &&
         feedbacks?.map((f) => {
           return (
-            <Feedback isError={f.isErr} text={f.text} closeSelf={close} />
+            <Feedback isError={f.isErr} text={f.text} closeSelf={() => close({
+              isErr: f.isErr,
+              text: f.text
+            })} />
           )
         })
 
