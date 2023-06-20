@@ -14,6 +14,8 @@ pub struct Item {
     pub product_id: String,
 }
 
+
+
 use serde::{Serialize, Serializer, ser::SerializeMap};
 impl Serialize for Item {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
