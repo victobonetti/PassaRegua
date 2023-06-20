@@ -45,6 +45,7 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
             try {
                 const data: User[] = await invoke('find_all_users', {});
                 setResposta(data);
+                feedback(false, "Usuários encontrados com sucesso.")
             } catch {
                 feedback(true, "Erro ao encontrar usuários.")
             }

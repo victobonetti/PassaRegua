@@ -19,7 +19,7 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
     const excluirConta = async () => {
         let id = toDelete?.id
         try {
-            
+
             feedback(false, "Usuário excluído com sucesso.")
             fecharModalExcluir();
         }
@@ -38,10 +38,11 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
             try {
-
-                
+                let data: Account[] = await invoke('find_all_accounts', {})
+                setResposta(data);
+                feedback(false, "Contas encontradas com sucesso.")
             } catch {
-                feedback(true, "Erro ao encontrar usuários.")
+                feedback(true, "Erro ao encontrar contas.")
             }
         };
         fetchData();
@@ -93,7 +94,7 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
                         <button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar nova conta</button>
                     </div></>
             }
-    
+
         </>
 
     )

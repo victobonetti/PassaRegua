@@ -312,6 +312,10 @@ fn test_account_crud() {
     assert_eq!(account.paid_amount, 100.0);
     assert_eq!(account.account_total, 40.0);
 
+    // Encontre todas as contas
+    let all_accounts = Account::find_all(&conn).unwrap();
+    assert_eq!(all_accounts.len(), 1);
+
     // Exclua a conta
     Account::delete_one(&conn, account_id.clone()).unwrap();
 

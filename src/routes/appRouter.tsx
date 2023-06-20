@@ -18,14 +18,29 @@ export default function AppRouter(): JSX.Element {
   const [feedback, setFeedback] = useState(false);
   const [feedbacks, setFeedbacks] = useState<Array<FeedbackInterface>>([]);
 
-  const createFeedback = (isErr: boolean, text: string) => {
-    const hasDuplicateFeedback = feedbacks.some((feedback) => feedback.text == text);
-    if (feedbacks.length > 3 || hasDuplicateFeedback) {
-      return;
-    }
-    setFeedbacks((prevFeedbacks) => [...prevFeedbacks, { isErr, text }]);
-    setFeedback(true);
-  };
+  const createFeedback = (() => {
+    let isThrottled = false;
+
+    return (isErr:boolean, text:string) => {
+      if (isThrottled) {
+        return;
+      }
+
+      const hasDuplicateFeedback = feedbacks.some((feedback) => feedback.text === text);
+      if (feedbacks.length > 3 || hasDuplicateFeedback) {
+        return;
+      }
+
+      setFeedbacks((prevFeedbacks) => [...prevFeedbacks, { isErr, text }]);
+      setFeedback(true);
+
+      isThrottled = true;
+      setTimeout(() => {
+        isThrottled = false;
+      }, 1000); // Define o intervalo de 1 segundo (1000 milissegundos)
+    };
+  })();
+
 
   const close = (self: FeedbackInterface) => {
     setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => {

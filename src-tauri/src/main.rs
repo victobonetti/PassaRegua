@@ -320,6 +320,19 @@ fn delete_item_by_id(id: String) -> Result<(), String> {
 //Accounts Service
 
 #[tauri::command]
+fn find_all_accounts() -> Result<Vec<Account>, String> {
+    let conn = match db::db::init_database() {
+        Ok(conn) => conn,
+        Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
+    };
+
+    match Account::find_all(&conn) {
+        Ok(result) => Ok(result),
+        Err(_) => Err("Erro ao criar conta.".to_owned()),
+    }
+}
+
+#[tauri::command]
 fn create_account(user_id: String) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
@@ -384,7 +397,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             delete_item_by_id,
             create_account,
             find_account_by_id,
-            delete_account_by_id
+            delete_account_by_id,
+            find_all_accounts
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

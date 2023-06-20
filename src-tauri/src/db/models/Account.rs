@@ -16,7 +16,7 @@ pub struct Account {
     pub account_total: f64,
 }
 
-use serde::{Serialize, Serializer, ser::SerializeMap};
+use serde::{ser::SerializeMap, Serialize, Serializer};
 impl Serialize for Account {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -32,7 +32,6 @@ impl Serialize for Account {
         payment_map.end()
     }
 }
-
 
 impl Account {
     fn get_payments(
@@ -99,7 +98,7 @@ impl Account {
                 payments: Some(payments),
                 paid_amount,
                 account_total,
-            };                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+            };
             Ok(Some(account))
         } else {
             Ok(None)
@@ -140,10 +139,13 @@ impl Account {
         Ok(())
     }
 
-    fn find_one_by_user(conn: &PooledConnection<SqliteConnectionManager>, user_id: String) -> Result<bool> {
+    fn find_one_by_user(
+        conn: &PooledConnection<SqliteConnectionManager>,
+        user_id: String,
+    ) -> Result<bool> {
         let sql = "SELECT COUNT(*) FROM accounts WHERE user_id = ?1";
         let count: i64 = conn.query_row(sql, params![user_id], |row| row.get(0))?;
-    
+
         Ok(count > 0)
     }
 
@@ -174,5 +176,37 @@ impl Account {
         )?;
 
         Ok(uuid)
+    }
+
+    pub fn find_all(
+        conn: &PooledConnection<SqliteConnectionManager>,
+    ) -> Result<Vec<Account>, rusqlite::Error> {
+        let mut stmt = conn.prepare("SELECT * FROM accounts")?;
+        let rows = stmt.query_map(params![], |row| {
+            let account_id: String = row.get(0)?;
+            let user_id: String = row.get(1)?;
+
+            let items = Account::get_items(conn, account_id.clone())?;
+            let payments = Account::get_payments(conn, account_id.clone())?;
+
+            let paid_amount = payments.iter().map(|payment| payment.amount as f64).sum();
+            let account_total = items
+                .iter()
+                .map(|item| item.price * item.quantity as f64)
+                .sum();
+
+            Ok(Account {
+                id: account_id,
+                user_id,
+                items: Some(items),
+                payments: Some(payments),
+                paid_amount,
+                account_total,
+            })
+        })?;
+
+        let accounts: Result<Vec<_>, rusqlite::Error> = rows.collect();
+        println!("Accounts found: {:?}", accounts);
+        accounts
     }
 }

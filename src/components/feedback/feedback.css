@@ -5,12 +5,12 @@
 
 .modal-fade-out {
     animation-name: fade-out;
-    animation-duration: .5s;
+    animation-duration: .4s;
 }
 
 .modal-redux {
     animation-name: redux;
-    animation-duration: 5s;
+    animation-duration: 2s;
     animation-timing-function: linear;
     width: 0%;
 }
