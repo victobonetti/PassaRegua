@@ -7,7 +7,7 @@ import { Feedback } from "../../components/feedback/Feedback";
 
 export default function PaginaUsuarios({ feedback }: FeedbackProps) {
 
-    const [resposta, setResposta] = useState<User[]>([]);
+    const [resposta, setResposta] = useState<User[]>([{ id: '123', username: 'teste', password: 'admin' }]);
     const [toDelete, setToDelete] = useState<User>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -19,11 +19,16 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
     const excluirUsuario = async () => {
         let id = toDelete?.id
         try {
-            invoke('delete_user_by_id', { id }).then(() => {
-                fecharModalExcluir();
-                feedback(false, "Usuário excluído com sucesso.")
-            });
-        } catch {
+            await invoke('delete_user_by_id', { id })
+            let newResposta = resposta;
+            newResposta = newResposta.filter((r) =>
+                r.id != id
+            )
+            setResposta(newResposta)
+            feedback(false, "Usuário excluído com sucesso.")
+            fecharModalExcluir();
+        }
+        catch {
             feedback(true, "Erro ao excluir usuário.")
         }
 
@@ -60,7 +65,7 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
             }
 
             {!modalExcluirAberto &&
-                <tbody className="  text-slate-300  w-full table-auto flex flex-col ">
+                <><tbody className="  text-slate-300  w-full table-auto flex flex-col ">
 
                     <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
                         <tr className="flex w-full">
@@ -90,13 +95,11 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
                             </tr>
                         );
                     })}
-                </tbody>
+                </tbody><div className=" justify-center p-2 flex ">
+                        <Link to={'/usuarios/novo'}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo usuário</button></Link>
+                    </div></>
             }
-            {!modalExcluirAberto &&
-                <div className=" justify-center p-2 flex ">
-                    <Link to={'/usuarios/novo'}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo usuário</button></Link>
-                </div>
-            }
+    
         </>
 
     )
