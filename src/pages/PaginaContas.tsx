@@ -90,7 +90,7 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
                         );
                     })}
                 </tbody><div className=" justify-center p-2 flex ">
-                        <Link to={'/usuarios/novo'}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo usuário</button></Link>
+                        <button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar nova conta</button>
                     </div></>
             }
     
