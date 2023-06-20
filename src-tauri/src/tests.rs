@@ -62,10 +62,6 @@ fn test_user_crud() {
 #[test]
 fn test_product_crud() {
     let conn = setup();
-    // Crie uma conexão do banco de dados
-    let manager = SqliteConnectionManager::file("test.db");
-    let pool = Pool::builder().max_size(1).build(manager).unwrap();
-    let conn = pool.get().unwrap();
 
     // Crie um produto
     let name = "Product A";
@@ -103,10 +99,6 @@ fn test_product_crud() {
 #[test]
 fn test_payment_crud() {
     let conn = setup();
-    // Crie uma conexão do banco de dados
-    let manager = SqliteConnectionManager::file("test.db");
-    let pool = Pool::builder().max_size(1).build(manager).unwrap();
-    let conn = pool.get().unwrap();
 
     // Crie um usuário
     let username = "john";

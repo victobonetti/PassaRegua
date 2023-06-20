@@ -12,20 +12,26 @@ pub struct User {
     pub username: String,
     pub password: String,
     pub account_id: Option<String>,
+    pub created_at: String,
+    pub updated_at: Option<String>,
 }
 
 use serde::{ser::SerializeMap, Serialize, Serializer};
+
+use crate::date_now;
 impl Serialize for User {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        let mut payment_map = serializer.serialize_map(Some(4))?;
-        payment_map.serialize_entry("id", &self.id)?;
-        payment_map.serialize_entry("username", &self.username)?;
-        payment_map.serialize_entry("password", &self.password)?;
-        payment_map.serialize_entry("account_id", &self.account_id)?;
-        payment_map.end()
+        let mut user_map = serializer.serialize_map(Some(4))?;
+        user_map.serialize_entry("id", &self.id)?;
+        user_map.serialize_entry("username", &self.username)?;
+        user_map.serialize_entry("password", &self.password)?;
+        user_map.serialize_entry("account_id", &self.account_id)?;
+        user_map.serialize_entry("created_at", &self.created_at)?;
+        user_map.serialize_entry("updated_at", &self.created_at)?;
+        user_map.end()
     }
 }
 
@@ -38,9 +44,11 @@ impl User {
     ) -> Result<String, rusqlite::Error> {
         let uuid = Uuid::new_v4().to_string();
 
+        let date = date_now();
+
         conn.execute(
-            "INSERT INTO users (id, username, password, account_id) VALUES (?1, ?2, ?3, ?4)",
-            params![uuid, username, password, Null],
+            "INSERT INTO users (id, username, password, account_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            params![uuid, username, password, Null, date, Null],
         )?;
 
         Ok(uuid)
@@ -56,7 +64,9 @@ impl User {
                 id: row.get(0)?,
                 username: row.get(1)?,
                 password: row.get(2)?,
-                account_id: None,
+                account_id: row.get(3)?,
+                created_at: row.get(4)?,
+                updated_at: row.get(5)?,
             })
         })?;
 
@@ -77,7 +87,9 @@ impl User {
                 id: row.get(0)?,
                 username: row.get(1)?,
                 password: row.get(2)?,
-                account_id: None,
+                account_id: row.get(3)?,
+                created_at: row.get(4)?,
+                updated_at: row.get(5)?,
             };
             Ok(Some(user))
         } else {
@@ -101,10 +113,11 @@ impl User {
         username: String,
         password: String,
     ) -> Result<()> {
+        let date = date_now();
 
         conn.execute(
-            "UPDATE users SET username = ?, password = ? WHERE id = ?",
-            params![username, password, id],
+            "UPDATE users SET username = ?, password = ?, updated_at = ? WHERE id = ?",
+            params![username, password, date, id],
         )?;
 
         let resultados = User::find_one(conn, id)?;

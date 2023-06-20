@@ -2,6 +2,7 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::params;
 use uuid::Uuid;
+use chrono::{DateTime, Utc};
 
 #[derive(Debug)]
 pub struct Item {
@@ -12,6 +13,7 @@ pub struct Item {
     pub notes: Option<String>,
     pub account_id: String,
     pub product_id: String,
+
 }
 
 
@@ -22,15 +24,15 @@ impl Serialize for Item {
     where
         S: Serializer,
     {
-        let mut payment_map = serializer.serialize_map(Some(7))?;
-        payment_map.serialize_entry("id", &self.id)?;
-        payment_map.serialize_entry("name", &self.name)?;
-        payment_map.serialize_entry("quantity", &self.quantity)?;
-        payment_map.serialize_entry("price", &self.price)?;
-        payment_map.serialize_entry("notes", &self.notes)?;
-        payment_map.serialize_entry("account_id", &self.account_id)?;
-        payment_map.serialize_entry("product_id", &self.product_id)?;
-        payment_map.end()
+        let mut item_map = serializer.serialize_map(Some(7))?;
+        item_map.serialize_entry("id", &self.id)?;
+        item_map.serialize_entry("name", &self.name)?;
+        item_map.serialize_entry("quantity", &self.quantity)?;
+        item_map.serialize_entry("price", &self.price)?;
+        item_map.serialize_entry("notes", &self.notes)?;
+        item_map.serialize_entry("account_id", &self.account_id)?;
+        item_map.serialize_entry("product_id", &self.product_id)?;
+        item_map.end()
     }
 }
 

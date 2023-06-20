@@ -1,10 +1,11 @@
 // Estrutura para a conta de fiado
-use crate::db::models::item::Item;
+use crate::db::models::Item::Item;
 use crate::db::models::payment::Payment;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 use uuid::Uuid;
+use chrono::{DateTime, Utc};
 
 #[derive(Debug)]
 pub struct Account {
@@ -14,6 +15,7 @@ pub struct Account {
     pub payments: Option<Vec<Payment>>,
     pub paid_amount: f64,
     pub account_total: f64,
+
 }
 
 use serde::{ser::SerializeMap, Serialize, Serializer};
@@ -22,14 +24,14 @@ impl Serialize for Account {
     where
         S: Serializer,
     {
-        let mut payment_map = serializer.serialize_map(Some(6))?;
-        payment_map.serialize_entry("id", &self.id)?;
-        payment_map.serialize_entry("user_id", &self.user_id)?;
-        payment_map.serialize_entry("items", &self.items)?;
-        payment_map.serialize_entry("payments", &self.payments)?;
-        payment_map.serialize_entry("paid_amount", &self.paid_amount)?;
-        payment_map.serialize_entry("account_total", &self.account_total)?;
-        payment_map.end()
+        let mut account_map = serializer.serialize_map(Some(6))?;
+        account_map.serialize_entry("id", &self.id)?;
+        account_map.serialize_entry("user_id", &self.user_id)?;
+        account_map.serialize_entry("items", &self.items)?;
+        account_map.serialize_entry("payments", &self.payments)?;
+        account_map.serialize_entry("paid_amount", &self.paid_amount)?;
+        account_map.serialize_entry("account_total", &self.account_total)?;
+        account_map.end()
     }
 }
 

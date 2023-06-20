@@ -32,7 +32,9 @@ pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Resul
             id TEXT PRIMARY KEY,
             username TEXT NOT NULL,
             password TEXT NOT NULL,
-            account_id TEXT 
+            account_id TEXT,
+            created_at TEXT NOT NULL,
+            updated_at TEXT
         )",
         params![],
     )
@@ -42,7 +44,9 @@ pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Resul
         "CREATE TABLE IF NOT EXISTS products (
             id TEXT PRIMARY KEY,
                 name TEXT NOT NULL,
-                price REAL NOT NULL
+                price REAL NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT
             )",
         params![],
     )
@@ -52,6 +56,8 @@ pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Resul
         "CREATE TABLE IF NOT EXISTS accounts (
             id TEXT PRIMARY KEY,
             user_id INTEGER NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id)
         )",
         params![],
@@ -63,6 +69,8 @@ pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Resul
             id TEXT PRIMARY KEY,
             amount REAL NOT NULL,
             account_id TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT,
             FOREIGN KEY (account_id) REFERENCES accounts(id)
         )",
         params![],
@@ -78,6 +86,8 @@ pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Resul
                 price REAL NOT NULL,
                 notes TEXT,
                 account_id TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT,
                 FOREIGN KEY (product_id) REFERENCES products(id),
                 FOREIGN KEY (account_id) REFERENCES accounts(id)
             )",

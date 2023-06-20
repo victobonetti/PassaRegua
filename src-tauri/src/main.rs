@@ -6,30 +6,38 @@
 mod db {
     pub mod db;
     pub mod models {
+        pub mod Item;
         pub mod account;
-        pub mod item;
         pub mod payment;
         pub mod product;
         pub mod user;
     }
 }
 
-use r2d2::PooledConnection;
-use r2d2_sqlite::SqliteConnectionManager;
-
 #[allow(unused_imports)]
 use crate::db::models::account::Account;
-#[allow(unused_imports)]
-use crate::db::models::item::Item;
 #[allow(unused_imports)]
 use crate::db::models::payment::Payment;
 #[allow(unused_imports)]
 use crate::db::models::product::Product;
 #[allow(unused_imports)]
 use crate::db::models::user::User;
+#[allow(unused_imports)]
+use crate::db::models::Item::Item;
+
+use chrono::{ Utc};
 
 #[cfg(test)]
 mod tests;
+
+pub fn date_now() -> String {
+    let date = Utc::now().naive_utc();
+    let date_now = date.format("%Y-%m-%d %H:%M:%S").to_string();
+    println!("{}", date_now);
+    date_now
+}
+
+
 
 //User Service
 #[tauri::command]
@@ -372,6 +380,11 @@ fn delete_account_by_id(account_id: String) -> Result<(), String> {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+
+    create_user("Victor".to_owned(), "Sapeca".to_owned());
+    create_user("Fuboca".to_owned(), "Sapeca".to_owned());
+    create_user("xepa".to_owned(), "Sapeca".to_owned());
+
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             create_user,

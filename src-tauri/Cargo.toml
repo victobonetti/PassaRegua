@@ -21,6 +21,7 @@ r2d2 = "0.8.9"
 r2d2_sqlite = "0.15.0"
 tempfile = "3.2.0"
 lazy_static = "1.4"
+chrono = "0.4"
 
 
 [dependencies.uuid]

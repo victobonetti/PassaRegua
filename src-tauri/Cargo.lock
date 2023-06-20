@@ -270,8 +270,11 @@ checksum = "ec837a71355b28f6556dbd569b37b3f363091c0bd4b2e735674521b4c5fd9bc5"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
+ "js-sys",
  "num-traits",
  "serde",
+ "time 0.1.45",
+ "wasm-bindgen",
  "winapi",
 ]
 
@@ -2758,6 +2761,7 @@ dependencies = [
 name = "tauri-teste"
 version = "0.0.0"
 dependencies = [
+ "chrono",
  "lazy_static",
  "r2d2",
  "r2d2_sqlite",

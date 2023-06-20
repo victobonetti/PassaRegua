@@ -2,12 +2,14 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 use uuid::Uuid;
+use chrono::{DateTime, Utc};
 
 #[derive(Debug)]
 pub struct Payment {
     pub id: String,
     pub amount: f64,
     pub account_id: String,
+
 }
 
 use serde::{Serialize, Serializer, ser::SerializeMap};

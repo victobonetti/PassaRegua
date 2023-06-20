@@ -2,6 +2,7 @@ use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, Result};
 use uuid::Uuid;
+use chrono::{DateTime, Utc};
 
 // Estrutura para o produto
 #[allow(dead_code)]
@@ -10,6 +11,7 @@ pub struct Product {
     pub id: String,
     pub name: String,
     pub price: f64,
+
 }
 
 use serde::{Serialize, Serializer, ser::SerializeMap};
@@ -18,11 +20,11 @@ impl Serialize for Product {
     where
         S: Serializer,
     {
-        let mut payment_map = serializer.serialize_map(Some(3))?;
-        payment_map.serialize_entry("id", &self.id)?;
-        payment_map.serialize_entry("name", &self.name)?;
-        payment_map.serialize_entry("price", &self.price)?;
-        payment_map.end()
+        let mut product_map = serializer.serialize_map(Some(3))?;
+        product_map.serialize_entry("id", &self.id)?;
+        product_map.serialize_entry("name", &self.name)?;
+        product_map.serialize_entry("price", &self.price)?;
+        product_map.end()
     }
 }
 
