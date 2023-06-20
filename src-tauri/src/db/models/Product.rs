@@ -1,8 +1,7 @@
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite::{params, Result};
+use rusqlite::{params, types::Null, Result};
 use uuid::Uuid;
-use chrono::{DateTime, Utc};
 
 // Estrutura para o produto
 #[allow(dead_code)]
@@ -11,10 +10,13 @@ pub struct Product {
     pub id: String,
     pub name: String,
     pub price: f64,
-
+    pub created_at: String,
+    pub updated_at: Option<String>,
 }
 
-use serde::{Serialize, Serializer, ser::SerializeMap};
+use serde::{ser::SerializeMap, Serialize, Serializer};
+
+use crate::date_now;
 impl Serialize for Product {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -24,6 +26,8 @@ impl Serialize for Product {
         product_map.serialize_entry("id", &self.id)?;
         product_map.serialize_entry("name", &self.name)?;
         product_map.serialize_entry("price", &self.price)?;
+        product_map.serialize_entry("created_at", &self.created_at)?;
+        product_map.serialize_entry("updated_at", &self.updated_at)?;
         product_map.end()
     }
 }
@@ -37,9 +41,11 @@ impl Product {
     ) -> Result<String, rusqlite::Error> {
         let uuid = Uuid::new_v4().to_string();
 
+        let date = date_now();
+
         conn.execute(
-            "INSERT INTO products (id, name, price) VALUES (?1, ?2, ?3)",
-            params![uuid, name, price],
+            "INSERT INTO products (id, name, price, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![uuid, name, price, date, Null],
         )?;
 
         Ok(uuid)
@@ -55,6 +61,8 @@ impl Product {
                 id: row.get(0)?,
                 name: row.get(1)?,
                 price: row.get(2)?,
+                created_at: row.get(3)?,
+                updated_at: row.get(4)?,
             })
         })?;
 
@@ -81,6 +89,8 @@ impl Product {
                 id: row.get(0)?,
                 name: row.get(1)?,
                 price: row.get(2)?,
+                created_at: row.get(3)?,
+                updated_at: row.get(4)?,
             };
             Ok(Some(product))
         } else {
@@ -103,9 +113,12 @@ impl Product {
         id: String,
         new_price: f64,
     ) -> Result<(), rusqlite::Error> {
+
+        let date = date_now();
+
         conn.execute(
-            "UPDATE products SET price = ?1 WHERE id = ?2",
-            params![new_price, id],
+            "UPDATE products SET price = ?1, updated_at = ?2 WHERE id = ?3",
+            params![new_price, date, id],
         )?;
         Ok(())
     }
@@ -116,9 +129,12 @@ impl Product {
         id: String,
         new_name: &str,
     ) -> Result<(), rusqlite::Error> {
+
+        let date = date_now();
+
         conn.execute(
-            "UPDATE products SET name = ?1 WHERE id = ?2",
-            params![new_name, id],
+            "UPDATE products SET name = ?1, updated_at = ?2 WHERE id = ?3",
+            params![new_name, date, id],
         )?;
         Ok(())
     }

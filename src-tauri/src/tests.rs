@@ -124,6 +124,8 @@ fn test_payment_crud() {
                 id: row.get(0)?,
                 amount: row.get(1)?,
                 account_id: row.get(2)?,
+                created_at: row.get(3)?,
+                updated_at: row.get(4)?
             })
         })
         .unwrap();

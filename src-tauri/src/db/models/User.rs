@@ -30,7 +30,7 @@ impl Serialize for User {
         user_map.serialize_entry("password", &self.password)?;
         user_map.serialize_entry("account_id", &self.account_id)?;
         user_map.serialize_entry("created_at", &self.created_at)?;
-        user_map.serialize_entry("updated_at", &self.created_at)?;
+        user_map.serialize_entry("updated_at", &self.updated_at)?;
         user_map.end()
     }
 }

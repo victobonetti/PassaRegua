@@ -1,8 +1,8 @@
+use chrono::{DateTime, Utc};
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite::params;
+use rusqlite::{params, types::Null};
 use uuid::Uuid;
-use chrono::{DateTime, Utc};
 
 #[derive(Debug)]
 pub struct Item {
@@ -13,12 +13,13 @@ pub struct Item {
     pub notes: Option<String>,
     pub account_id: String,
     pub product_id: String,
-
+    pub created_at: String,
+    pub updated_at: Option<String>,
 }
 
+use serde::{ser::SerializeMap, Serialize, Serializer};
 
-
-use serde::{Serialize, Serializer, ser::SerializeMap};
+use crate::date_now;
 impl Serialize for Item {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -32,6 +33,8 @@ impl Serialize for Item {
         item_map.serialize_entry("notes", &self.notes)?;
         item_map.serialize_entry("account_id", &self.account_id)?;
         item_map.serialize_entry("product_id", &self.product_id)?;
+        item_map.serialize_entry("created_at", &self.created_at)?;
+        item_map.serialize_entry("updated_at", &self.updated_at)?;
         item_map.end()
     }
 }
@@ -69,10 +72,12 @@ impl Item {
 
         let uuid = Uuid::new_v4().to_string();
 
+        let date = date_now();
+
         // Inserir o item na tabela items
         conn.execute(
-            "INSERT INTO items (id, name, quantity, price, account_id, product_id) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-            params![uuid, name, quantity, price, account_id, product_id],
+            "INSERT INTO items (id, name, quantity, price, account_id, product_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+            params![uuid, name, quantity, price, account_id, product_id, date, Null],
         )?;
 
         Ok(uuid)
@@ -80,9 +85,8 @@ impl Item {
 
     pub fn find_item(
         conn: &PooledConnection<SqliteConnectionManager>,
-        item_id: String
+        item_id: String,
     ) -> Result<Option<Item>, rusqlite::Error> {
-
         let mut stmt = conn.prepare(" SELECT * FROM items WHERE id = ?1")?;
         let mut rows = stmt.query(params![item_id])?;
 
@@ -95,12 +99,13 @@ impl Item {
                 price: row.get(4)?,
                 notes: row.get(5)?,
                 account_id: row.get(6)?,
+                created_at: row.get(7)?,
+                updated_at: row.get(8)?,
             };
             Ok(Some(item))
         } else {
             Ok(None)
         }
-
     }
 
     pub fn edit_note(

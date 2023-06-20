@@ -1,18 +1,20 @@
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite::{params, Result};
+use rusqlite::{params, Result, types::Null};
 use uuid::Uuid;
-use chrono::{DateTime, Utc};
 
 #[derive(Debug)]
 pub struct Payment {
     pub id: String,
     pub amount: f64,
     pub account_id: String,
-
+    pub created_at: String,
+    pub updated_at: Option<String>,
 }
 
-use serde::{Serialize, Serializer, ser::SerializeMap};
+use serde::{ser::SerializeMap, Serialize, Serializer};
+
+use crate::date_now;
 impl Serialize for Payment {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -22,6 +24,8 @@ impl Serialize for Payment {
         payment_map.serialize_entry("id", &self.id)?;
         payment_map.serialize_entry("amount", &self.amount)?;
         payment_map.serialize_entry("account_id", &self.account_id)?;
+        payment_map.serialize_entry("created_at", &self.created_at)?;
+        payment_map.serialize_entry("updated_at", &self.updated_at)?;
         payment_map.end()
     }
 }
@@ -45,16 +49,21 @@ impl Payment {
 
         let uuid = Uuid::new_v4().to_string();
 
+        let date = date_now();
+
         // Inserir o pagamento na tabela payments
         conn.execute(
-            "INSERT INTO payments (id, amount, account_id) VALUES (?1, ?2, ?3)",
-            params![uuid, amount, account_id],
+            "INSERT INTO payments (id, amount, account_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5)",
+            params![uuid, amount, account_id, date, Null],
         )?;
 
         Ok(uuid)
     }
 
-    pub fn find_one(conn: &PooledConnection<SqliteConnectionManager>, id: String) -> Result<Option<Payment>, rusqlite::Error> {
+    pub fn find_one(
+        conn: &PooledConnection<SqliteConnectionManager>,
+        id: String,
+    ) -> Result<Option<Payment>, rusqlite::Error> {
         let mut stmt = conn.prepare("SELECT * FROM payments WHERE id = ?1")?;
         let mut rows = stmt.query(params![id])?;
 
@@ -63,6 +72,8 @@ impl Payment {
                 id: row.get(0)?,
                 amount: row.get(1)?,
                 account_id: row.get(2)?,
+                created_at: row.get(3)?,
+                updated_at: row.get(4)?,
             };
             Ok(Some(payment))
         } else {

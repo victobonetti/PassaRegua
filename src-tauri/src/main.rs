@@ -14,6 +14,8 @@ mod db {
     }
 }
 
+use std::time::Duration;
+
 #[allow(unused_imports)]
 use crate::db::models::account::Account;
 #[allow(unused_imports)]
@@ -36,8 +38,6 @@ pub fn date_now() -> String {
     println!("{}", date_now);
     date_now
 }
-
-
 
 //User Service
 #[tauri::command]

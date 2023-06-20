@@ -1,11 +1,12 @@
 // Estrutura para a conta de fiado
 use crate::db::models::Item::Item;
-use crate::db::models::payment::Payment;
+use crate::{date_now, db::models::payment::Payment};
+use chrono::{DateTime, Utc};
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
+use rusqlite::types::Null;
 use rusqlite::{params, Result};
 use uuid::Uuid;
-use chrono::{DateTime, Utc};
 
 #[derive(Debug)]
 pub struct Account {
@@ -15,7 +16,8 @@ pub struct Account {
     pub payments: Option<Vec<Payment>>,
     pub paid_amount: f64,
     pub account_total: f64,
-
+    pub created_at: String,
+    pub updated_at: Option<String>,
 }
 
 use serde::{ser::SerializeMap, Serialize, Serializer};
@@ -31,6 +33,8 @@ impl Serialize for Account {
         account_map.serialize_entry("payments", &self.payments)?;
         account_map.serialize_entry("paid_amount", &self.paid_amount)?;
         account_map.serialize_entry("account_total", &self.account_total)?;
+        account_map.serialize_entry("created_at", &self.created_at)?;
+        account_map.serialize_entry("updated_at", &self.updated_at)?;
         account_map.end()
     }
 }
@@ -46,6 +50,8 @@ impl Account {
                 id: row.get(0)?,
                 amount: row.get(1)?,
                 account_id: row.get(2)?,
+                created_at: row.get(3)?,
+                updated_at: row.get(4)?,
             })
         })?;
 
@@ -68,6 +74,8 @@ impl Account {
                 price: row.get(4)?,
                 notes: row.get(5)?,
                 account_id: row.get(6)?,
+                created_at: row.get(7)?,
+                updated_at: row.get(8)?,
             })
         })?;
 
@@ -100,6 +108,8 @@ impl Account {
                 payments: Some(payments),
                 paid_amount,
                 account_total,
+                created_at: row.get(2)?,
+                updated_at: row.get(3)?,
             };
             Ok(Some(account))
         } else {
@@ -165,10 +175,12 @@ impl Account {
 
         let uuid = Uuid::new_v4().to_string();
 
+        let date = date_now();
+
         // Criar a conta
         conn.execute(
-            "INSERT INTO accounts (id, user_id) VALUES (?1, ?2)",
-            params![uuid, user_id.clone()],
+            "INSERT INTO accounts (id, user_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4)",
+            params![uuid, user_id.clone(), date, Null],
         )?;
 
         // Atualizar usuário
@@ -187,6 +199,8 @@ impl Account {
         let rows = stmt.query_map(params![], |row| {
             let account_id: String = row.get(0)?;
             let user_id: String = row.get(1)?;
+            let created_at: String = row.get(2)?;
+            let updated_at: Option<String> = row.get(3)?;
 
             let items = Account::get_items(conn, account_id.clone())?;
             let payments = Account::get_payments(conn, account_id.clone())?;
@@ -204,6 +218,8 @@ impl Account {
                 payments: Some(payments),
                 paid_amount,
                 account_total,
+                created_at,
+                updated_at,
             })
         })?;
 
