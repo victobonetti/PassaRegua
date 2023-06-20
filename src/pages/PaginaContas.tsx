@@ -1,27 +1,25 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Account from "../interfaces/Account";
+import ConfirmModal from "../components/ConfirmModal";
+
 
 export default function PaginaContas({ feedback }: FeedbackProps) {
 
-    const [resposta, setResposta] = useState<User[]>([{ id: '123', username: 'teste', password: 'admin' }]);
-    const [toDelete, setToDelete] = useState<User>();
+    const [resposta, setResposta] = useState<Account[]>([]);
+    const [toDelete, setToDelete] = useState<Account>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
-    const abrirModalExcluir = (user: User) => {
-        setToDelete(user);
+    const abrirModalExcluir = (account: Account) => {
+        setToDelete(account);
         setModalExcluirAberto(true);
     }
 
-    const excluirUsuario = async () => {
+    const excluirConta = async () => {
         let id = toDelete?.id
         try {
-            await invoke('delete_user_by_id', { id })
-            let newResposta = resposta;
-            newResposta = newResposta.filter((r) =>
-                r.id != id
-            )
-            setResposta(newResposta)
+            
             feedback(false, "Usuário excluído com sucesso.")
             fecharModalExcluir();
         }
@@ -40,8 +38,8 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
             try {
-                const data: User[] = await invoke('find_all_users', {});
-                setResposta(data);
+
+                
             } catch {
                 feedback(true, "Erro ao encontrar usuários.")
             }
@@ -56,7 +54,7 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
                 titulo="Tem certeza?"
                 texto="Por favor, confirme que deseja prosseguir com a exclusão do usuário clicando no botão abaixo."
                 botaotexto="Sim, excluir."
-                callbackConfirm={() => excluirUsuario()}
+                callbackConfirm={() => excluirConta()}
                 callbackCancel={() => fecharModalExcluir()}
             />
             }
@@ -66,9 +64,9 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
 
                     <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
                         <tr className="flex w-full">
-                            <td className="pl-5 text-slate-600 w-1/4 ">NOME</td>
-                            <td className="pl-5 text-slate-600 w-1/4 ">SENHA</td>
-                            <td className="pl-5 text-slate-600 w-1/4 ">STATUS</td>
+                            <td className="pl-5 text-slate-600 w-1/4 ">ITEMS NA CONTA</td>
+                            <td className="pl-5 text-slate-600 w-1/4 ">TOTAL PAGO</td>
+                            <td className="pl-5 text-slate-600 w-1/4 ">NÚMERO DE PAGAMENTOS</td>
                             <td className="pl-5 text-slate-600 w-1/4 "></td>
                         </tr>
                     </thead>
@@ -77,16 +75,15 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
                         return (
                             <tr key={i} className="  w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
                                 <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
-                                    {data.username}
+                                    {data.items.length}
                                 </td>
                                 <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
-                                    {"*".repeat(data.password.length)}
+                                    R${data.paidAmount.toFixed(2)}
                                 </td>
                                 <td className=" font-semibold w-1/4 p-5  text-sm whitespace-nowrap">
-                                    {data.account_id ? 'Tem conta em aberto' : 'Não tem conta em aberto.'}
+                                    {data.payments.length ? 'Tem conta em aberto' : 'Não tem conta em aberto.'}
                                 </td>
                                 <td className=" w-1/4 p-4  text-sm whitespace-nowrap">
-                                    <Link to={`/usuarios/editar/${data.id}/${data.username}/${data.password}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
                                     <button onClick={() => abrirModalExcluir(data)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
                                 </td>
                             </tr>
