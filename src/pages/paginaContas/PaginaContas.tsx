@@ -78,8 +78,8 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
                                     <h3 className=" text-2xl ">{c.userId}</h3>
                                     <p className=" text-sm text-slate-400 mt-2 text">Dívida: <span className=" text-red-400">{Number(c.accountTotal - c.paidAmount).toFixed(2)}</span></p>
                                     <p className=" text-sm text-slate-400 mt-2 text">Valor pago: <span className=" text-emerald-400">{Number(c.paidAmount.toFixed(2))}</span></p>
-                                    <button className=" my-2 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-sm ">Pagamentos</button>
-                                    <button className=" ml-2 my-2 transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-blue-900 font-semibold px-2 py-1 rounded text-sm ">Ver Itens</button>
+                                    <Link to={`/contas/payments/${c.userId}`}><button className=" my-2 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-sm ">Pagamentos</button></Link>
+                                    <Link to={`/contas/items/${c.userId}`}><button className=" ml-2 my-2 transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-blue-900 font-semibold px-2 py-1 rounded text-sm ">Ver Itens</button></Link>
                                 </div>
                             )
                         })}
