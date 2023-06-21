@@ -6,15 +6,13 @@
 mod db {
     pub mod db;
     pub mod models {
-        pub mod Item;
+        pub mod item;
         pub mod account;
         pub mod payment;
         pub mod product;
         pub mod user;
     }
 }
-
-use std::time::Duration;
 
 #[allow(unused_imports)]
 use crate::db::models::account::Account;
@@ -25,7 +23,7 @@ use crate::db::models::product::Product;
 #[allow(unused_imports)]
 use crate::db::models::user::User;
 #[allow(unused_imports)]
-use crate::db::models::Item::Item;
+use crate::db::models::item::Item;
 
 use chrono::{ Utc};
 
@@ -58,12 +56,12 @@ fn create_user(username: String, password: String) -> Result<String, String> {
 fn find_all_users() -> Result<Vec<User>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
-        Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
+        Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados".to_owned()),
     };
 
     match User::find_all(&conn) {
         Ok(users) => Ok(users),
-        Err(_) => Err("Erro ao buscar usuários.".to_owned()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -344,12 +342,12 @@ fn find_all_accounts() -> Result<Vec<Account>, String> {
 fn create_account(user_id: String) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
-        Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
+        Err(e) => return Err(e.to_string()),
     };
 
     match Account::create_account(&conn, user_id) {
         Ok(result) => Ok(result),
-        Err(_) => Err("Erro ao criar conta.".to_owned()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -380,10 +378,6 @@ fn delete_account_by_id(account_id: String) -> Result<(), String> {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-
-    create_user("Victor".to_owned(), "Sapeca".to_owned());
-    create_user("Fuboca".to_owned(), "Sapeca".to_owned());
-    create_user("xepa".to_owned(), "Sapeca".to_owned());
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![

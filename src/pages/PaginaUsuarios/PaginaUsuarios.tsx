@@ -34,6 +34,7 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
 
     }
 
+
     const fecharModalExcluir = () => {
         setToDelete(undefined);
         setModalExcluirAberto(false);

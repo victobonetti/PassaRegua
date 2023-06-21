@@ -1,7 +1,6 @@
 // Estrutura para a conta de fiado
-use crate::db::models::Item::Item;
+use crate::db::models::item::Item;
 use crate::{date_now, db::models::payment::Payment};
-use chrono::{DateTime, Utc};
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::types::Null;
@@ -206,10 +205,14 @@ impl Account {
             let payments = Account::get_payments(conn, account_id.clone())?;
 
             let paid_amount = payments.iter().map(|payment| payment.amount as f64).sum();
-            let account_total = items
+            let mut account_total: f64 = items
                 .iter()
                 .map(|item| item.price * item.quantity as f64)
                 .sum();
+
+            if account_total.is_nan() {
+                account_total = 0.0;
+            }
 
             Ok(Account {
                 id: account_id,

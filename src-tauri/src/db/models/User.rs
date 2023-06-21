@@ -82,6 +82,8 @@ impl User {
         let mut stmt = conn.prepare("SELECT * FROM users WHERE id = ?1")?;
         let mut rows = stmt.query(params![id])?;
 
+       
+
         if let Some(row) = rows.next()? {
             let user = User {
                 id: row.get(0)?,
@@ -91,6 +93,7 @@ impl User {
                 created_at: row.get(4)?,
                 updated_at: row.get(5)?,
             };
+            println!("User found: {:?}", user);
             Ok(Some(user))
         } else {
             Ok(None)

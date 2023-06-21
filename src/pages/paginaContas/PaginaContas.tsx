@@ -39,12 +39,7 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
         const fetchData = async (): Promise<void> => {
             try {
                 let data: Account[] = await invoke('find_all_accounts', {});
-                let promises = data.map(async (c) => {
-                    c.userId = await invoke('find_user_by_id', { id: c.userId });
-                    return c;
-                });
-                let new_data: Account[] = await Promise.all(promises);
-                setResposta(new_data);
+                setResposta(data);
                 feedback(false, "Contas encontradas com sucesso.");
             } catch {
                 feedback(true, "Erro ao encontrar contas.");
@@ -75,11 +70,11 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
                         {resposta.map((c, i) => {
                             return (
                                 <div key={i} className=" text-slate-300 mb-2 mx-1 shadow-lg rounded bg-slate-800 w-52 p-2">
-                                    <h3 className=" text-2xl ">{c.userId}</h3>
-                                    <p className=" text-sm text-slate-400 mt-2 text">Dívida: <span className=" text-red-400">{Number(c.accountTotal - c.paidAmount).toFixed(2)}</span></p>
-                                    <p className=" text-sm text-slate-400 mt-2 text">Valor pago: <span className=" text-emerald-400">{Number(c.paidAmount.toFixed(2))}</span></p>
-                                    <Link to={`/contas/payments/${c.userId}`}><button className=" my-2 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-sm ">Pagamentos</button></Link>
-                                    <Link to={`/contas/items/${c.userId}`}><button className=" ml-2 my-2 transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-blue-900 font-semibold px-2 py-1 rounded text-sm ">Ver Itens</button></Link>
+                                    <h3 className=" text-2xl ">{c.user_id}</h3>
+                                    <p className=" text-sm text-slate-400 mt-2 text">Dívida: <span className=" text-red-400">R${Number(c.account_total - c.paid_amount).toFixed(2)}</span></p>
+                                    <p className=" text-sm text-slate-400 mt-2 text">Valor pago: <span className=" text-emerald-400">R${Number(c.paid_amount).toFixed(2)}</span></p>
+                                    <Link to={`/contas/payments/${c.user_id}`}><button className=" my-2 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-sm ">Pagamentos</button></Link>
+                                    <Link to={`/contas/items/${c.user_id}`}><button className=" ml-2 my-2 transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-blue-900 font-semibold px-2 py-1 rounded text-sm ">Ver Itens</button></Link>
                                 </div>
                             )
                         })}

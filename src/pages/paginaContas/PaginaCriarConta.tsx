@@ -11,11 +11,12 @@ export default function PaginaCriarConta({ feedback }: FeedbackProps) {
     const criaConta = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await invoke("create_account", {id});
+            let userId = id;
+            await invoke("create_account", {userId});
             feedback(false, "Conta criada com sucesso.");
             window.location.href = '/contas';
-        } catch {
-            feedback(true, "Ocorreu um erro ao criar a conta.");
+        } catch (e) {
+            feedback(true, String(e));
         }
     }
 

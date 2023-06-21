@@ -3,11 +3,11 @@ import Payment from "./Payment";
 
 export default interface Account {
     id: String,
-    userId: String,
+    user_id: String,
     items: Item[],
     payments: Payment[],
-    paidAmount: number,
-    accountTotal: number,
-    createdAt:String,
-    updatedAt?:String,
+    paid_amount: number,
+    account_total: number,
+    created_at:String,
+    updated_at?:String,
 }

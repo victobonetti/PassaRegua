@@ -15,7 +15,7 @@ fn setup() -> PooledConnection<SqliteConnectionManager> {
     let pool = Pool::builder().max_size(1).build(manager).unwrap();
     let conn = pool.get().unwrap();
 
-    build_database(&conn);
+    let _init_database = build_database(&conn);
 
     return conn;
 }
