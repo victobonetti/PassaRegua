@@ -6,4 +6,6 @@ export default interface Item {
     notes: String | undefined,
     accountId: String,
     productId: String,
+    createdAt:String,
+    updatedAt?:String,
 }

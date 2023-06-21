@@ -6,7 +6,7 @@ import ConfirmModal from "../../components/ConfirmModal";
 
 export default function PaginaProdutos({ feedback }: FeedbackProps) {
 
-    const [resposta, setResposta] = useState<Product[]>([{ id: "321", name: 'prodteste', price: 45.50 }]);
+    const [resposta, setResposta] = useState<Product[]>([]);
     const [toDelete, setToDelete] = useState<Product>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -68,9 +68,10 @@ export default function PaginaProdutos({ feedback }: FeedbackProps) {
                 <><tbody className=" text-slate-300  w-full table-auto flex flex-col ">
                     <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
                         <tr className="flex w-full">
-                            <td className="pl-5 text-slate-600 w-1/3 ">PRODUTO</td>
-                            <td className="pl-5 text-slate-600 w-1/3 ">PREÇO</td>
-                            <td className="pl-5 text-slate-600 w-1/3 "></td>
+                            <td className="pl-5 text-slate-600 w-1/4 ">CRIADO EM</td>
+                            <td className="pl-5 text-slate-600 w-1/4 ">PRODUTO</td>
+                            <td className="pl-5 text-slate-600 w-1/4 ">PREÇO</td>
+                            <td className="pl-5 text-slate-600 w-1/4 "></td>
                         </tr>
                     </thead>
 
@@ -79,13 +80,16 @@ export default function PaginaProdutos({ feedback }: FeedbackProps) {
                     {resposta?.map((data, i) => {
                         return (
                             <tr key={i} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
-                                <td className=" font-semibold w-1/3 p-5 text-sm whitespace-nowrap ">
+                                <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
+                                    {data.createdAt}
+                                </td>
+                                <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
                                     {data.name}
                                 </td>
-                                <td className=" font-semibold w-1/3 p-5 text-sm whitespace-nowrap">
+                                <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
                                     {`R$${Number(data.price).toFixed(2)}`}
                                 </td>
-                                <td className=" text-center w-1/3 p-4  text-sm whitespace-nowrap">
+                                <td className=" text-center w-1/4 p-4  text-sm whitespace-nowrap">
                                     <Link to={`/produtos/editar/${data.id}/${data.name}/${data.price.toFixed(2)}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
                                     <button onClick={() => abrirModalExcluir(data)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
                                 </td>

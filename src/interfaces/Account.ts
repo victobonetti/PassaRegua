@@ -8,4 +8,6 @@ export default interface Account {
     payments: Payment[],
     paidAmount: number,
     accountTotal: number,
+    createdAt:String,
+    updatedAt?:String,
 }
