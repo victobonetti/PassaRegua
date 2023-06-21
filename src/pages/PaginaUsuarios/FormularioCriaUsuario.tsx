@@ -12,11 +12,12 @@ export default function FormularioCriaUsuario({ feedback }: FeedbackProps) {
         try {
             await invoke("create_user", { username, password });
             feedback(false, "Usuário criado com sucesso!");
+            window.location.href = '/usuarios';
         } catch {
             feedback(true, "Erro ao criar usuário.");
         }
         
-        window.location.href = '/usuarios';
+       
     }
 
     return (

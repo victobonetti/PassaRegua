@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from '../App';
 import PaginaInicial from '../pages/PaginaInicial';
 import PaginaUsuarios from '../pages/PaginaUsuarios/PaginaUsuarios';
-import PaginaContas from '../pages/PaginaContas';
+import PaginaContas from '../pages/paginaContas/PaginaContas';
 import PaginaProdutos from '../pages/PaginaProdutos/PaginaProdutos';
 import FormularioCriaUsuario from '../pages/PaginaUsuarios/FormularioCriaUsuario';
 import FormularioEditaUsuario from '../pages/PaginaUsuarios/FormularioEditaUsuario';
@@ -11,6 +11,7 @@ import { useState } from 'react';
 import FeedbackInterface from '../components/feedback/FeedbackInterface';
 import FormularioCriaProduto from '../pages/PaginaProdutos/FormularioCriaProduto';
 import FormularioEditaProduto from '../pages/PaginaProdutos/FormularioEditaProduto';
+import PaginaCriarConta from '../pages/paginaContas/PaginaCriarConta';
 // import FormularioEditaProduto from '../pages/PaginaProdutos/FormularioEditaProduto';
 
 
@@ -21,7 +22,7 @@ export default function AppRouter(): JSX.Element {
   const createFeedback = (() => {
     let isThrottled = false;
 
-    return (isErr:boolean, text:string) => {
+    return (isErr: boolean, text: string) => {
       if (isThrottled) {
         return;
       }
@@ -74,6 +75,7 @@ export default function AppRouter(): JSX.Element {
           <Route path='/usuarios/novo' element={<FormularioCriaUsuario feedback={createFeedback} />} />
           <Route path='/usuarios/editar/:id/:usernameParam/:passwordParam' element={<FormularioEditaUsuario feedback={createFeedback} />} />
           <Route path='/contas' element={<PaginaContas feedback={createFeedback} />} />
+          <Route path='/contas/novo' element={<PaginaCriarConta feedback={createFeedback} />} />
           <Route path='/produtos' element={<PaginaProdutos feedback={createFeedback} />} />
           <Route path='produtos/novo' element={<FormularioCriaProduto feedback={createFeedback} />} />
           <Route path='produtos/editar/:id/:nameParam/:priceParam' element={<FormularioEditaProduto feedback={createFeedback} />} />

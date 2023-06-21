@@ -49,9 +49,9 @@ function App() {
         <img className=" p-4" src={logo} alt="logomarca" />
         <nav className="">
           <Link to={'/'}><li className={` ${paginaInicial ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : '         pl-4  '}  cursor-pointer flex items-center list-none hover:bg-slate-700 h-12 font-semibold`}>Visão geral</li></Link>
-          <Link to={'/usuarios'}><li className={` ${paginaUsuarios ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : '  pl-4 '}  cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Usuários</li></Link>
-          <Link to={'/contas'}><li className={` ${paginaContas ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : '   pl-4  '}  cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Contas</li></Link>
-          <Link to={'/produtos'}><li className={` ${paginaProdutos ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : ' pl-4  '}   cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Produtos</li></Link>
+          <Link to={'/contas'}><li className={` ${paginaContas ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : '   pl-4  '}  cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Acessar contas</li></Link>
+          <Link to={'/usuarios'}><li className={` ${paginaUsuarios ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : '  pl-4 '}  cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Gerenciar usuários</li></Link>
+          <Link to={'/produtos'}><li className={` ${paginaProdutos ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : ' pl-4  '}   cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Gerenciar produtos</li></Link>
         </nav>
       </aside>
       <div className=" overflow-hidden flex justify-center w-full ">
