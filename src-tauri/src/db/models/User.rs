@@ -82,8 +82,6 @@ impl User {
         let mut stmt = conn.prepare("SELECT * FROM users WHERE id = ?1")?;
         let mut rows = stmt.query(params![id])?;
 
-       
-
         if let Some(row) = rows.next()? {
             let user = User {
                 id: row.get(0)?,
@@ -131,5 +129,21 @@ impl User {
         }
 
         Ok(())
+    }
+
+    pub fn get_username(
+        conn: &PooledConnection<SqliteConnectionManager>,
+        id: String,
+    ) -> Result<Option<String>, rusqlite::Error> {
+        let mut stmt = conn.prepare("SELECT username FROM users WHERE id = ?1")?;
+        let mut rows = stmt.query(params![id])?;
+
+        if let Some(row) = rows.next()? {
+            let username: String = row.get(0)?;
+            println!("USERNAME: {}", username);
+            Ok(Some(username))
+        } else {
+            Ok(None)
+        }
     }
 }

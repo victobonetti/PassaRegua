@@ -83,7 +83,7 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
                         return (
                             <tr key={i} className="  w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
                                 <td className=" font-semibold w-1/5 p-5 text-sm whitespace-nowrap ">
-                                    {data.createdAt}
+                                    {data.created_at.replaceAll("-", "/")}
                                 </td>
                                 <td className=" font-semibold w-1/5 p-5 text-sm whitespace-nowrap ">
                                     {data.username}

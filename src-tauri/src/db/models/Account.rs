@@ -1,5 +1,6 @@
 // Estrutura para a conta de fiado
 use crate::db::models::item::Item;
+use crate::db::models::user::User;
 use crate::{date_now, db::models::payment::Payment};
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
@@ -11,6 +12,7 @@ use uuid::Uuid;
 pub struct Account {
     pub id: String,
     pub user_id: String,
+    pub owner: String,
     pub items: Option<Vec<Item>>,
     pub payments: Option<Vec<Payment>>,
     pub paid_amount: f64,
@@ -29,6 +31,7 @@ impl Serialize for Account {
         account_map.serialize_entry("id", &self.id)?;
         account_map.serialize_entry("user_id", &self.user_id)?;
         account_map.serialize_entry("items", &self.items)?;
+        account_map.serialize_entry("owner", &self.owner)?;
         account_map.serialize_entry("payments", &self.payments)?;
         account_map.serialize_entry("paid_amount", &self.paid_amount)?;
         account_map.serialize_entry("account_total", &self.account_total)?;
@@ -99,10 +102,21 @@ impl Account {
         let mut stmt = conn.prepare("SELECT * FROM accounts WHERE id = ?1")?;
         let mut rows = stmt.query(params![account_id.clone()])?;
 
+        let owner;
+
         if let Some(row) = rows.next()? {
+            let user_id: String = row.get(1)?;
+
+            if let Some(username) = User::get_username(&conn, user_id.to_owned())? {
+                owner = username.to_string();
+            } else {
+                owner = "Indefinido".to_string();
+            }
+
             let account = Account {
                 id: row.get(0)?,
-                user_id: row.get(1)?,
+                user_id,
+                owner,
                 items: Some(items),
                 payments: Some(payments),
                 paid_amount,
@@ -200,6 +214,13 @@ impl Account {
             let user_id: String = row.get(1)?;
             let created_at: String = row.get(2)?;
             let updated_at: Option<String> = row.get(3)?;
+            let owner: String;
+
+            if let Some(username) = User::get_username(&conn, user_id.to_owned())? {
+                owner = username;
+            } else {
+                owner = "Indefinido".to_string();
+            }
 
             let items = Account::get_items(conn, account_id.clone())?;
             let payments = Account::get_payments(conn, account_id.clone())?;
@@ -216,7 +237,8 @@ impl Account {
 
             Ok(Account {
                 id: account_id,
-                user_id,
+                user_id: user_id,
+                owner: owner,
                 items: Some(items),
                 payments: Some(payments),
                 paid_amount,

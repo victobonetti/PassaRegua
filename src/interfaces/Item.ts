@@ -4,8 +4,8 @@ export default interface Item {
     quantity: number,
     price: number,
     notes: String | undefined,
-    accountId: String,
-    productId: String,
-    createdAt:String,
-    updatedAt?:String,
+    account_id: String,
+    product_id: String,
+    created_at:String,
+    updated_at?:String,
 }

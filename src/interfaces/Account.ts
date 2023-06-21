@@ -4,6 +4,7 @@ import Payment from "./Payment";
 export default interface Account {
     id: String,
     user_id: String,
+    owner: String,
     items: Item[],
     payments: Payment[],
     paid_amount: number,

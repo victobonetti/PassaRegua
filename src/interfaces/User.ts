@@ -3,6 +3,6 @@ export interface User {
     username: String,
     password: String,
     account_id?: String,
-    createdAt:String,
-    updatedAt?:String,
+    created_at:String,
+    updated_at?:String,
 }

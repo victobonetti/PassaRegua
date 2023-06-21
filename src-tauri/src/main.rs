@@ -6,8 +6,8 @@
 mod db {
     pub mod db;
     pub mod models {
-        pub mod item;
         pub mod account;
+        pub mod item;
         pub mod payment;
         pub mod product;
         pub mod user;
@@ -17,15 +17,15 @@ mod db {
 #[allow(unused_imports)]
 use crate::db::models::account::Account;
 #[allow(unused_imports)]
+use crate::db::models::item::Item;
+#[allow(unused_imports)]
 use crate::db::models::payment::Payment;
 #[allow(unused_imports)]
 use crate::db::models::product::Product;
 #[allow(unused_imports)]
 use crate::db::models::user::User;
-#[allow(unused_imports)]
-use crate::db::models::item::Item;
 
-use chrono::{ Utc};
+use chrono::Utc;
 
 #[cfg(test)]
 mod tests;
@@ -50,6 +50,19 @@ fn create_user(username: String, password: String) -> Result<String, String> {
         Err(_) => Err("Erro ao criar usuário.".to_owned()),
     };
     result
+}
+
+#[tauri::command]
+fn find_username(id: String) -> Result<Option<String>, String> {
+    let conn = match db::db::init_database() {
+        Ok(conn) => conn,
+        Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados".to_owned()),
+    };
+
+    match User::get_username(&conn, id) {
+        Ok(users) => Ok(users),
+        Err(e) => Err(e.to_string()),
+    }
 }
 
 #[tauri::command]
@@ -194,7 +207,7 @@ fn create_payment(amount: f64, account_id: String) -> Result<String, String> {
 
     match Payment::create_one(&conn, amount, account_id) {
         Ok(result) => Ok(result),
-        Err(_) => Err("Erro ao criar pagamento.".to_owned()),
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -333,8 +346,11 @@ fn find_all_accounts() -> Result<Vec<Account>, String> {
     };
 
     match Account::find_all(&conn) {
-        Ok(result) => Ok(result),
-        Err(_) => Err("Erro ao criar conta.".to_owned()),
+        Ok(result) => {
+            println!("Result: {:?}", result);
+            Ok(result)
+        }
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -378,11 +394,11 @@ fn delete_account_by_id(account_id: String) -> Result<(), String> {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             create_user,
             find_all_users,
+            find_username,
             find_user_by_id,
             edit_user,
             delete_user_by_id,
