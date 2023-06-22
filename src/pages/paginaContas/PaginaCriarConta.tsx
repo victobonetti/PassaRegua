@@ -40,9 +40,9 @@ export default function PaginaCriarConta({ feedback }: FeedbackProps) {
             <div className=" w-2/3 flex">
                 <select id="countries" onChange={e => setId(e.target.value)} className=" text-lg w-3/4 bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2.5 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500">
                     <option selected>Selecione um usuário</option>
-                    {usuarios.map((u, i) => {
+                    {usuarios.map((u) => {
                         return (
-                            <option key={i} value={String(u.id)}>{u.username}</option>
+                            <option key={String(u.id)} value={String(u.id)}>{u.username}</option>
                         )
                     })
                     }

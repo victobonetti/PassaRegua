@@ -77,9 +77,9 @@ export default function PaginaProdutos({ feedback }: FeedbackProps) {
 
                     {resposta?.length < 1 && <h1 className=" w-full bg-slate-800 p-4 text-2xl">Não foram encontrados registros.</h1>}
 
-                    {resposta?.map((data, i) => {
+                    {resposta?.map((data) => {
                         return (
-                            <tr key={i} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
+                            <tr key={String(data.id)} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
                                 <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
                                     {data.created_at.replaceAll("-", "/")}
                                 </td>

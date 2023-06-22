@@ -14,6 +14,7 @@ import FormularioEditaProduto from '../pages/PaginaProdutos/FormularioEditaProdu
 import PaginaCriarConta from '../pages/paginaContas/PaginaCriarConta';
 import PaginaItems from '../pages/paginaContas/PaginaItems';
 import PaginaPagamentos from '../pages/paginaContas/PaginaPagamentos';
+import PaginaAdicionarItem from '../pages/paginaContas/PaginaAdicionarItem';
 // import FormularioEditaProduto from '../pages/PaginaProdutos/FormularioEditaProduto';
 
 
@@ -79,6 +80,7 @@ export default function AppRouter(): JSX.Element {
           <Route path='/contas' element={<PaginaContas feedback={createFeedback} />} />
           <Route path='/contas/novo' element={<PaginaCriarConta feedback={createFeedback} />} />
           <Route path='/contas/items/:id' element={<PaginaItems feedback={createFeedback} />} />
+          <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem feedback={createFeedback} />} />
           <Route path='/contas/payments/:id' element={<PaginaPagamentos feedback={createFeedback} />} />
          
          <Route path='/produtos' element={<PaginaProdutos feedback={createFeedback} />} />
