@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-export default function FormularioEditaProduto({ feedback }: FeedbackProps) {
+export default function FormularioEditaProduto() {
 
     const [name, setName] = useState('');
     const [getPrice, setPrice] = useState('0.00');
@@ -23,19 +23,15 @@ export default function FormularioEditaProduto({ feedback }: FeedbackProps) {
         let newPrice = Number(getPrice)
         try {
             await invoke("edit_product_price", { id, newPrice });
-            feedback(false, "Preço do produto editado com sucesso!");
         } catch (e) {
             console.log(e)
-            feedback(true, "Erro ao editar preço do produto.");
         }
 
         try {
             let newName = name;
             await invoke("edit_product_name", { id, newName })
-            feedback(false, "Nome do produto editado com sucesso!");
         } catch (e) {
             console.log(e)
-            feedback(true, "Erro ao editar nome do produto.");
         }
 
         window.location.href = '/produtos';

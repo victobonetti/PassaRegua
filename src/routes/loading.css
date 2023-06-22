@@ -1,0 +1,17 @@
+.load-bar {
+    background-color: rgb(203 213 225);
+    animation-name: load;
+    animation-duration: .5s;
+    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+    animation-iteration-count: infinite;
+}
+
+@keyframes load {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}

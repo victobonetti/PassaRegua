@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import ConfirmModal from "../../components/ConfirmModal";
 import { Feedback } from "../../components/feedback/Feedback";
 
-export default function PaginaUsuarios({ feedback }: FeedbackProps) {
+export default function PaginaUsuarios() {
 
     const [resposta, setResposta] = useState<User[]>([]);
     const [toDelete, setToDelete] = useState<User>();
@@ -25,11 +25,9 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
                 r.id != id
             )
             setResposta(newResposta)
-            feedback(false, "Usuário excluído com sucesso.")
             fecharModalExcluir();
         }
         catch {
-            feedback(true, "Erro ao excluir usuário.")
         }
 
     }
@@ -46,9 +44,7 @@ export default function PaginaUsuarios({ feedback }: FeedbackProps) {
             try {
                 const data: User[] = await invoke('find_all_users', {});
                 setResposta(data);
-                feedback(false, "Usuários encontrados com sucesso.")
             } catch {
-                feedback(true, "Erro ao encontrar usuários.")
             }
         };
         fetchData();

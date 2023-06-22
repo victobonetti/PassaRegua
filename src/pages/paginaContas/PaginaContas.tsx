@@ -5,7 +5,7 @@ import Account from "../../interfaces/Account";
 import ConfirmModal from "../../components/ConfirmModal";
 
 
-export default function PaginaContas({ feedback }: FeedbackProps) {
+export default function PaginaContas() {
 
     const [resposta, setResposta] = useState<Account[]>([]);
     const [toDelete, setToDelete] = useState<Account>();
@@ -20,11 +20,9 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
         let id = toDelete?.id
         try {
 
-            feedback(false, "Usuário excluído com sucesso.")
             fecharModalExcluir();
         }
         catch {
-            feedback(true, "Erro ao excluir usuário.")
         }
 
     }
@@ -41,9 +39,7 @@ export default function PaginaContas({ feedback }: FeedbackProps) {
                 let data: Account[] = await invoke('find_all_accounts', {});
                 setResposta(data);
 
-                feedback(false, "Contas encontradas com sucesso.");
             } catch (e) {
-                feedback(true, String(e));
             }
         };
 

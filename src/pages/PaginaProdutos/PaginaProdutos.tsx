@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Product from "../../interfaces/Product";
 import ConfirmModal from "../../components/ConfirmModal";
 
-export default function PaginaProdutos({ feedback }: FeedbackProps) {
+export default function PaginaProdutos() {
 
     const [resposta, setResposta] = useState<Product[]>([]);
     const [toDelete, setToDelete] = useState<Product>();
@@ -25,9 +25,7 @@ export default function PaginaProdutos({ feedback }: FeedbackProps) {
             try {
                 const data: Product[] = await invoke('find_all_products', {});
                 setResposta(data);
-                feedback(false, 'Produtos encontrados com sucesso.')
             } catch (e) {
-                feedback(true, `Não foi possível encontrar os produtos.`)
             }
         };
         fetchData();
@@ -43,12 +41,9 @@ export default function PaginaProdutos({ feedback }: FeedbackProps) {
             )
             console.log(newResposta)
             setResposta(newResposta)
-            feedback(false, "produto excluído com sucesso.")
             fecharModalExcluir();
         }
         catch {
-            console.log('catch!!!')
-            feedback(true, "Erro ao excluir produto.")
         }
 
 

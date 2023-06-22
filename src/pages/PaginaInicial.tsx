@@ -1,8 +1,30 @@
-export default function PaginaInicial({ feedback }: FeedbackProps) {
+import { useContext } from "react";
+import { FeedbackContext } from "../routes/appRouter";
+
+export default function PaginaInicial() {
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+
+    const handleGoodFeedback = () => {
+        createFeedback(false, "Good feedback");
+    };
+
+    const handleBadFeedback = () => {
+        createFeedback(true, "Bad feedback");
+    };
+
+    const handleLoading = () => {
+        manageLoading(true);
+        setTimeout(() => {
+            manageLoading(false);
+        }, 1000)
+    }
+
     return (
-        <h1 className=" text-4xl m-4">Bem-vindo de volta!
-            <button onClick={() => feedback(false, "Isso é um feedback")} className=" bg-pink-400 text-black p-4 rounded text-2xl">Aperte aqui pra um feedback pica</button>
-            <button onClick={() => feedback(true, "Isso era um feedback")} className=" bg-purple-400 text-black p-4 rounded text-2xl">Aperte aqui pra um feedback paia</button>
-        </h1>
-    )
+        <div>
+            <h1 className="text-4xl m-4">Bem-vindo de volta!</h1>
+            <button onClick={handleGoodFeedback}>Good feedback</button>
+            <button onClick={handleBadFeedback}>Bad feedback</button>
+            <button onClick={handleLoading}>Loading </button>
+        </div>
+    );
 }

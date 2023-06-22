@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function FormularioCriaProduto({ feedback }: FeedbackProps) {
+export default function FormularioCriaProduto() {
 
     const [name, setName] = useState('');
     const [getPrice, setPrice] = useState('0.00');
@@ -12,9 +12,7 @@ export default function FormularioCriaProduto({ feedback }: FeedbackProps) {
         let price = Number(getPrice)
         try {
             await invoke("create_product", { name, price });
-            feedback(false, "Produto criado com sucesso!");
         } catch {
-            feedback(true, "Erro ao criar produto.");
         }
 
         window.location.href = '/produtos';

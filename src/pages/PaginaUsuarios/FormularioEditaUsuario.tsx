@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { User } from "../../interfaces/User";
 
-export default function FormularioEditaUsuario({ feedback }: FeedbackProps) {
+export default function FormularioEditaUsuario() {
 
     const [username, setInputUsername] = useState('');
     const [password, setInputPassword] = useState('');
@@ -21,9 +21,7 @@ export default function FormularioEditaUsuario({ feedback }: FeedbackProps) {
         e.preventDefault();
         try{
             await invoke("edit_user", {id, username, password });
-            feedback(false, "Usuário editadp com sucesso!");
         } catch {
-            feedback(true, "Erro ao editar usuário.");
         }
        
         window.location.href = '/usuarios';

@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-export default function PaginaPagamentos({ feedback }: FeedbackProps) {
+export default function PaginaPagamentos() {
 
     const [getValue, setValue] = useState('0.00');
 
@@ -15,10 +15,8 @@ export default function PaginaPagamentos({ feedback }: FeedbackProps) {
         console.log(accountId);
         try {
             await invoke("create_payment", { amount, accountId });
-            feedback(false, "Pagamento criado com sucesso!");
             window.location.href = '/contas';
         } catch (e) {
-            feedback(true, String(e));
         }
 
 

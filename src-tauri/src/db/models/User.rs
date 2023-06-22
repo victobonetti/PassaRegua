@@ -43,14 +43,11 @@ impl User {
         password: String,
     ) -> Result<String, rusqlite::Error> {
         let uuid = Uuid::new_v4().to_string();
-
         let date = date_now();
-
         conn.execute(
             "INSERT INTO users (id, username, password, account_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
             params![uuid, username, password, Null, date, Null],
         )?;
-
         Ok(uuid)
     }
 
@@ -69,7 +66,6 @@ impl User {
                 updated_at: row.get(5)?,
             })
         })?;
-
         let users: Result<Vec<_>, rusqlite::Error> = rows.collect();
         users
     }
@@ -115,19 +111,16 @@ impl User {
         password: String,
     ) -> Result<()> {
         let date = date_now();
-
         conn.execute(
             "UPDATE users SET username = ?, password = ?, updated_at = ? WHERE id = ?",
             params![username, password, date, id],
         )?;
-
         let resultados = User::find_one(conn, id)?;
         if let Some(resultados) = resultados {
             assert_eq!(resultados.username, username);
             println!("{:?}", resultados);
             println!("{:?},{:?}", username, password);
         }
-
         Ok(())
     }
 

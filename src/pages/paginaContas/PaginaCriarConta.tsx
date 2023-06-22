@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { User } from "../../interfaces/User";
 
-export default function PaginaCriarConta({ feedback }: FeedbackProps) {
+export default function PaginaCriarConta() {
 
     const [id, setId] = useState('')
     const [usuarios, setUsuarios] = useState<User[]>([]);
@@ -13,10 +13,8 @@ export default function PaginaCriarConta({ feedback }: FeedbackProps) {
         try {
             let userId = id;
             await invoke("create_account", {userId});
-            feedback(false, "Conta criada com sucesso.");
             window.location.href = '/contas';
         } catch (e) {
-            feedback(true, String(e));
         }
     }
 
@@ -26,9 +24,7 @@ export default function PaginaCriarConta({ feedback }: FeedbackProps) {
             try {
                 const data: User[] = await invoke('find_all_users', {});
                 setUsuarios(data);
-                feedback(false, "Usuários encontrados com sucesso.")
             } catch {
-                feedback(true, "Erro ao encontrar usuários.")
             }
         };
         fetchData();

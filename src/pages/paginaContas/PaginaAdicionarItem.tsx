@@ -11,7 +11,7 @@ interface selectedProduct {
     quantity: number
 }
 
-export default function PaginaAdicionarItem({ feedback }: FeedbackProps) {
+export default function PaginaAdicionarItem() {
 
     const [resposta, setResposta] = useState<Product[]>([]);
     const [selected, setSelected] = useState<selectedProduct[]>([])
@@ -43,11 +43,9 @@ export default function PaginaAdicionarItem({ feedback }: FeedbackProps) {
                     await invoke('create_item', { name, quantity, price, accountId, productId });
                 })
             );
-            feedback(false, "Itens lançados com sucesso.")
             window.location.href = `/contas/items/${id}`
         }
         catch {
-            feedback(true, "Erro ao lançar itens.")
         }
 
     };
@@ -97,9 +95,7 @@ export default function PaginaAdicionarItem({ feedback }: FeedbackProps) {
             try {
                 const data: Product[] = await invoke('find_all_products', {});
                 setResposta(data);
-                feedback(false, 'Produtos encontrados com sucesso.')
             } catch (e) {
-                feedback(true, `Não foi possível encontrar os produtos.`)
             }
         };
 
@@ -111,9 +107,7 @@ export default function PaginaAdicionarItem({ feedback }: FeedbackProps) {
             try {
                 let data: Account = await invoke('find_account_by_id', { accountId })
                 setAccount(data);
-                feedback(false, "Dados encontrados com sucesso")
             } catch (e) {
-                feedback(true, String(e))
             }
         }
 

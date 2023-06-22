@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api";
 import Account from "../../interfaces/Account";
 
-export default function PaginaItems({ feedback }: FeedbackProps) {
+export default function PaginaItems() {
 
     const { id } = useParams();
 
@@ -16,9 +16,7 @@ export default function PaginaItems({ feedback }: FeedbackProps) {
             try {
                 let data: Account = await invoke('find_account_by_id', { accountId })
                 setAccount(data);
-                feedback(false, "Dados encontrados com sucesso")
             } catch (e) {
-                feedback(true, String(e))
             }
 
 

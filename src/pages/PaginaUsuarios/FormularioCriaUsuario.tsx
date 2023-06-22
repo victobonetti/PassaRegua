@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function FormularioCriaUsuario({ feedback }: FeedbackProps) {
+export default function FormularioCriaUsuario() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -11,10 +11,8 @@ export default function FormularioCriaUsuario({ feedback }: FeedbackProps) {
         e.preventDefault();
         try {
             await invoke("create_user", { username, password });
-            feedback(false, "Usuário criado com sucesso!");
             window.location.href = '/usuarios';
         } catch {
-            feedback(true, "Erro ao criar usuário.");
         }
         
        
