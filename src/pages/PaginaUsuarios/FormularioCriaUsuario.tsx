@@ -1,18 +1,26 @@
 import { invoke } from "@tauri-apps/api";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { FeedbackContext } from "../../routes/appRouter";
 
 export default function FormularioCriaUsuario() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+    
 
     const criaUsuario = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        manageLoading(true);
         try {
             await invoke("create_user", { username, password });
             window.location.href = '/usuarios';
-        } catch {
+            createFeedback(false, "Usuário criado.")
+        } catch (e) {
+            createFeedback(true, String(e))
+        } finally {
+            manageLoading(false);
         }
         
        

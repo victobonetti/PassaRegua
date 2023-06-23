@@ -45,7 +45,7 @@ export default function AppRouter(): JSX.Element {
       return;
     }
 
-    const hasDuplicateFeedback = feedbacks.some((feedback) => feedback.text === text);
+    const hasDuplicateFeedback = feedbacks.some((feedback) => feedback.text == text);
     if (feedbacks.length > 3 || hasDuplicateFeedback) {
       return;
     }

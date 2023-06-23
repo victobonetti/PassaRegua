@@ -1,13 +1,15 @@
 import { invoke } from "@tauri-apps/api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { User } from "../../interfaces/User";
+import { FeedbackContext } from "../../routes/appRouter";
 
 export default function FormularioEditaUsuario() {
 
     const [username, setInputUsername] = useState('');
     const [password, setInputPassword] = useState('');
     const { id, usernameParam, passwordParam } = useParams();
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
   
     useEffect(() => {
       if (usernameParam && passwordParam) {
@@ -19,9 +21,14 @@ export default function FormularioEditaUsuario() {
 
     const editaUsuario = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        manageLoading(true);
         try{
             await invoke("edit_user", {id, username, password });
-        } catch {
+            createFeedback(false, "Usuário editado.")
+        } catch (e) {
+            createFeedback(true, String(e))
+        } finally {
+            manageLoading(false);
         }
        
         window.location.href = '/usuarios';

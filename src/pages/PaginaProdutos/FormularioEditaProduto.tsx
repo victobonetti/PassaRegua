@@ -1,8 +1,11 @@
 import { invoke } from "@tauri-apps/api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { FeedbackContext } from "../../routes/appRouter";
 
 export default function FormularioEditaProduto() {
+
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
 
     const [name, setName] = useState('');
     const [getPrice, setPrice] = useState('0.00');
@@ -24,15 +27,17 @@ export default function FormularioEditaProduto() {
         try {
             await invoke("edit_product_price", { id, newPrice });
         } catch (e) {
-            console.log(e)
+            createFeedback(true, String(e));
         }
 
         try {
             let newName = name;
             await invoke("edit_product_name", { id, newName })
         } catch (e) {
-            console.log(e)
+           createFeedback(true, String(e))
         }
+
+        
 
         window.location.href = '/produtos';
 

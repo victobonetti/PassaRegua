@@ -1,10 +1,14 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Product from "../../interfaces/Product";
 import ConfirmModal from "../../components/ConfirmModal";
+import { FeedbackContext } from "../../routes/appRouter";
 
 export default function PaginaProdutos() {
+
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+
 
     const [resposta, setResposta] = useState<Product[]>([]);
     const [toDelete, setToDelete] = useState<Product>();
@@ -22,10 +26,14 @@ export default function PaginaProdutos() {
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
+            manageLoading(true);
             try {
                 const data: Product[] = await invoke('find_all_products', {});
                 setResposta(data);
             } catch (e) {
+                createFeedback(true, String(e))
+            } finally {
+                manageLoading(false);
             }
         };
         fetchData();
@@ -42,8 +50,10 @@ export default function PaginaProdutos() {
             console.log(newResposta)
             setResposta(newResposta)
             fecharModalExcluir();
+            createFeedback(false, "Produto excluído.")
         }
-        catch {
+        catch (e) {
+            createFeedback(true, String(e))
         }
 
 
