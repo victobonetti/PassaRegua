@@ -6,6 +6,8 @@ import { FeedbackContext } from "../../routes/appRouter";
 export default function FormularioEditaProduto() {
 
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
     const [name, setName] = useState('');
     const [getPrice, setPrice] = useState('0.00');
@@ -22,29 +24,30 @@ export default function FormularioEditaProduto() {
 
 
     const editaProduto = async (e: React.FormEvent<HTMLFormElement>) => {
+
         e.preventDefault();
-        let newPrice = Number(getPrice)
-        try {
-            await invoke("edit_product_price", { id, newPrice });
-        } catch (e) {
-            createFeedback(true, String(e));
-        }
+        setButtonDisabled(true);
+
+        console.log("EDIT ATIVADO!")
+
+        let newPrice = Number(getPrice);
+
+        manageLoading(true);
 
         try {
             let newName = name;
-            await invoke("edit_product_name", { id, newName })
+            await invoke("edit_product_price", { id, newPrice });
+            await invoke("edit_product_name", { id, newName });
+            window.location.href = '/produtos';
+            createFeedback(false, "Produto editado.");
         } catch (e) {
-           createFeedback(true, String(e))
+            manageLoading(false);
+            createFeedback(true, String(e));
         }
-
-        
-
-        window.location.href = '/produtos';
 
     }
 
     const updatePrice = (n: number) => {
-        console.log("SUBMIT.")
         let splitedPrice = getPrice.split('');
         splitedPrice.splice(getPrice.indexOf('.'), 1);
 
@@ -103,7 +106,8 @@ export default function FormularioEditaProduto() {
                 </div>
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/produtos'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-                    <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>
+                    {!buttonDisabled && <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>}
+                    {buttonDisabled && <button disabled className=" opacity-50 text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>}
                 </div>
             </form>
         </div>

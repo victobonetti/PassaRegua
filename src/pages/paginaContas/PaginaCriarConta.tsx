@@ -1,30 +1,43 @@
 import { invoke } from "@tauri-apps/api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { User } from "../../interfaces/User";
+import { FeedbackContext } from "../../routes/appRouter";
 
 export default function PaginaCriarConta() {
+
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
 
     const [id, setId] = useState('')
     const [usuarios, setUsuarios] = useState<User[]>([]);
 
+    useLayoutEffect(() => {
+        manageLoading(true);
+    }, [])
+
     const criaConta = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        manageLoading(true);
         try {
             let userId = id;
             await invoke("create_account", {userId});
             window.location.href = '/contas';
         } catch (e) {
+            manageLoading(false);
+            createFeedback(true, String(e))
         }
     }
 
-
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
+            manageLoading(true);
             try {
                 const data: User[] = await invoke('find_all_users', {});
                 setUsuarios(data);
-            } catch {
+            } catch (e){
+                createFeedback(true, String(e));
+            } finally {
+                manageLoading(false);
             }
         };
         fetchData();
@@ -47,7 +60,6 @@ export default function PaginaCriarConta() {
                 <button type="submit" className=" ml-2 transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar nova conta</button>
             </div>
             <Link to={'/contas'}><p className=" mt-2 text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-
         </form>
     )
 

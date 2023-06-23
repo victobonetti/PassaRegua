@@ -1,26 +1,36 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useLayoutEffect, useState } from "react"
 import Item from "../../interfaces/Item";
 import { Link, useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api";
 import Account from "../../interfaces/Account";
+import { FeedbackContext } from "../../routes/appRouter";
 
 export default function PaginaItems() {
+
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+
 
     const { id } = useParams();
 
     const [account, setAccount] = useState<Account>()
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let accountId = id;
-            try {
-                let data: Account = await invoke('find_account_by_id', { accountId })
-                setAccount(data);
-            } catch (e) {
-            }
+    useLayoutEffect(() => {
+        manageLoading(true);
+    }, [])
 
-
+    const fetchData = async () => {
+        let accountId = id;
+        try {
+            let data: Account = await invoke('find_account_by_id', { accountId })
+            setAccount(data);
+        } catch (e) {
+            createFeedback(true, String(e))
+        } finally {
+            manageLoading(false);
         }
+    }
+
+    useEffect(() => {
         fetchData();
     }, [])
 

@@ -66,7 +66,20 @@ export default function AppRouter(): JSX.Element {
   };
 
   const manageLoading = (active: boolean) => {
-    setLoading(active);
+    if (active == false) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500)
+    }
+
+    if (loading == true && active == true) {
+        return;
+    }
+
+    if (loading == false && active == true) {
+      setLoading(true);
+    }
+
   }
 
   return (
@@ -87,29 +100,29 @@ export default function AppRouter(): JSX.Element {
           })}  </div>}
 
       <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
-          <Routes>
-            <Route path={'/'} element={<App load={loading} />}>
-              <Route index element={<PaginaInicial />} />
-              <Route path='/usuarios' element={<PaginaUsuarios />} />
-              <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
-              <Route
-                path='/usuarios/editar/:id/:usernameParam/:passwordParam'
-                element={<FormularioEditaUsuario />}
-              />
-              <Route path='/contas' element={<PaginaContas />} />
-              <Route path='/contas/novo' element={<PaginaCriarConta />} />
-              <Route path='/contas/items/:id' element={<PaginaItems />} />
-              <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
-              <Route path='/contas/payments/:id' element={<PaginaPagamentos />} />
+        <Routes>
+          <Route path={'/'} element={<App load={loading} />}>
+            <Route index element={<PaginaInicial />} />
+            <Route path='/usuarios' element={<PaginaUsuarios />} />
+            <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
+            <Route
+              path='/usuarios/editar/:id/:usernameParam/:passwordParam'
+              element={<FormularioEditaUsuario />}
+            />
+            <Route path='/contas' element={<PaginaContas />} />
+            <Route path='/contas/novo' element={<PaginaCriarConta />} />
+            <Route path='/contas/items/:id' element={<PaginaItems />} />
+            <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
+            <Route path='/contas/payments/:id' element={<PaginaPagamentos />} />
 
-              <Route path='/produtos' element={<PaginaProdutos />} />
-              <Route path='produtos/novo' element={<FormularioCriaProduto />} />
-              <Route
-                path='produtos/editar/:id/:nameParam/:priceParam'
-                element={<FormularioEditaProduto />}
-              />
-            </Route>
-          </Routes>
+            <Route path='/produtos' element={<PaginaProdutos />} />
+            <Route path='produtos/novo' element={<FormularioCriaProduto />} />
+            <Route
+              path='produtos/editar/:id/:nameParam/:priceParam'
+              element={<FormularioEditaProduto />}
+            />
+          </Route>
+        </Routes>
       </FeedbackContext.Provider >
     </Router >
 

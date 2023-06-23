@@ -1,21 +1,33 @@
 import { invoke } from "@tauri-apps/api";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { FeedbackContext } from "../../routes/appRouter";
 
 export default function FormularioCriaProduto() {
 
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+
+
     const [name, setName] = useState('');
     const [getPrice, setPrice] = useState('0.00');
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
     const criaProduto = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setButtonDisabled(true);
+        manageLoading(true);
         let price = Number(getPrice)
         try {
             await invoke("create_product", { name, price });
-        } catch {
+            window.location.href = '/produtos';
+            createFeedback(false, "Produto criado.");
+        } catch (e) {
+            manageLoading(false);
+            createFeedback(true, String(e));
         }
 
-        window.location.href = '/produtos';
+
     }
 
     const updatePrice = (n: number) => {
@@ -77,7 +89,8 @@ export default function FormularioCriaProduto() {
                 </div>
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/produtos'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-                    <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>
+                    {!buttonDisabled && <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>}
+                    {buttonDisabled && <button disabled className=" opacity-50 text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>}
                 </div>
             </form>
         </div>

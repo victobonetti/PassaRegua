@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Product from "../../interfaces/Product";
 import { invoke } from "@tauri-apps/api";
 import Account from "../../interfaces/Account";
 import Item from "../../interfaces/Item";
 import { Link, useParams } from "react-router-dom";
 import { table } from "console";
+import { FeedbackContext } from "../../routes/appRouter";
 
 interface selectedProduct {
     product: Product,
@@ -12,6 +13,8 @@ interface selectedProduct {
 }
 
 export default function PaginaAdicionarItem() {
+
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
 
     const [resposta, setResposta] = useState<Product[]>([]);
     const [selected, setSelected] = useState<selectedProduct[]>([])
@@ -22,15 +25,8 @@ export default function PaginaAdicionarItem() {
     const { id } = useParams();[
     ]
 
-    // fn create_item(
-    //     name: String,
-    //     quantity: i32,
-    //     price: f64,
-    //     account_id: String,
-    //     product_id: String,
-    // ) -> 
-
     const createItems = async () => {
+        manageLoading(true)
         try {
             await Promise.all(
                 selected.map(async (s) => {
@@ -45,7 +41,9 @@ export default function PaginaAdicionarItem() {
             );
             window.location.href = `/contas/items/${id}`
         }
-        catch {
+        catch (e) {
+            createFeedback(true, String(e));
+            manageLoading(false);
         }
 
     };
@@ -98,9 +96,6 @@ export default function PaginaAdicionarItem() {
             } catch (e) {
             }
         };
-
-
-
 
         const fetchAccountData = async () => {
             let accountId = id;

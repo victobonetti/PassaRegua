@@ -19,6 +19,8 @@ export default function PaginaUsuarios() {
     }
 
     const excluirUsuario = async () => {
+
+        manageLoading(true);
         let id = toDelete?.id
 
         try {
@@ -47,7 +49,6 @@ export default function PaginaUsuarios() {
 
 
     const fetchData = async (): Promise<void> => {
-        manageLoading(true);
         try {
             const data: User[] = await invoke('find_all_users', {});
             setResposta(data);

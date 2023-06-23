@@ -10,28 +10,29 @@ export default function FormularioEditaUsuario() {
     const [password, setInputPassword] = useState('');
     const { id, usernameParam, passwordParam } = useParams();
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
-  
+
     useEffect(() => {
-      if (usernameParam && passwordParam) {
-        setInputUsername(usernameParam);
-        setInputPassword(passwordParam);
-      }
+        if (usernameParam && passwordParam) {
+            setInputUsername(usernameParam);
+            setInputPassword(passwordParam);
+        }
     }, [usernameParam, passwordParam]);
 
 
     const editaUsuario = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         manageLoading(true);
-        try{
-            await invoke("edit_user", {id, username, password });
+        try {
+            await invoke("edit_user", { id, username, password });
             createFeedback(false, "Usuário editado.")
+            window.location.href = '/usuarios';
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
             manageLoading(false);
         }
-       
-        window.location.href = '/usuarios';
+
+
     }
 
     return (

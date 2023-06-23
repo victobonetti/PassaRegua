@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Product from "../../interfaces/Product";
 import ConfirmModal from "../../components/ConfirmModal";
@@ -24,18 +24,23 @@ export default function PaginaProdutos() {
         setModalExcluirAberto(false);
     }
 
+
+    useLayoutEffect(() => {
+        manageLoading(true)
+    }, [])
+
+    const fetchData = async (): Promise<void> => {
+        try {
+            const data: Product[] = await invoke('find_all_products', {});
+            setResposta(data);
+        } catch (e) {
+            createFeedback(true, String(e))
+        } finally {
+            manageLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            manageLoading(true);
-            try {
-                const data: Product[] = await invoke('find_all_products', {});
-                setResposta(data);
-            } catch (e) {
-                createFeedback(true, String(e))
-            } finally {
-                manageLoading(false);
-            }
-        };
         fetchData();
     }, []);
 
@@ -47,7 +52,6 @@ export default function PaginaProdutos() {
             newResposta = newResposta.filter((r) =>
                 r.id != id
             )
-            console.log(newResposta)
             setResposta(newResposta)
             fecharModalExcluir();
             createFeedback(false, "Produto excluído.")
@@ -55,8 +59,6 @@ export default function PaginaProdutos() {
         catch (e) {
             createFeedback(true, String(e))
         }
-
-
     }
 
     return (
@@ -80,7 +82,7 @@ export default function PaginaProdutos() {
                         </tr>
                     </thead>
 
-                    {resposta?.length < 1 && <h1 className=" w-full bg-slate-800 p-4 text-2xl">Não foram encontrados registros.</h1>}
+                    {resposta?.length < 1 && <tr className=" w-full bg-slate-800 p-4 text-2xl">Não foram encontrados registros.</tr>}
 
                     {resposta?.map((data) => {
                         return (

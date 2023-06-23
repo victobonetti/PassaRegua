@@ -1,11 +1,14 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Account from "../../interfaces/Account";
 import ConfirmModal from "../../components/ConfirmModal";
+import { FeedbackContext } from "../../routes/appRouter";
 
 
 export default function PaginaContas() {
+
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
 
     const [resposta, setResposta] = useState<Account[]>([]);
     const [toDelete, setToDelete] = useState<Account>();
@@ -18,11 +21,15 @@ export default function PaginaContas() {
 
     const excluirConta = async () => {
         let id = toDelete?.id
+        manageLoading(true);
         try {
-
+            await invoke("delete_user_by_id", { id });
             fecharModalExcluir();
         }
-        catch {
+        catch (e) {
+            createFeedback(true, String(e));
+        } finally {
+            manageLoading(false);
         }
 
     }
@@ -32,19 +39,25 @@ export default function PaginaContas() {
         setModalExcluirAberto(false);
     }
 
+    useLayoutEffect(() => {
+        manageLoading(true);
+    }, [])
+
+
+    const fetchData = async (): Promise<void> => {
+        try {
+            let data: Account[] = await invoke('find_all_accounts', {});
+            setResposta(data);
+
+        } catch (e) {
+            createFeedback(true, String(e))
+        } finally {
+            manageLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            try {
-                let data: Account[] = await invoke('find_all_accounts', {});
-                setResposta(data);
-
-            } catch (e) {
-            }
-        };
-
         fetchData();
-
     }, []);
 
     return (
@@ -69,8 +82,8 @@ export default function PaginaContas() {
                                 <div key={String(c.id)} className=" text-slate-300 mb-2 mx-1 shadow-lg rounded bg-slate-800 w-1/5 p-2">
                                     <div className=" flex justify-between border-b border-slate-700 pb-1 mb-1">
                                         <h3 className=" text-slate-200 font-semibold ">{c.owner.toUpperCase()}</h3>
-                                        {c.account_total - c.paid_amount <= 0 &&<h4 className=" bg-neutral-200 rounded-full text-xs text-neutral-600 font-bold flex items-center justify-center px-1">Quitado</h4>}
-                                        {c.account_total - c.paid_amount > 0 &&<h4 className=" bg-yellow-400 rounded-full text-xs text-yellow-900 font-bold flex items-center justify-center px-1">Em aberto</h4>}
+                                        {c.account_total - c.paid_amount <= 0 && <h4 className=" bg-neutral-200 rounded-full text-xs text-neutral-600 font-bold flex items-center justify-center px-1">Quitado</h4>}
+                                        {c.account_total - c.paid_amount > 0 && <h4 className=" bg-yellow-400 rounded-full text-xs text-yellow-900 font-bold flex items-center justify-center px-1">Em aberto</h4>}
                                     </div>
                                     <p className=" text-slate-300 text-xs">Dívida: <span className=" text-red-400">R${Number(c.account_total - c.paid_amount).toFixed(2)}</span></p>
                                     <p className=" text-slate-300 mt-1 text-xs">Valor pago: <span className=" text-emerald-400">R${Number(c.paid_amount).toFixed(2)}</span></p>
