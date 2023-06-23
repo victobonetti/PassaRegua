@@ -67,13 +67,18 @@ fn find_username(id: String) -> Result<Option<String>, String> {
 
 #[tauri::command]
 fn find_all_users() -> Result<Vec<User>, String> {
+
+    println!("Chamada feita");
+
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados".to_owned()),
     };
 
     match User::find_all(&conn) {
-        Ok(users) => Ok(users),
+        Ok(users) => {
+            println!("{}", users.len());
+            Ok(users)},
         Err(e) => Err(e.to_string()),
     }
 }

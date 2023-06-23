@@ -1,9 +1,8 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { User } from "../../interfaces/User";
 import { Link } from "react-router-dom";
 import ConfirmModal from "../../components/ConfirmModal";
-import { Feedback } from "../../components/feedback/Feedback";
 import { FeedbackContext } from "../../routes/appRouter";
 
 export default function PaginaUsuarios() {
@@ -21,7 +20,7 @@ export default function PaginaUsuarios() {
 
     const excluirUsuario = async () => {
         let id = toDelete?.id
-        manageLoading(true)
+
         try {
             await invoke('delete_user_by_id', { id })
             let newResposta = resposta;
@@ -47,18 +46,23 @@ export default function PaginaUsuarios() {
     }
 
 
+    const fetchData = async (): Promise<void> => {
+        manageLoading(true);
+        try {
+            const data: User[] = await invoke('find_all_users', {});
+            setResposta(data);
+        } catch (e) {
+            createFeedback(true, String(e))
+        } finally {
+            manageLoading(false)
+        }
+    };
+
+    useLayoutEffect(() => {
+        manageLoading(true)
+    }, [])
+
     useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            manageLoading(true);
-            try {
-                const data: User[] = await invoke('find_all_users', {});
-                setResposta(data);
-            } catch (e){
-                createFeedback(true, String(e))
-            } finally {
-                manageLoading(false)
-            }
-        };
         fetchData();
     }, []);
 

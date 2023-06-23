@@ -15,7 +15,6 @@ import PaginaCriarConta from '../pages/paginaContas/PaginaCriarConta';
 import PaginaItems from '../pages/paginaContas/PaginaItems';
 import PaginaPagamentos from '../pages/paginaContas/PaginaPagamentos';
 import PaginaAdicionarItem from '../pages/paginaContas/PaginaAdicionarItem';
-import './loading.css'
 
 export const FeedbackContext = createContext<{
   feedback: boolean;
@@ -71,34 +70,25 @@ export default function AppRouter(): JSX.Element {
   }
 
   return (
-    <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
-      <Router>
+
+    <Router>
+      {feedback &&
         <div className='absolute right-4 bottom-2'>
-          {feedback &&
-            feedbacks?.map((f, i) => {
-              return (
-                <Feedback
-                  key={i} // Adicione uma chave única para cada feedback
-                  isError={f.isErr}
-                  text={f.text}
-                  closeSelf={() => close(f)}
-                />
-              );
-            })}
-        </div>
+          {feedbacks?.map((f, i) => {
+            return (
+              <Feedback
+                key={i} // Adicione uma chave única para cada feedback
+                isError={f.isErr}
+                text={f.text}
+                closeSelf={() => close(f)}
+              />
+            );
 
-        {loading &&
-          <div className=' h-screen w-screen flex items-center justify-center bg-slate-800'>
-            <div className='w-32'>
-              <div className='load-bar h-2'></div>
-            </div>
-          </div>
-        }
+          })}  </div>}
 
-
-        {!loading &&
+      <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
           <Routes>
-            <Route path={'/'} element={<App />}>
+            <Route path={'/'} element={<App load={loading} />}>
               <Route index element={<PaginaInicial />} />
               <Route path='/usuarios' element={<PaginaUsuarios />} />
               <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
@@ -120,8 +110,8 @@ export default function AppRouter(): JSX.Element {
               />
             </Route>
           </Routes>
-        }
-      </Router>
-    </FeedbackContext.Provider>
+      </FeedbackContext.Provider >
+    </Router >
+
   );
 }
