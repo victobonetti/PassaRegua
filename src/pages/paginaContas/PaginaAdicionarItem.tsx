@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import Product from "../../interfaces/Product";
 import { invoke } from "@tauri-apps/api";
 import Account from "../../interfaces/Account";
@@ -88,26 +88,26 @@ export default function PaginaAdicionarItem() {
         setSelected(data);
     }
 
-    useEffect(() => {
-        const fetchProdsData = async (): Promise<void> => {
-            try {
-                const data: Product[] = await invoke('find_all_products', {});
-                setResposta(data);
-            } catch (e) {
-            }
-        };
-
-        const fetchAccountData = async () => {
+    const fetchData = async (): Promise<void> => {
+        try {
             let accountId = id;
-            try {
-                let data: Account = await invoke('find_account_by_id', { accountId })
-                setAccount(data);
-            } catch (e) {
-            }
+            const p: Product[] = await invoke('find_all_products', {});
+            setResposta(p);
+            const a: Account = await invoke('find_account_by_id', { accountId })
+            setAccount(a);
+        } catch (e) {
+            createFeedback(true, String(e));
+        } finally {
+            manageLoading(false);
         }
+    };
 
-        fetchProdsData();
-        fetchAccountData();
+    useLayoutEffect(() => {
+        manageLoading(true);
+    }, [])
+
+    useEffect(() => {
+        fetchData();
     }, []);
 
     useEffect(() => {
