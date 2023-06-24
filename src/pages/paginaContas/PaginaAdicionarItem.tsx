@@ -21,6 +21,7 @@ export default function PaginaAdicionarItem() {
     const [account, setAccount] = useState<Account>();
     const [search, setSearch] = useState('');
     const [total, setTotal] = useState(0);
+    const [itemErr, setItemErr] = useState('');
 
     const { id } = useParams();[
     ]
@@ -58,26 +59,30 @@ export default function PaginaAdicionarItem() {
     }
 
     const selectProduct = (product: Product) => {
+        if (product.price + total > 1000 ) {
+            createFeedback(true, 'Valor máximo excedido (R$1000.00).')
+        } else {
 
-        let has_product = false;
+            let has_product = false;
 
-        let data = selected.map((p) => {
-            if (p.product.id != product.id) {
-                return p;
-            } else {
-                p.quantity += 1;
-                has_product = true;
-                return p;
+            let data = selected.map((p) => {
+                if (p.product.id != product.id) {
+                    return p;
+                } else {
+                    p.quantity += 1;
+                    has_product = true;
+                    return p;
+                }
+            })
+
+            if (!has_product || selected.length == 0) {
+                data.push({ product: product, quantity: 1 })
             }
-        })
 
-        if (!has_product || selected.length == 0) {
-            data.push({ product: product, quantity: 1 })
+            console.log(data)
+
+            setSelected(data);
         }
-
-        console.log(data)
-
-        setSelected(data);
     }
 
     const spliceProduct = (product: selectedProduct) => {
@@ -116,7 +121,6 @@ export default function PaginaAdicionarItem() {
 
     return (
         <div className=" w-full h-full flex flex-col items-center ">
-
             <h1 className=" my-8 text-4xl text-slate-300">Selecionar produtos</h1>
             <div className=" flex w-full">
                 <div className=" p-4 w-3/5 flex flex-col items-center justify-center">
@@ -165,6 +169,8 @@ export default function PaginaAdicionarItem() {
                 <div className=" mr-4 h-16 w-36  text-red-400 text-2xl flex flex-col items-center justify-center">
                     <span className=" mb-2 text-slate-400 text-xs">Valor total dos itens:</span>
                     <span className=" border rounded px-2 py-1"> R${total.toFixed(2)}</span>
+                    <span className=" mb-2 text-xs text-red-500">{itemErr}</span>
+
                 </div>
             </div>
             <Link className=" mt-2 ml-4 self-start text-slate-400 underline cursor-pointer " to={'/contas'}><p >Voltar</p></Link>

@@ -113,7 +113,7 @@ export default function AppRouter(): JSX.Element {
             <Route path='/contas/novo' element={<PaginaCriarConta />} />
             <Route path='/contas/items/:id' element={<PaginaItems />} />
             <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
-            <Route path='/contas/payments/:id' element={<PaginaPagamentos />} />
+            <Route path='/contas/payments/:id/:total' element={<PaginaPagamentos />} />
 
             <Route path='/produtos' element={<PaginaProdutos />} />
             <Route path='produtos/novo' element={<FormularioCriaProduto />} />

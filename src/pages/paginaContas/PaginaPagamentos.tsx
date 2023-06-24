@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 
@@ -8,27 +8,44 @@ export default function PaginaPagamentos() {
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
 
     const [getValue, setValue] = useState('0.00');
+    const [valueErr, setValueErr] = useState('');
+    const [buttonDisabled, setButtonDisabled] = useState(false);
 
-    const { id } = useParams();
+    const { id, total } = useParams();
 
     const criaPagamento = async (e: React.FormEvent<HTMLFormElement>) => {
-        manageLoading(true);
+
+
         e.preventDefault();
         let amount = Number(getValue)
         let accountId = String(id);
-        console.log(accountId);
-        try {
-            await invoke("create_payment", { amount, accountId });
-            window.location.href = '/contas';
-        } catch (e) {
-            manageLoading(false);
-            createFeedback(true, String(e));
+        if (amount <= Number(total)) {
+            manageLoading(true);
+            console.log(accountId);
+            try {
+                await invoke("create_payment", { amount, accountId });
+                window.location.href = '/contas';
+            } catch (e) {
+                manageLoading(false);
+                createFeedback(true, String(e));
+            }
+        } else {
+            createFeedback(true, "Valor do pagamento maior que valor da conta.")
         }
-
-
     }
 
+    useEffect(() => {
+        if (getValue.length > 7) {
+            setButtonDisabled(true);
+            setValueErr('Número inválido.')
+        } else {
+            setButtonDisabled(false);
+            setValueErr('')
+        }
+    }, [getValue])
+
     const updatevalue = (n: number) => {
+
         let splitedvalue = getValue.split('');
         splitedvalue.splice(getValue.indexOf('.'), 1);
 
@@ -60,6 +77,7 @@ export default function PaginaPagamentos() {
             <form onSubmit={e => criaPagamento(e)} className="flex flex-col w-96">
                 <label className="text-xs font-semibold text-slate-400" htmlFor="">Valor</label>
                 <div className=" rounded mt-2 items-center p-4  bg-slate-400 text-4xl">R${getValue}</div>
+                <span className=" mb-2 text-xs text-red-500">{valueErr}</span>
                 <div className=" self-center mt-4 w-48  bg-slate-950 rounded">
                     <div className=" flex ">
                         <div onClick={() => updatevalue(7)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">7</div>
@@ -85,7 +103,8 @@ export default function PaginaPagamentos() {
                 </div>
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/contas'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-                    <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold p-2 rounded">Confirmar</button>
+                    {!buttonDisabled && <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold p-2 rounded">Confirmar</button>}
+                    {buttonDisabled && <button disabled className=" opacity-50 text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold p-2 rounded">Confirmar</button>}
                 </div>
             </form>
         </div>

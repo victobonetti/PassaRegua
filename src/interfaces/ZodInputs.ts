@@ -9,7 +9,8 @@ export function validaNome(name: string) {
 
 export function validaPreco(price: string) {
     return z.string()
-        .max(8, { message: "Texto deve haver, no máximo, 8 caracteres." })
-        .parse(name);
+        .min(4, { message: "Texto deve haver, no mínimo, 4 caracteres." })
+        .max(6, { message: "Texto deve haver, no máximo, 5 caracteres." })
+        .safeParse(price);
     
 }

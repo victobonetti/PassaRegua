@@ -11,20 +11,22 @@ export default function PaginaContas() {
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
 
     const [resposta, setResposta] = useState<Account[]>([]);
-    const [toDelete, setToDelete] = useState<Account>();
+    const [toDelete, setToDelete] = useState('');
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
-    const abrirModalExcluir = (account: Account) => {
-        setToDelete(account);
+    const abrirModalExcluir = (id: string) => {
+        setToDelete(id);
         setModalExcluirAberto(true);
     }
 
     const excluirConta = async () => {
-        let id = toDelete?.id
+        let accountId = toDelete;
         manageLoading(true);
         try {
-            await invoke("delete_user_by_id", { id });
+            await invoke("delete_account_by_id", { accountId });
             fecharModalExcluir();
+            createFeedback(false, "Conta excluída com sucesso.");
+            setResposta(resposta.filter((c) => c.id !== accountId));
         }
         catch (e) {
             createFeedback(true, String(e));
@@ -35,7 +37,7 @@ export default function PaginaContas() {
     }
 
     const fecharModalExcluir = () => {
-        setToDelete(undefined);
+        setToDelete('');
         setModalExcluirAberto(false);
     }
 
@@ -87,8 +89,10 @@ export default function PaginaContas() {
                                     </div>
                                     <p className=" text-slate-300 text-xs">Dívida: <span className=" text-red-400">R${Number(c.account_total - c.paid_amount).toFixed(2)}</span></p>
                                     <p className=" text-slate-300 mt-1 text-xs">Valor pago: <span className=" text-emerald-400">R${Number(c.paid_amount).toFixed(2)}</span></p>
-                                    <div className=" py-2 flex flex-wrap justify-between "><Link to={`/contas/payments/${c.id}`}><button className=" transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-xs ">Adicionar pagamento</button></Link>
-                                        <Link to={`/contas/items/${c.id}`}><button className=" transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-blue-900 font-semibold px-2 py-1 rounded  text-xs ">Adicionar Itens</button></Link>
+                                    <div className=" py-2 flex flex-col "><Link to={`/contas/payments/${c.id}/${c.account_total}`}><button className=" transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-xs ">Adicionar pagamento</button></Link>
+                                        <Link to={`/contas/items/${c.id}`}><button className=" flex mt-1 transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-blue-900 font-semibold px-2 py-1 rounded  text-xs ">Adicionar Itens</button></Link>
+                                        {c.account_total - c.paid_amount <= 0 && <button onClick={() => abrirModalExcluir(String(c.id))} className=" mt-1 transition-all hover:bg-transparent hover:text-red-300 border border-red-300 w-fit bg-red-300 text-red-900 font-semibold px-2 py-1 rounded text-xs flex">Excluir conta.</button>}
+                                        {c.account_total - c.paid_amount > 0 && <button disabled className=" flex opacity-50 mt-1 transition-all border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded text-xs w-fit">Excluir conta.</button>}
                                     </div>
                                 </div>
                             )

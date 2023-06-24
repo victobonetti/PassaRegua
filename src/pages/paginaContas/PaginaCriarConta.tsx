@@ -20,7 +20,7 @@ export default function PaginaCriarConta() {
         manageLoading(true);
         try {
             let userId = id;
-            await invoke("create_account", {userId});
+            await invoke("create_account", { userId });
             window.location.href = '/contas';
         } catch (e) {
             manageLoading(false);
@@ -34,7 +34,7 @@ export default function PaginaCriarConta() {
             try {
                 const data: User[] = await invoke('find_all_users', {});
                 setUsuarios(data);
-            } catch (e){
+            } catch (e) {
                 createFeedback(true, String(e));
             } finally {
                 manageLoading(false);
@@ -50,9 +50,11 @@ export default function PaginaCriarConta() {
                 <select id="countries" onChange={e => setId(e.target.value)} className=" text-lg w-3/4 bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2.5 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-emerald-500 dark:focus:border-emerald-500">
                     <option selected>Selecione um usuário</option>
                     {usuarios.map((u) => {
-                        return (
-                            <option key={String(u.id)} value={String(u.id)}>{u.username}</option>
-                        )
+                        if (u.account_id == undefined) {
+                            return (
+                                <option key={String(u.id)} value={String(u.id)}>{u.username}</option>
+                            )
+                        }
                     })
                     }
 

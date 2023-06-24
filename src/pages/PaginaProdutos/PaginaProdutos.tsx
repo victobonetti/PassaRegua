@@ -72,40 +72,43 @@ export default function PaginaProdutos() {
             />
             }
             {!modalExcluirAberto &&
-                <><tbody className=" text-slate-300  w-full table-auto flex flex-col ">
-                    <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
-                        <tr className="flex w-full">
-                            <td className="pl-5 text-slate-600 w-1/4 ">CRIADO EM</td>
-                            <td className="pl-5 text-slate-600 w-1/4 ">PRODUTO</td>
-                            <td className="pl-5 text-slate-600 w-1/4 ">PREÇO</td>
-                            <td className="pl-5 text-slate-600 w-1/4 "></td>
-                        </tr>
-                    </thead>
+                <>
+                    <table className=" w-full ">
+                        <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
+                            <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
+                                <tr className="flex w-full">
+                                    <td className="pl-5 text-slate-600 w-1/4 ">CRIADO EM</td>
+                                    <td className="pl-5 text-slate-600 w-1/4 ">PRODUTO</td>
+                                    <td className="pl-5 text-slate-600 w-1/4 ">PREÇO</td>
+                                    <td className="pl-5 text-slate-600 w-1/4 "></td>
+                                </tr>
+                            </thead>
 
-                    {resposta?.length < 1 && <tr className=" w-full bg-slate-800 p-4 text-2xl">Não foram encontrados registros.</tr>}
+                            {resposta?.length < 1 && <tr className=" w-full bg-slate-800 p-4 text-2xl"><td colSpan={5}>Não foram encontrados registros.</td></tr>}
 
-                    {resposta?.map((data) => {
-                        return (
-                            <tr key={String(data.id)} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
-                                <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
-                                    {data.created_at.replaceAll("-", "/")}
-                                </td>
-                                <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
-                                    {data.name}
-                                </td>
-                                <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
-                                    {`R$${Number(data.price).toFixed(2)}`}
-                                </td>
-                                <td className=" text-center w-1/4 p-4  text-sm whitespace-nowrap">
-                                    <Link to={`/produtos/editar/${data.id}/${data.name}/${data.price.toFixed(2)}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
-                                    <button onClick={() => abrirModalExcluir(data)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody><div className=" justify-center p-2 flex ">
+                            {resposta?.map((data) => {
+                                return (
+                                    <tr key={String(data.id)} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
+                                        <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
+                                            {data.created_at.replaceAll("-", "/")}
+                                        </td>
+                                        <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
+                                            {data.name}
+                                        </td>
+                                        <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
+                                            {`R$${Number(data.price).toFixed(2)}`}
+                                        </td>
+                                        <td className=" text-center w-1/4 p-4  text-sm whitespace-nowrap">
+                                            <Link to={`/produtos/editar/${data.id}/${data.name}/${data.price.toFixed(2)}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
+                                            <button onClick={() => abrirModalExcluir(data)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody></table><div className=" justify-center p-2 flex ">
                         <Link to={'/produtos/novo'}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo produto</button></Link>
-                    </div></>
+                    </div>
+                </>
             }
         </>
     )

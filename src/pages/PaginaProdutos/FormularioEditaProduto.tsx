@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
+import { validaNome, validaPreco } from "../../interfaces/ZodInputs";
 
 export default function FormularioEditaProduto() {
 
@@ -11,6 +12,8 @@ export default function FormularioEditaProduto() {
 
     const [name, setName] = useState('');
     const [getPrice, setPrice] = useState('0.00');
+    const [nameErr, setNameErr] = useState('');
+    const [priceErr, setPriceErr] = useState('');
 
     const { id, nameParam, priceParam } = useParams();
 
@@ -26,29 +29,47 @@ export default function FormularioEditaProduto() {
     const editaProduto = async (e: React.FormEvent<HTMLFormElement>) => {
 
         e.preventDefault();
-        setButtonDisabled(true);
 
-        console.log("EDIT ATIVADO!")
+        let validar_nome = validaNome(name);
 
-        let newPrice = Number(getPrice);
+        let validar_preco = validaPreco(getPrice);
 
-        manageLoading(true);
+        if (validar_nome.success && validar_preco.success) {
 
-        try {
-            let newName = name;
-            await invoke("edit_product_price", { id, newPrice });
-            await invoke("edit_product_name", { id, newName });
-            window.location.href = '/produtos';
-            createFeedback(false, "Produto editado.");
-        } catch (e) {
-            manageLoading(false);
-            createFeedback(true, String(e));
+            setButtonDisabled(true);
+            let newPrice = Number(getPrice);
+
+            manageLoading(true);
+
+            try {
+                let newName = name;
+                await invoke("edit_product_price", { id, newPrice });
+                await invoke("edit_product_name", { id, newName });
+                window.location.href = '/produtos';
+                createFeedback(false, "Produto editado.");
+            } catch (e) {
+                manageLoading(false);
+                createFeedback(true, String(e));
+            }
+
+        } else {
+
+            if (!validar_nome.success) {
+                setNameErr('Entrada inválida: Nome deve haver até, no máximo, 24 caractéres.');
+            }
+
+            if (!validar_preco.success) {
+                setPriceErr('Número inválido.');
+            }
+
         }
 
     }
 
     const updatePrice = (n: number) => {
+
         let splitedPrice = getPrice.split('');
+
         splitedPrice.splice(getPrice.indexOf('.'), 1);
 
         let newPrice = splitedPrice.map((value, index) => {
@@ -79,8 +100,10 @@ export default function FormularioEditaProduto() {
             <form onSubmit={e => editaProduto(e)} className="flex flex-col w-96">
                 <label className=" border-none text-xs font-semibold text-slate-400" htmlFor="username">NOME</label>
                 <input value={name} autoComplete="none" onChange={e => setName(e.target.value)} className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="name" />
+                <span className=" mb-2 text-xs text-red-500">{nameErr}</span>
                 <label className="text-xs font-semibold text-slate-400" htmlFor="">PREÇO</label>
                 <div className=" rounded mt-2 items-center p-4  bg-slate-400 text-4xl">R${getPrice}</div>
+                <span className=" mb-2 text-xs text-red-500">{priceErr}</span>
                 <div className=" self-center mt-4 w-48  bg-slate-950 rounded">
                     <div className=" flex ">
                         <div onClick={() => updatePrice(7)} className=" flex items-center justify-center text-lg text-yellow-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-yellow-300">7</div>
