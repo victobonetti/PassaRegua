@@ -24,10 +24,12 @@ export default function PaginaItems() {
         try {
             let data: Account = await invoke('find_account_by_id', { accountId })
             setAccount(data);
+            console.log(data)
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
             manageLoading(false);
+
         }
     }
 
@@ -83,14 +85,14 @@ export default function PaginaItems() {
                         <table className=" w-full">
                             <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
                                 <thead className=" select-none bg-slate-400 font-semibold flex w-full text-sm ">
-                                    <tr className="flex w-full">
-                                        <td className=" text-sm flex items-center p-2 text-slate-600 w-3/12 ">LANÇADO EM</td>
-                                        <td className=" text-sm flex items-center p-2 text-slate-600 w-2/12 ">PRODUTO</td>
-                                        <td className=" text-sm flex items-center p-2 text-slate-600 w-1/12 ">QTD.</td>
-                                        <td className=" text-sm flex items-center p-2 text-slate-600 w-1/12 ">PREÇO UN.</td>
-                                        <td className=" text-sm flex items-center p-2 text-slate-600 w-1/12 ">TOTAL</td>
-                                        <td className=" text-sm flex items-center p-2 text-slate-600 w-2/12 ">OBSERVAÇÕES</td>
-                                        <td className=" text-sm flex items-center p-2 text-slate-600 w-2/12 ">AÇÕES</td>
+                                    <tr className="flex w-full items-center">
+                                        <td className=" text-sm text-center p-2 text-slate-600 w-3/12 ">LANÇADO EM</td>
+                                        <td className=" text-sm text-center p-2 text-slate-600 w-2/12 ">PRODUTO</td>
+                                        <td className=" text-sm text-center p-2 text-slate-600 w-1/12 ">QTD.</td>
+                                        <td className=" text-sm text-center p-2 text-slate-600 w-1/12 ">PREÇO UN.</td>
+                                        <td className=" text-sm text-center p-2 text-slate-600 w-1/12 ">TOTAL</td>
+                                        <td className=" text-sm text-center p-2 text-slate-600 w-2/12 ">OBSERVAÇÕES</td>
+                                        <td className=" text-sm text-center p-2 text-slate-600 w-2/12 ">AÇÕES</td>
                                     </tr>
                                 </thead>
 
@@ -98,16 +100,17 @@ export default function PaginaItems() {
 
                                 {account && account.items?.map((data) => {
                                     return (
-                                        <tr key={String(data.id)} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
-                                            <td className=" text-sm p-2 text-slate-300 w-3/12 ">{data.created_at}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-2/12 ">{data.name}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">{data.quantity}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${data.price.toFixed(2)}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${Number(data.quantity * data.price).toFixed(2)}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-2/12 ">{data.notes}</td>
-                                            <button onClick={() => abrirModalExcluir(String(data.id))} className=" transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold rounded text-xs my-2 p-1">Excluir</button>
-                                            <td className=" text-sm p-2 text-slate-300 w-2/12 "></td>
-
+                                        <tr key={String(data.id)} className=" w-full flex justify-evenly items-center bg-slate-800  odd:bg-slate-700">
+                                            <td className=" text-center text-sm p-2 text-slate-300 w-3/12 ">{data.created_at}</td>
+                                            <td className=" text-center text-sm p-2 text-slate-300 w-2/12 ">{data.name}</td>
+                                            <td className=" text-center text-sm p-2 text-slate-300 w-1/12 ">{data.quantity}</td>
+                                            <td className=" text-center text-sm p-2 text-slate-300 w-1/12 ">R${data.price.toFixed(2)}</td>
+                                            <td className=" text-center text-sm p-2 text-slate-300 w-1/12 ">R${Number(data.quantity * data.price).toFixed(2)}</td>
+                                            <td className=" text-center text-sm p-2 text-slate-300 w-2/12 ">{data.notes ? data.notes : <span className=" text-slate-500 text-xs">Sem anotações...</span>}</td>
+                                            <td className=" text-center text-sm p-2 text-slate-300 w-2/12 flex justify-evenly">
+                                                <button onClick={() => abrirModalExcluir(String(data.id))} className=" transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold rounded text-xs my-2 p-1">Excluir</button>
+                                                <button onClick={() => abrirModalExcluir(String(data.id))} className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-900 font-semibold rounded text-xs my-2 p-1">Anotar</button>
+                                            </td>
                                         </tr>
                                     );
                                 })}
@@ -116,9 +119,16 @@ export default function PaginaItems() {
                     </div>
                     <div className=" border-l-8 border-slate-950 bg-slate-700 w-1/4 h-full flex flex-col  p-4">
                         <div className=" shadow-inner bg-slate-800 p-4">
-                            <p className=" text-slate-300 text-sm ">Dívida</p> <span className=" text-xl font-semibold text-red-400">R${account && Number(account.account_total - account.paid_amount).toFixed(2)}</span>
-                            <p className=" mt-2 text-slate-300 text-sm ">Valor pago:</p> <span className=" text-xl font-semibold text-emerald-400">R${account && Number(account.paid_amount).toFixed(2)}</span>
-                            <p className=" mt-2 text-slate-300 text-sm ">Total da conta:</p> <span className=" text-xl font-semibold text-slate-400">R${account && Number(account.account_total).toFixed(2)}</span>
+                            <div className=" w-40 flex justify-between mb-4">
+                                <div>
+                                    <p className=" text-slate-300 text-sm ">Dívida:</p> <span className=" font-semibold text-red-400">R${account && Number(account.account_total - account.paid_amount).toFixed(2)}</span>
+                                </div>
+
+                                <div>
+                                    <p className=" text-slate-300 text-sm ">Valor pago:</p> <span className=" font-semibold text-emerald-400">R${account && Number(account.paid_amount).toFixed(2)}</span>
+                                </div>
+                            </div>
+                            <p className=" border-t pt-2 border-slate-500 mt-2 text-slate-300 text-sm ">Total da conta:</p> <span className=" text-2xl font-semibold text-slate-400">R${account && Number(account.account_total).toFixed(2)}</span>
                         </div >
                         <Link to={`/contas/items/add/${account?.id}`}><button type="submit" className=" w-full mt-4 transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Adicionar item</button></Link>
                         <Link className=" w-full text-center" to={'/contas'}><p className=" mt-2 text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>

@@ -84,15 +84,19 @@ export default function PaginaContas() {
                                 <div key={String(c.id)} className=" text-slate-300 mb-2 mx-1 shadow-lg rounded bg-slate-800 w-1/5 p-2">
                                     <div className=" flex justify-between border-b border-slate-700 pb-1 mb-1">
                                         <h3 className=" text-slate-200 font-semibold ">{c.owner.toUpperCase()}</h3>
-                                        {c.account_total - c.paid_amount <= 0 && <h4 className=" bg-neutral-200 rounded-full text-xs text-neutral-600 font-bold flex items-center justify-center px-1">Quitado</h4>}
+                                        {c.account_total - c.paid_amount < 0 && <h4 className=" bg-green-200 rounded-full text-xs text-green-600 font-bold flex items-center justify-center px-1">Saldo</h4>}
+                                        {c.account_total - c.paid_amount == 0 && <h4 className=" bg-neutral-200 rounded-full text-xs text-neutral-600 font-bold flex items-center justify-center px-1">Quitado</h4>}
                                         {c.account_total - c.paid_amount > 0 && <h4 className=" bg-yellow-400 rounded-full text-xs text-yellow-900 font-bold flex items-center justify-center px-1">Em aberto</h4>}
                                     </div>
                                     <p className=" text-slate-300 text-xs">Dívida: <span className=" text-red-400">R${Number(c.account_total - c.paid_amount).toFixed(2)}</span></p>
                                     <p className=" text-slate-300 mt-1 text-xs">Valor pago: <span className=" text-emerald-400">R${Number(c.paid_amount).toFixed(2)}</span></p>
-                                    <div className=" py-2 flex flex-col "><Link to={`/contas/payments/${c.id}/${c.account_total}`}><button className=" transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-xs ">Adicionar pagamento</button></Link>
-                                        <Link to={`/contas/items/${c.id}`}><button className=" flex mt-1 transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-blue-900 font-semibold px-2 py-1 rounded  text-xs ">Adicionar Itens</button></Link>
-                                        {c.account_total - c.paid_amount <= 0 && <button onClick={() => abrirModalExcluir(String(c.id))} className=" mt-1 transition-all hover:bg-transparent hover:text-red-300 border border-red-300 w-fit bg-red-300 text-red-900 font-semibold px-2 py-1 rounded text-xs flex">Excluir conta.</button>}
-                                        {c.account_total - c.paid_amount > 0 && <button disabled className=" flex opacity-50 mt-1 transition-all border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded text-xs w-fit">Excluir conta.</button>}
+                                    <div className=" py-2 flex flex-col ">
+                                        <div className=" text-xs font-bold mb-1 text-slate-500">GERENCIAR</div>
+                                        <Link to={`/contas/payments/${c.id}/${c.account_total}`}>
+                                            <button className=" transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-xs w-24 ">Pagamentos</button></Link>
+                                        <Link to={`/contas/items/${c.id}`}><button className=" mt-1 transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-center text-blue-900 font-semibold px-2 py-1 rounded  text-xs w-24 ">Lançar itens</button></Link>
+                                        {c.account_total - c.paid_amount <= 0 && <button onClick={() => abrirModalExcluir(String(c.id))} className=" mt-1 transition-all hover:bg-transparent hover:text-red-300 text-center border border-red-300 bg-red-300 w-24 text-red-900 font-semibold px-2 py-1 rounded text-xs ">Excluir conta</button>}
+                                        {c.account_total - c.paid_amount > 0 && <button disabled className=" opacity-50 mt-1 transition-all border border-red-300  bg-red-300 text-red-900 font-semibold text-center px-2 py-1 rounded text-xs w-24">Excluir conta</button>}
                                     </div>
                                 </div>
                             )
