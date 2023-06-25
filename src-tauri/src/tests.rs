@@ -112,7 +112,7 @@ fn test_payment_crud() {
 
     // Crie um pagamento
     let amount = 100.0;
-    Payment::create_one(&conn, amount, account_id.clone()).unwrap();
+    Payment::create_one(&conn, amount, account_id.clone(), 1).unwrap();
 
     // Encontre o pagamento criado
     let mut stmt = conn
@@ -124,8 +124,9 @@ fn test_payment_crud() {
                 id: row.get(0)?,
                 amount: row.get(1)?,
                 account_id: row.get(2)?,
-                created_at: row.get(3)?,
-                updated_at: row.get(4)?
+                payment_type: row.get(3)?,
+                created_at: row.get(4)?,
+                updated_at: row.get(5)?
             })
         })
         .unwrap();
@@ -295,7 +296,7 @@ fn test_account_crud() {
 
     // Crie um pagamento
     let amount = 100.0;
-    Payment::create_one(&conn, amount, account_id.clone()).unwrap();
+    Payment::create_one(&conn, amount, account_id.clone(), 5).unwrap();
 
     // Atualize os pagamentos e itens da conta
     let account = Account::find_one(&conn, account_id.clone()).unwrap();

@@ -65,6 +65,19 @@ export default function PaginaItems() {
         setModalExcluirAberto(false);
     }
 
+    const formatNote = (note: String | undefined) => {
+
+        if (note) {
+            return (
+                <p className="text-emerald-400">{note}</p>
+            )
+        } else {
+            return <p className=" text-slate-500 ">Não contém notas...</p>
+        }
+
+
+    }
+
 
     return (
 
@@ -101,15 +114,15 @@ export default function PaginaItems() {
                                 {account && account.items?.map((data) => {
                                     return (
                                         <tr key={String(data.id)} className=" w-full flex justify-evenly items-center bg-slate-800  odd:bg-slate-700">
-                                            <td className=" text-center text-sm p-2 text-slate-300 w-3/12 ">{data.created_at}</td>
-                                            <td className=" text-center text-sm p-2 text-slate-300 w-2/12 ">{data.name}</td>
-                                            <td className=" text-center text-sm p-2 text-slate-300 w-1/12 ">{data.quantity}</td>
-                                            <td className=" text-center text-sm p-2 text-slate-300 w-1/12 ">R${data.price.toFixed(2)}</td>
-                                            <td className=" text-center text-sm p-2 text-slate-300 w-1/12 ">R${Number(data.quantity * data.price).toFixed(2)}</td>
-                                            <td className=" text-center text-sm p-2 text-slate-300 w-2/12 ">{data.notes ? data.notes : <span className=" text-slate-500 text-xs">Sem anotações...</span>}</td>
+                                            <td className=" text-sm p-2 text-slate-300 w-3/12 ">{data.created_at}</td>
+                                            <td className=" text-sm p-2 text-slate-300 w-2/12 ">{data.name}</td>
+                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">{data.quantity}</td>
+                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${data.price.toFixed(2)}</td>
+                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${Number(data.quantity * data.price).toFixed(2)}</td>
+                                            <td className="  p-2 text-slate-300 w-2/12 text-xs ">{formatNote(data.notes)}</td>
                                             <td className=" text-center text-sm p-2 text-slate-300 w-2/12 flex justify-evenly">
                                                 <button onClick={() => abrirModalExcluir(String(data.id))} className=" transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold rounded text-xs my-2 p-1">Excluir</button>
-                                                <button onClick={() => abrirModalExcluir(String(data.id))} className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-900 font-semibold rounded text-xs my-2 p-1">Anotar</button>
+                                                <Link to={`/contas/items/note/${data.account_id}/${data.id}/${data.notes}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-900 font-semibold rounded text-xs my-2 p-1">Anotar</button></Link>
                                             </td>
                                         </tr>
                                     );

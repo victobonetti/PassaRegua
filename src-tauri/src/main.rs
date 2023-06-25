@@ -204,13 +204,13 @@ fn edit_product_name(id: String, new_name: String) -> Result<(), String> {
 //Payments Service
 
 #[tauri::command]
-fn create_payment(amount: f64, account_id: String) -> Result<String, String> {
+fn create_payment(amount: f64, account_id: String, payment_type:i32) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
     };
 
-    match Payment::create_one(&conn, amount, account_id) {
+    match Payment::create_one(&conn, amount, account_id, payment_type) {
         Ok(result) => Ok(result),
         Err(e) => Err(e.to_string()),
     }

@@ -52,8 +52,9 @@ impl Account {
                 id: row.get(0)?,
                 amount: row.get(1)?,
                 account_id: row.get(2)?,
-                created_at: row.get(3)?,
-                updated_at: row.get(4)?,
+                payment_type: row.get(3)?,
+                created_at: row.get(4)?,
+                updated_at: row.get(5)?,
             })
         })?;
 

@@ -69,6 +69,7 @@ pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Resul
             id TEXT PRIMARY KEY,
             amount REAL NOT NULL,
             account_id TEXT NOT NULL,
+            payment_type INTEGER NOT NULL CHECK (payment_type BETWEEN 0 AND 5),
             created_at TEXT NOT NULL,
             updated_at TEXT,
             FOREIGN KEY (account_id) REFERENCES accounts(id)

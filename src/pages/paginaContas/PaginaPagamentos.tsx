@@ -11,20 +11,22 @@ export default function PaginaPagamentos() {
     const [valueErr, setValueErr] = useState('');
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
-    const { id, total } = useParams();
+    const { id, total, paid } = useParams();
 
     const criaPagamento = async (e: React.FormEvent<HTMLFormElement>) => {
-
 
         e.preventDefault();
         let amount = Number(getValue)
         let accountId = String(id);
-        if (amount <= Number(total)) {
+        let paymentType = 0;
+    
+        if (Number(amount) <= (Number(total) - Number(paid))) {
             manageLoading(true);
             console.log(accountId);
             try {
-                await invoke("create_payment", { amount, accountId });
+                await invoke("create_payment", { amount, accountId, paymentType });
                 window.location.href = '/contas';
+                createFeedback(false, "Pagamento criado.");
             } catch (e) {
                 manageLoading(false);
                 createFeedback(true, String(e));

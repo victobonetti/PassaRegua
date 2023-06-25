@@ -8,8 +8,10 @@ pub struct Payment {
     pub id: String,
     pub amount: f64,
     pub account_id: String,
+    pub payment_type: i32,
     pub created_at: String,
     pub updated_at: Option<String>,
+
 }
 
 use serde::{ser::SerializeMap, Serialize, Serializer};
@@ -24,6 +26,7 @@ impl Serialize for Payment {
         payment_map.serialize_entry("id", &self.id)?;
         payment_map.serialize_entry("amount", &self.amount)?;
         payment_map.serialize_entry("account_id", &self.account_id)?;
+        payment_map.serialize_entry("type", &self.payment_type)?;
         payment_map.serialize_entry("created_at", &self.created_at)?;
         payment_map.serialize_entry("updated_at", &self.updated_at)?;
         payment_map.end()
@@ -35,7 +38,10 @@ impl Payment {
         conn: &PooledConnection<SqliteConnectionManager>,
         amount: f64,
         account_id: String,
+        payment_type: i32,
     ) -> Result<String, rusqlite::Error> {
+
+
         // Verificar se o ID da conta é válido
         let account_exists: bool = conn.query_row(
             "SELECT COUNT(*) FROM accounts WHERE id = ?1",
@@ -53,8 +59,8 @@ impl Payment {
 
         // Inserir o pagamento na tabela payments
         conn.execute(
-            "INSERT INTO payments (id, amount, account_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5)",
-            params![uuid, amount, account_id, date, Null],
+            "INSERT INTO payments (id, amount, account_id, payment_type, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            params![uuid, amount, account_id, payment_type, date, Null],
         )?;
 
         Ok(uuid)
@@ -72,8 +78,9 @@ impl Payment {
                 id: row.get(0)?,
                 amount: row.get(1)?,
                 account_id: row.get(2)?,
-                created_at: row.get(3)?,
-                updated_at: row.get(4)?,
+                payment_type: row.get(3)?,
+                created_at: row.get(4)?,
+                updated_at: row.get(5)?,
             };
             Ok(Some(payment))
         } else {

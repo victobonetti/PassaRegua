@@ -90,9 +90,9 @@ export default function PaginaContas() {
                                     </div>
                                     <p className=" text-slate-300 text-xs">Dívida: <span className=" text-red-400">R${Number(c.account_total - c.paid_amount).toFixed(2)}</span></p>
                                     <p className=" text-slate-300 mt-1 text-xs">Valor pago: <span className=" text-emerald-400">R${Number(c.paid_amount).toFixed(2)}</span></p>
-                                    <div className=" py-2 flex flex-col ">
+                                    <div className=" py-2 flex flex-col w-24 ">
                                         <div className=" text-xs font-bold mb-1 text-slate-500">GERENCIAR</div>
-                                        <Link to={`/contas/payments/${c.id}/${c.account_total}`}>
+                                        <Link to={`/contas/payments/${c.id}/${c.account_total}/${c.paid_amount}`}>
                                             <button className=" transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-2 py-1 rounded text-xs w-24 ">Pagamentos</button></Link>
                                         <Link to={`/contas/items/${c.id}`}><button className=" mt-1 transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-center text-blue-900 font-semibold px-2 py-1 rounded  text-xs w-24 ">Lançar itens</button></Link>
                                         {c.account_total - c.paid_amount <= 0 && <button onClick={() => abrirModalExcluir(String(c.id))} className=" mt-1 transition-all hover:bg-transparent hover:text-red-300 text-center border border-red-300 bg-red-300 w-24 text-red-900 font-semibold px-2 py-1 rounded text-xs ">Excluir conta</button>}

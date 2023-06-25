@@ -15,6 +15,7 @@ import PaginaCriarConta from '../pages/paginaContas/PaginaCriarConta';
 import PaginaItems from '../pages/paginaContas/PaginaItems';
 import PaginaPagamentos from '../pages/paginaContas/PaginaPagamentos';
 import PaginaAdicionarItem from '../pages/paginaContas/PaginaAdicionarItem';
+import PaginaCriarNota from '../pages/paginaContas/PaginaCriarNota';
 
 export const FeedbackContext = createContext<{
   feedback: boolean;
@@ -113,7 +114,9 @@ export default function AppRouter(): JSX.Element {
             <Route path='/contas/novo' element={<PaginaCriarConta />} />
             <Route path='/contas/items/:id' element={<PaginaItems />} />
             <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
+            <Route path='/contas/items/note/:id/:itemId/:noteText' element={<PaginaCriarNota />} />
             <Route path='/contas/payments/:id/:total' element={<PaginaPagamentos />} />
+            <Route path='/contas/payments/:id/:total/:paid' element={<PaginaPagamentos />} />
 
             <Route path='/produtos' element={<PaginaProdutos />} />
             <Route path='produtos/novo' element={<FormularioCriaProduto />} />
