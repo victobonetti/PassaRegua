@@ -37,6 +37,15 @@ pub fn date_now() -> String {
     date_now
 }
 
+#[tauri::command]
+fn get_database_content_status()-> bool{
+    let users = find_all_users().unwrap();
+    match users.len() {
+        0 =>  false,
+        _ => true
+    }
+}
+
 //User Service
 #[tauri::command]
 fn create_user(username: String, cpf: String, phone: String) -> Result<String, String> {
@@ -426,7 +435,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             create_account,
             find_account_by_id,
             delete_account_by_id,
-            find_all_accounts
+            find_all_accounts,
+            get_database_content_status
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

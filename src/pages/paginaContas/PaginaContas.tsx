@@ -81,12 +81,12 @@ export default function PaginaContas() {
                     <div className=" p-4 flex flex-wrap">
                         {resposta.map((c) => {
                             return (
-                                <div key={String(c.id)} className=" text-slate-300 mb-2 mx-1 shadow-lg rounded bg-slate-800 w-1/5 p-2">
+                                <div key={String(c.id)} className=" text-slate-300 mb-2 mx-1 shadow-lg rounded bg-slate-800 w-72 p-2">
                                     <div className=" flex justify-between border-b border-slate-700 pb-1 mb-1">
-                                        <h3 className=" text-slate-200 font-semibold text-sm ">{c.owner.toUpperCase()}</h3>
-                                        {c.account_total - c.paid_amount < 0 && <h4 className="  py-2 h-8 w-28 bg-green-200 rounded-full text-xs text-green-600 font-bold flex items-center justify-center px-1">Saldo</h4>}
-                                        {c.account_total - c.paid_amount == 0 && <h4 className="  py-2 h-8 bg-neutral-200 rounded-full text-xs text-neutral-600 font-bold flex items-center justify-center px-1">Quitado</h4>}
-                                        {c.account_total - c.paid_amount > 0 && <h4 className=" w-28 py-2 h-8 bg-yellow-400 rounded-full text-xs text-yellow-900 font-bold flex items-center justify-center px-1">Em aberto</h4>}
+                                        <h3 className=" w-1/2 h-10 text-slate-200 font-semibold text-sm ">{c.owner.toUpperCase()}</h3>
+                                        {c.account_total - c.paid_amount < 0 && <h4 className="  w-20 py-2 h-6 bg-green-200 rounded-full text-xs text-green-600 font-bold flex items-center justify-center">Saldo</h4>}
+                                        {c.account_total - c.paid_amount == 0 && <h4 className="  w-20 py-2 h-6 bg-neutral-200 rounded-full text-xs text-neutral-600 font-bold flex items-center justify-center">Quitado</h4>}
+                                        {c.account_total - c.paid_amount > 0 && <h4 className=" w-20 py-2 h-6 bg-yellow-400 rounded-full text-xs text-yellow-900 font-bold flex items-center justify-center ">Em aberto</h4>}
                                     </div>
                                     <p className=" text-slate-300 text-xs">Dívida: <span className=" text-red-400">R${Number(c.account_total - c.paid_amount).toFixed(2)}</span></p>
                                     <p className=" text-slate-300 mt-1 text-xs">Valor pago: <span className=" text-emerald-400">R${Number(c.paid_amount).toFixed(2)}</span></p>

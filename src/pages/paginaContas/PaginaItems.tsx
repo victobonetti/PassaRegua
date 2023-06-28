@@ -75,6 +75,9 @@ export default function PaginaItems() {
             return <p className=" text-slate-500 ">Não contém notas...</p>
         }
 
+    }
+
+    const editaPgt = () => {
 
     }
 
@@ -117,12 +120,15 @@ export default function PaginaItems() {
                                             <td className=" text-sm p-2 text-slate-300 w-3/12 ">{data.created_at}</td>
                                             <td className=" text-sm p-2 text-slate-300 w-2/12 ">{data.name}</td>
                                             <td className=" text-sm p-2 text-slate-300 w-1/12 ">{data.quantity}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${data.price.toFixed(2)}</td>
+                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${data.price.toFixed(2)}
+
+                                            </td>
                                             <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${Number(data.quantity * data.price).toFixed(2)}</td>
                                             <td className="  p-2 text-slate-300 w-2/12 text-xs ">{formatNote(data.notes)}</td>
-                                            <td className=" text-center text-sm p-2 text-slate-300 w-2/12 flex justify-evenly">
+                                            <td className=" text-center text-sm p-2 text-slate-300 w-1/12 flex flex-col justify-evenly">
                                                 <button onClick={() => abrirModalExcluir(String(data.id))} className=" transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold rounded text-xs my-2 p-1">Excluir</button>
-                                                <Link to={`/contas/items/note/${data.account_id}/${data.id}/${data.notes}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-900 font-semibold rounded text-xs my-2 p-1">Anotar</button></Link>
+                                                <Link to={`/contas/items/note/${data.account_id}/${data.id}/${data.notes}`}><button className=" w-full transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-900 font-semibold rounded text-xs my-2 p-1">Anotar</button></Link>
+                                                <Link to={`/contas/items/price/${data.account_id}/${data.id}/${data.price.toFixed(2)}/${data.quantity}`}><button className=" w-full transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-neutral-900 font-semibold rounded text-xs my-2 p-1">Editar preço</button></Link>
                                             </td>
                                         </tr>
                                     );

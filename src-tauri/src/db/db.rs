@@ -25,6 +25,8 @@ pub fn init_database(
     Ok(pool.get()?)
 }
 
+
+
 pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()> {
     // Crie a tabela users
     conn.execute(

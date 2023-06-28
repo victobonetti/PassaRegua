@@ -1,9 +1,10 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FeedbackContext } from "../routes/appRouter";
+import { invoke } from "@tauri-apps/api";
 
 export default function PaginaInicial() {
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
-
+  
 
     return (
         <div>

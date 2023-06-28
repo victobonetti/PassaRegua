@@ -1,7 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600&display=swap');
+
+* {
+    font-family: 'Inter';
+}
+
 .load-bar {
     background-color: rgb(203 213 225);
     animation-name: load;
-    animation-duration: .6s;
+    animation-duration: .2s;
     animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
     /* animation-iteration-count: infinite; */
 }

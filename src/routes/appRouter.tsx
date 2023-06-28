@@ -16,6 +16,7 @@ import PaginaItems from '../pages/paginaContas/PaginaItems';
 import PaginaPagamentos from '../pages/paginaContas/PaginaPagamentos';
 import PaginaAdicionarItem from '../pages/paginaContas/PaginaAdicionarItem';
 import PaginaCriarNota from '../pages/paginaContas/PaginaCriarNota';
+import FormularioEditaPreco from '../pages/paginaContas/FormularioEditaPreco';
 
 export const FeedbackContext = createContext<{
   feedback: boolean;
@@ -70,11 +71,11 @@ export default function AppRouter(): JSX.Element {
     if (active == false) {
       setTimeout(() => {
         setLoading(false);
-      }, 500)
+      }, 100)
     }
 
     if (loading == true && active == true) {
-        return;
+      return;
     }
 
     if (loading == false && active == true) {
@@ -117,6 +118,8 @@ export default function AppRouter(): JSX.Element {
             <Route path='/contas/items/note/:id/:itemId/:noteText' element={<PaginaCriarNota />} />
             <Route path='/contas/payments/:id/:total' element={<PaginaPagamentos />} />
             <Route path='/contas/payments/:id/:total/:paid' element={<PaginaPagamentos />} />
+            <Route path='/contas/items/price/:id/:itemId/:priceParam/:quantityParam' element={< FormularioEditaPreco />} />
+            {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
 
             <Route path='/produtos' element={<PaginaProdutos />} />
             <Route path='produtos/novo' element={<FormularioCriaProduto />} />
