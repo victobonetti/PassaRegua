@@ -78,16 +78,17 @@ export default function PaginaUsuarios() {
                 callbackCancel={() => fecharModalExcluir()}
             />
             }
- 
+
             {!modalExcluirAberto &&
                 <><table className="w-full "><tbody className="  text-slate-300  w-full table-auto flex flex-col ">
                     <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
                         <tr className="flex w-full">
-                            <td className="pl-5 text-slate-600 w-1/5 ">CRIADO EM</td>
-                            <td className="pl-5 text-slate-600 w-1/5 ">NOME</td>
-                            <td className="pl-5 text-slate-600 w-1/5 ">SENHA</td>
-                            <td className="pl-5 text-slate-600 w-1/5 ">STATUS</td>
-                            <td className="pl-5 text-slate-600 w-1/5 "></td>
+                            <td className="pl-5 text-slate-600 w-1/6 ">CRIADO EM</td>
+                            <td className="pl-5 text-slate-600 w-1/6 ">NOME</td>
+                            <td className="pl-5 text-slate-600 w-1/6 ">CPF</td>
+                            <td className="pl-5 text-slate-600 w-1/6 ">TELEFONE</td>
+                            <td className="pl-5 text-slate-600 w-1/6 ">STATUS</td>
+                            <td className="pl-5 text-slate-600 w-1/6 "></td>
                         </tr>
                     </thead>
                     {resposta?.length < 1 && (
@@ -99,20 +100,23 @@ export default function PaginaUsuarios() {
                     {resposta.map((data) => {
                         return (
                             <tr key={String(data.id)} className="  w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
-                                <td className=" font-semibold w-1/5 p-5 text-sm whitespace-nowrap ">
+                                <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap ">
                                     {data.created_at.replaceAll("-", "/")}
                                 </td>
-                                <td className=" font-semibold w-1/5 p-5 text-sm whitespace-nowrap ">
+                                <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap ">
                                     {data.username}
                                 </td>
-                                <td className=" font-semibold w-1/5 p-5 text-sm whitespace-nowrap">
-                                    {"*".repeat(data.password.length)}
+                                <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap">
+                                    {data.cpf}
                                 </td>
-                                <td className=" font-semibold w-1/5 p-5  text-sm whitespace-nowrap">
+                                <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap">
+                                    {data.phone}
+                                </td>
+                                <td className=" font-semibold w-1/6 p-5  text-sm whitespace-nowrap">
                                     {data.account_id ? 'Tem conta em aberto' : 'Não tem conta em aberto.'}
                                 </td>
-                                <td className=" w-1/5 p-4  text-sm whitespace-nowrap">
-                                    <Link to={`/usuarios/editar/${data.id}/${data.username}/${data.password}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
+                                <td className=" w-1/6 p-4  text-sm whitespace-nowrap">
+                                    <Link to={`/usuarios/editar/${data.id}/${data.username}/${data.cpf}/${data.phone}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
                                     <button onClick={() => abrirModalExcluir(data)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
                                 </td>
                             </tr>

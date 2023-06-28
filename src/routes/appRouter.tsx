@@ -107,7 +107,7 @@ export default function AppRouter(): JSX.Element {
             <Route path='/usuarios' element={<PaginaUsuarios />} />
             <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
             <Route
-              path='/usuarios/editar/:id/:usernameParam/:passwordParam'
+              path='/usuarios/editar/:id/:usernameParam/:cpfParam/:phoneParam'
               element={<FormularioEditaUsuario />}
             />
             <Route path='/contas' element={<PaginaContas />} />

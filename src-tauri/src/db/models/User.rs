@@ -10,7 +10,8 @@ use uuid::Uuid;
 pub struct User {
     pub id: String,
     pub username: String,
-    pub password: String,
+    pub cpf: String,
+    pub phone: String,
     pub account_id: Option<String>,
     pub created_at: String,
     pub updated_at: Option<String>,
@@ -27,7 +28,8 @@ impl Serialize for User {
         let mut user_map = serializer.serialize_map(Some(4))?;
         user_map.serialize_entry("id", &self.id)?;
         user_map.serialize_entry("username", &self.username)?;
-        user_map.serialize_entry("password", &self.password)?;
+        user_map.serialize_entry("cpf", &self.cpf)?;
+        user_map.serialize_entry("phone", &self.phone)?;
         user_map.serialize_entry("account_id", &self.account_id)?;
         user_map.serialize_entry("created_at", &self.created_at)?;
         user_map.serialize_entry("updated_at", &self.updated_at)?;
@@ -40,13 +42,14 @@ impl User {
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         username: String,
-        password: String,
+        cpf: String,
+        phone: String,
     ) -> Result<String, rusqlite::Error> {
         let uuid = Uuid::new_v4().to_string();
         let date = date_now();
         conn.execute(
-            "INSERT INTO users (id, username, password, account_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-            params![uuid, username, password, Null, date, Null],
+            "INSERT INTO users (id, username, cpf, phone, account_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+            params![uuid, username, cpf, phone, Null, date, Null],
         )?;
         Ok(uuid)
     }
@@ -60,10 +63,11 @@ impl User {
             Ok(User {
                 id: row.get(0)?,
                 username: row.get(1)?,
-                password: row.get(2)?,
-                account_id: row.get(3)?,
-                created_at: row.get(4)?,
-                updated_at: row.get(5)?,
+                cpf: row.get(2)?,
+                phone: row.get(3)?,
+                account_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
             })
         })?;
         let users: Result<Vec<_>, rusqlite::Error> = rows.collect();
@@ -82,10 +86,11 @@ impl User {
             let user = User {
                 id: row.get(0)?,
                 username: row.get(1)?,
-                password: row.get(2)?,
-                account_id: row.get(3)?,
-                created_at: row.get(4)?,
-                updated_at: row.get(5)?,
+                cpf: row.get(2)?,
+                phone: row.get(3)?,
+                account_id: row.get(4)?,
+                created_at: row.get(5)?,
+                updated_at: row.get(6)?,
             };
             println!("User found: {:?}", user);
             Ok(Some(user))
@@ -108,18 +113,19 @@ impl User {
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
         username: String,
-        password: String,
+        cpf: String,
+        phone: String,
     ) -> Result<()> {
         let date = date_now();
         conn.execute(
-            "UPDATE users SET username = ?, password = ?, updated_at = ? WHERE id = ?",
-            params![username, password, date, id],
+            "UPDATE users SET username = ?, cpf = ?, phone = ?, updated_at = ? WHERE id = ?",
+            params![username, cpf, phone, date, id],
         )?;
         let resultados = User::find_one(conn, id)?;
         if let Some(resultados) = resultados {
             assert_eq!(resultados.username, username);
-            println!("{:?}", resultados);
-            println!("{:?},{:?}", username, password);
+            assert_eq!(resultados.cpf, cpf);
+            assert_eq!(resultados.phone, phone);
         }
         Ok(())
     }

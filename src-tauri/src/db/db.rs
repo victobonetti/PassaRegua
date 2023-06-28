@@ -31,7 +31,8 @@ pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Resul
         "CREATE TABLE IF NOT EXISTS users (
             id TEXT PRIMARY KEY,
             username TEXT NOT NULL,
-            password TEXT NOT NULL,
+            cpf TEXT NOT NULL,
+            phone TEXT NOT NULL,
             account_id TEXT,
             created_at TEXT NOT NULL,
             updated_at TEXT

@@ -19,7 +19,7 @@ function App({ load }: { load: boolean }) {
         <nav className="">
           <Link to={'/'}><li className={` ${currentPage === '/' ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : 'pl-4'} cursor-pointer flex items-center list-none hover:bg-slate-700 h-12 font-semibold`}>Visão geral</li></Link>
           <Link to={'/contas'}><li className={` ${currentPage === '/contas' ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : 'pl-4'} cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Acessar contas</li></Link>
-          <Link to={'/usuarios'}><li className={` ${currentPage === '/usuarios' ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : 'pl-4'} cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Gerenciar usuários</li></Link>
+          <Link to={'/usuarios'}><li className={` ${currentPage === '/usuarios' ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : 'pl-4'} cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Gerenciar clientes</li></Link>
           <Link to={'/produtos'}><li className={` ${currentPage === '/produtos' ? 'border-l-4 border-emerald-500 bg-slate-800 pl-3' : 'pl-4'} cursor-pointer flex items-center list-none hover:bg-slate-700 h-12`}>Gerenciar produtos</li></Link>
         </nav>
       </aside>

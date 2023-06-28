@@ -39,13 +39,13 @@ pub fn date_now() -> String {
 
 //User Service
 #[tauri::command]
-fn create_user(username: String, password: String) -> Result<String, String> {
+fn create_user(username: String, cpf: String, phone: String) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
     };
 
-    let result = match User::create_one(&conn, username, password) {
+    let result = match User::create_one(&conn, username, cpf, phone) {
         Ok(result) => Ok(result),
         Err(_) => Err("Erro ao criar usuário.".to_owned()),
     };
@@ -67,7 +67,6 @@ fn find_username(id: String) -> Result<Option<String>, String> {
 
 #[tauri::command]
 fn find_all_users() -> Result<Vec<User>, String> {
-
     println!("Chamada feita");
 
     let conn = match db::db::init_database() {
@@ -78,7 +77,8 @@ fn find_all_users() -> Result<Vec<User>, String> {
     match User::find_all(&conn) {
         Ok(users) => {
             println!("{}", users.len());
-            Ok(users)},
+            Ok(users)
+        }
         Err(e) => Err(e.to_string()),
     }
 }
@@ -110,13 +110,13 @@ fn delete_user_by_id(id: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn edit_user(id: String, username: String, password: String) -> Result<(), String> {
+fn edit_user(id: String, username: String, cpf: String, phone: String) -> Result<(), String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
     };
 
-    match User::edit_one(&conn, id, username, password) {
+    match User::edit_one(&conn, id, username, cpf, phone) {
         Ok(_) => Ok(()),
         Err(_) => Err("Erro ao editar usuário.".to_owned()),
     }
@@ -204,7 +204,7 @@ fn edit_product_name(id: String, new_name: String) -> Result<(), String> {
 //Payments Service
 
 #[tauri::command]
-fn create_payment(amount: f64, account_id: String, payment_type:i32) -> Result<String, String> {
+fn create_payment(amount: f64, account_id: String, payment_type: i32) -> Result<String, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),

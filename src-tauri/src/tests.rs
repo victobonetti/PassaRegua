@@ -2,12 +2,12 @@ use r2d2::{Pool, PooledConnection};
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::params;
 
+use crate::db::db::build_database;
 use crate::Account;
 use crate::Item;
 use crate::Payment;
 use crate::Product;
-use crate::User;
-use crate::db::db::build_database; // Importe o módulo user do arquivo principal
+use crate::User; // Importe o módulo user do arquivo principal
 
 fn setup() -> PooledConnection<SqliteConnectionManager> {
     // Crie uma conexão do banco de dados
@@ -26,31 +26,46 @@ fn test_user_crud() {
 
     // Crie um usuário
     let username = "john";
-    let password = "password";
-    let test_id = User::create_one(&conn, username.to_string(), password.to_string())
-        .unwrap()
-        .clone();
+    let cpf = "123.123.123.21";
+    let phone = "3213-1232";
+    let test_id = User::create_one(
+        &conn,
+        username.to_string(),
+        cpf.to_string(),
+        phone.to_string(),
+    )
+    .unwrap()
+    .clone();
 
     // Encontre o usuário criado
     let found_user = User::find_one(&conn, test_id.clone()).unwrap();
     assert!(found_user.is_some());
     let user = found_user.unwrap();
     assert_eq!(user.username, username);
-    assert_eq!(user.password, password);
+    assert_eq!(user.cpf, cpf);
+    assert_eq!(user.phone, phone);
 
-    let new_username = "Jorge";
-    let new_password = "1234a";
+    let new_username = "errr";
+    let new_cpf = "123.123.123.22";
+    let new_phone = "3213-1231";
 
     //edite o usuário
-    User::edit_one(&conn, test_id.clone(), new_username.to_string(), new_password.to_string()).unwrap();
+    User::edit_one(
+        &conn,
+        test_id.clone(),
+        new_username.to_string(),
+        new_cpf.to_string(),
+        new_phone.to_string(),
+    )
+    .unwrap();
 
-     // Encontre o usuário editado
-     let found_user = User::find_one(&conn, test_id.clone()).unwrap();
-     assert!(found_user.is_some());
-     let user = found_user.unwrap();
-     assert_eq!(user.username, new_username.to_owned());
-     assert_eq!(user.password, new_password.to_owned());
-
+    // Encontre o usuário editado
+    let found_user = User::find_one(&conn, test_id.clone()).unwrap();
+    assert!(found_user.is_some());
+    let user = found_user.unwrap();
+    assert_eq!(user.username, new_username.to_owned());
+    assert_eq!(user.cpf, new_cpf.to_owned());
+    assert_eq!(user.phone, new_phone.to_owned());
     // Exclua o usuário
     User::delete_one(&conn, test_id.clone()).unwrap();
 
@@ -102,11 +117,16 @@ fn test_payment_crud() {
 
     // Crie um usuário
     let username = "john";
-    let password = "password";
-    let test_id = User::create_one(&conn, username.to_string(), password.to_string())
-        .unwrap()
-        .clone();
-
+    let cpf = "123.123.123.21";
+    let phone = "3213-1232";
+    let test_id = User::create_one(
+        &conn,
+        username.to_string(),
+        cpf.to_string(),
+        phone.to_string(),
+    )
+    .unwrap()
+    .clone();
     // Crie uma conta
     let account_id: String = Account::create_account(&conn, test_id.clone()).unwrap();
 
@@ -126,7 +146,7 @@ fn test_payment_crud() {
                 account_id: row.get(2)?,
                 payment_type: row.get(3)?,
                 created_at: row.get(4)?,
-                updated_at: row.get(5)?
+                updated_at: row.get(5)?,
             })
         })
         .unwrap();
@@ -175,13 +195,19 @@ fn test_item_crud() {
 
     // Crie um usuário
     let username = "john";
-    let password = "password";
-    let user_id = User::create_one(&conn, username.to_string(), password.to_string())
-        .unwrap()
-        .clone();
+    let cpf = "123.123.123.21";
+    let phone = "3213-1232";
+    let test_id = User::create_one(
+        &conn,
+        username.to_string(),
+        cpf.to_string(),
+        phone.to_string(),
+    )
+    .unwrap()
+    .clone();
 
     // Crie uma conta
-    let account_id: String = Account::create_account(&conn, user_id.clone()).unwrap();
+    let account_id: String = Account::create_account(&conn, test_id.clone()).unwrap();
 
     // Crie um produto
     let name = "Product A";
@@ -258,10 +284,16 @@ fn test_account_crud() {
 
     // Crie um usuário
     let username = "john";
-    let password = "password";
-    let user_id = User::create_one(&conn, username.to_string(), password.to_string())
-        .unwrap()
-        .clone();
+    let cpf = "123.123.123.21";
+    let phone = "3213-1232";
+    let user_id = User::create_one(
+        &conn,
+        username.to_string(),
+        cpf.to_string(),
+        phone.to_string(),
+    )
+    .unwrap()
+    .clone();
 
     // Crie um produto
     let name = "Product A";
@@ -269,14 +301,14 @@ fn test_account_crud() {
     let product_id = Product::create_one(&conn, name, price).unwrap().clone();
 
     // Crie uma conta
-    let account_id = Account::create_account(&conn, user_id.clone()).unwrap();
+    let account_id = Account::create_account(&conn, user_id.to_string()).unwrap();
 
     // Verifique se a conta foi criada corretamente
     let account = Account::find_one(&conn, account_id.clone()).unwrap();
     assert!(account.is_some());
     let account = account.unwrap();
     assert_eq!(account.id, account_id);
-    assert_eq!(account.user_id, user_id);
+    assert_eq!(account.user_id, user_id.to_string());
     assert_eq!(account.paid_amount, 0.0);
     assert_eq!(account.account_total, 0.0);
 
