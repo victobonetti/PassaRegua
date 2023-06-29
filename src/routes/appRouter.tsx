@@ -112,15 +112,15 @@ export default function AppRouter(): JSX.Element {
 
       <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
         <Routes>
-          <Route path={'/'} element={<App load={loading} />}>
+          <Route path={'/'} element={<App load={loading} dataStorage={{users:users, accounts:accounts, products:products}} />}>
             <Route index element={<PaginaInicial />} />
-            <Route path='/usuarios' element={<PaginaUsuarios />} />
+            <Route path='/usuarios' element={<PaginaUsuarios data={users} setData={setUsers}/>} />
             <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
             <Route
               path='/usuarios/editar/:id/:usernameParam/:cpfParam/:phoneParam'
               element={<FormularioEditaUsuario />}
             />
-            <Route path='/contas' element={<PaginaContas />} />
+            <Route path='/contas' element={<PaginaContas data={accounts} setData={setAccounts} />} />
             <Route path='/contas/novo' element={<PaginaCriarConta />} />
             <Route path='/contas/items/:id' element={<PaginaItems />} />
             <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />

@@ -1,15 +1,13 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { User } from "../../interfaces/User";
 import { Link } from "react-router-dom";
 import ConfirmModal from "../../components/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 
-export default function PaginaUsuarios() {
+export default function PaginaUsuarios({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {
 
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
-
-    const [resposta, setResposta] = useState<User[]>([]);
     const [toDelete, setToDelete] = useState<User>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -25,11 +23,11 @@ export default function PaginaUsuarios() {
 
         try {
             await invoke('delete_user_by_id', { id })
-            let newResposta = resposta;
-            newResposta = newResposta.filter((r) =>
+            let newData = data;
+            newData = newData.filter((r) =>
                 r.id != id
             )
-            setResposta(newResposta)
+            setData(newData)
             fecharModalExcluir();
             createFeedback(false, "Usuário excluído.")
         }
@@ -50,8 +48,10 @@ export default function PaginaUsuarios() {
 
     const fetchData = async (): Promise<void> => {
         try {
-            const data: User[] = await invoke('find_all_users', {});
-            setResposta(data);
+            const all: User[] = await invoke('find_all_users', {});
+            if (all !== data) {
+                setData(all);
+            }
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
@@ -91,27 +91,27 @@ export default function PaginaUsuarios() {
                             <td className="pl-5 text-slate-600 w-1/6 "></td>
                         </tr>
                     </thead>
-                    {resposta.map((data) => {
+                    {data.map((u) => {
                         return (
-                            <tr key={String(data.id)} className="  w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
+                            <tr key={String(u.id)} className="  w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
                                 <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap ">
-                                    {data.created_at.replaceAll("-", "/")}
+                                    {u.created_at.replaceAll("-", "/")}
                                 </td>
                                 <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap ">
-                                    {data.username}
+                                    {u.username}
                                 </td>
                                 <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap">
-                                    {data.cpf}
+                                    {u.cpf}
                                 </td>
                                 <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap">
-                                    {data.phone}
+                                    {u.phone}
                                 </td>
                                 <td className=" font-semibold w-1/6 p-5  text-sm whitespace-nowrap">
-                                    {data.account_id ? 'Tem conta em aberto' : 'Não tem conta em aberto.'}
+                                    {u.account_id ? 'Tem conta em aberto' : 'Não tem conta em aberto.'}
                                 </td>
                                 <td className=" w-1/6 p-4  text-sm whitespace-nowrap">
-                                    <Link to={`/usuarios/editar/${data.id}/${data.username}/${data.cpf}/${data.phone}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
-                                    <button onClick={() => abrirModalExcluir(data)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
+                                    <Link to={`/usuarios/editar/${u.id}/${u.username}/${u.cpf}/${u.phone}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
+                                    <button onClick={() => abrirModalExcluir(u)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
                                 </td>
                             </tr>
                         );

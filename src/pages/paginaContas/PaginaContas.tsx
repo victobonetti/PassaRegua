@@ -1,16 +1,14 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Account from "../../interfaces/Account";
 import ConfirmModal from "../../components/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 
 
-export default function PaginaContas() {
+export default function PaginaContas({ data, setData }: { data: Account[], setData: Dispatch<SetStateAction<Account[]>> }) {
 
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
-
-    const [resposta, setResposta] = useState<Account[]>([]);
     const [toDelete, setToDelete] = useState('');
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -26,7 +24,7 @@ export default function PaginaContas() {
             await invoke("delete_account_by_id", { accountId });
             fecharModalExcluir();
             createFeedback(false, "Conta excluída com sucesso.");
-            setResposta(resposta.filter((c) => c.id !== accountId));
+            setData(data.filter((c) => c.id !== accountId));
         }
         catch (e) {
             createFeedback(true, String(e));
@@ -48,9 +46,10 @@ export default function PaginaContas() {
 
     const fetchData = async (): Promise<void> => {
         try {
-            let data: Account[] = await invoke('find_all_accounts', {});
-            setResposta(data);
-
+            let all: Account[] = await invoke('find_all_accounts', {});
+            if (all !== data) {
+                setData(all);
+            }
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
@@ -79,7 +78,7 @@ export default function PaginaContas() {
                     <Link to={'/contas/novo'}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar nova conta</button></Link>
                 </div>
                     <div className=" p-4 flex flex-wrap">
-                        {resposta.map((c) => {
+                        {data.map((c) => {
                             return (
                                 <div key={String(c.id)} className=" text-slate-300 mb-2 mx-1 shadow-lg rounded bg-slate-800 w-72 p-2">
                                     <div className=" flex justify-between border-b border-slate-700 pb-1 mb-1">
