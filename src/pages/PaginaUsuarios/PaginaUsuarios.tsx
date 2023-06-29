@@ -91,12 +91,6 @@ export default function PaginaUsuarios() {
                             <td className="pl-5 text-slate-600 w-1/6 "></td>
                         </tr>
                     </thead>
-                    {resposta?.length < 1 && (
-                        <tr className="w-full bg-slate-800 p-4 text-2xl">
-                            <td colSpan={5}>Não foram encontrados registros.</td>
-                        </tr>
-                    )}
-
                     {resposta.map((data) => {
                         return (
                             <tr key={String(data.id)} className="  w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">

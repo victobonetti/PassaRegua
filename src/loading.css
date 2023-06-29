@@ -5,11 +5,23 @@
 }
 
 .load-bar {
-    background-color: rgb(203 213 225);
+    background-color: #34d399;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.load_anim {
+    width: 30%;
     animation-name: load;
-    animation-duration: .2s;
-    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-    /* animation-iteration-count: infinite; */
+    animation-duration: .5s;
+    animation-timing-function: ease-out;
+}
+
+.close_anim {
+    animation-name: close;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
 }
 
 @keyframes load {
@@ -18,8 +30,19 @@
     }
 
     100% {
-        width: 100%;
+        width: 30%;
+    }
+}
+
+@keyframes close {
+    0% {
+        width: 30%;
+        opacity: 100%;
     }
 
-   
+    100% {
+        width: 100%;
+        opacity: 0%;
+        transform: scaleY(200%);
+    }
 }

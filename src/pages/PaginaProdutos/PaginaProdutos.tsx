@@ -1,16 +1,13 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Product from "../../interfaces/Product";
 import ConfirmModal from "../../components/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 
-export default function PaginaProdutos() {
+export default function PaginaProdutos({ data, setData }: { data: Product[], setData: Dispatch<SetStateAction<Product[]>> }) {
 
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
-
-
-    const [resposta, setResposta] = useState<Product[]>([]);
     const [toDelete, setToDelete] = useState<Product>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -24,20 +21,23 @@ export default function PaginaProdutos() {
         setModalExcluirAberto(false);
     }
 
-
     useLayoutEffect(() => {
         manageLoading(true)
     }, [])
 
     const fetchData = async (): Promise<void> => {
+
         try {
-            const data: Product[] = await invoke('find_all_products', {});
-            setResposta(data);
+            const p: Product[] = await invoke('find_all_products', {});
+            if (data !== p) {
+                setData(p);
+            }
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
             manageLoading(false);
         }
+
     };
 
     useEffect(() => {
@@ -48,11 +48,11 @@ export default function PaginaProdutos() {
         let id = toDelete?.id
         try {
             await invoke('delete_product_by_id', { id })
-            let newResposta = resposta;
-            newResposta = newResposta.filter((r) =>
+            let newData = data;
+            newData = newData.filter((r) =>
                 r.id != id
             )
-            setResposta(newResposta)
+            setData(newData)
             fecharModalExcluir();
             createFeedback(false, "Produto excluído.")
         }
@@ -84,23 +84,23 @@ export default function PaginaProdutos() {
                                 </tr>
                             </thead>
 
-                            {resposta?.length < 1 && <tr className=" w-full bg-slate-800 p-4 text-2xl"><td colSpan={5}>Não foram encontrados registros.</td></tr>}
+                            {data?.length < 1 && <tr className=" w-full bg-slate-800 p-4 text-2xl"><td colSpan={5}>Não foram encontrados registros.</td></tr>}
 
-                            {resposta?.map((data) => {
+                            {data?.map((p) => {
                                 return (
-                                    <tr key={String(data.id)} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
+                                    <tr key={String(p.id)} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
                                         <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
-                                            {data.created_at.replaceAll("-", "/")}
+                                            {p.created_at.replaceAll("-", "/")}
                                         </td>
                                         <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
-                                            {data.name}
+                                            {p.name}
                                         </td>
                                         <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
-                                            {`R$${Number(data.price).toFixed(2)}`}
+                                            {`R$${Number(p.price).toFixed(2)}`}
                                         </td>
                                         <td className=" text-center w-1/4 p-4  text-sm whitespace-nowrap">
-                                            <Link to={`/produtos/editar/${data.id}/${data.name}/${data.price.toFixed(2)}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
-                                            <button onClick={() => abrirModalExcluir(data)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
+                                            <Link to={`/produtos/editar/${p.id}/${p.name}/${p.price.toFixed(2)}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
+                                            <button onClick={() => abrirModalExcluir(p)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
                                         </td>
                                     </tr>
                                 );

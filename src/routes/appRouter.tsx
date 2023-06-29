@@ -17,6 +17,9 @@ import PaginaPagamentos from '../pages/paginaContas/PaginaPagamentos';
 import PaginaAdicionarItem from '../pages/paginaContas/PaginaAdicionarItem';
 import PaginaCriarNota from '../pages/paginaContas/PaginaCriarNota';
 import FormularioEditaPreco from '../pages/paginaContas/FormularioEditaPreco';
+import { User } from '../interfaces/User';
+import Account from '../interfaces/Account';
+import Product from '../interfaces/Product';
 
 export const FeedbackContext = createContext<{
   feedback: boolean;
@@ -38,6 +41,11 @@ export default function AppRouter(): JSX.Element {
   const [feedback, setFeedback] = useState(false);
   const [feedbacks, setFeedbacks] = useState<FeedbackInterface[]>([]);
   const [loading, setLoading] = useState(false);
+
+  //global data
+  const [users, setUsers] = useState<User[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   const createFeedback = (isErr: boolean, text: string) => {
     let isThrottled = false;
@@ -68,19 +76,20 @@ export default function AppRouter(): JSX.Element {
   };
 
   const manageLoading = (active: boolean) => {
-    if (active == false) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 100)
-    }
+    setLoading(active);
+    // if (active == false) {
+    //   setTimeout(() => {
+    //     setLoading(false);
+    //   }, 100)
+    // }
 
-    if (loading == true && active == true) {
-      return;
-    }
+    // if (loading == true && active == true) {
+    //   return;
+    // }
 
-    if (loading == false && active == true) {
-      setLoading(true);
-    }
+    // if (loading == false && active == true) {
+    //   setLoading(true);
+    // }
 
   }
 
@@ -121,7 +130,7 @@ export default function AppRouter(): JSX.Element {
             <Route path='/contas/items/price/:id/:itemId/:priceParam/:quantityParam' element={< FormularioEditaPreco />} />
             {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
 
-            <Route path='/produtos' element={<PaginaProdutos />} />
+            <Route path='/produtos' element={<PaginaProdutos data={products} setData={setProducts} />} />
             <Route path='produtos/novo' element={<FormularioCriaProduto />} />
             <Route
               path='produtos/editar/:id/:nameParam/:priceParam'

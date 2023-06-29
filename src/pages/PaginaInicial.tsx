@@ -4,7 +4,10 @@ import { invoke } from "@tauri-apps/api";
 
 export default function PaginaInicial() {
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
-  
+
+    useEffect(() => {
+        manageLoading(true);
+    },[])
 
     return (
         <div>
