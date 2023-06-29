@@ -23,21 +23,22 @@ export default function FormularioEditaPreco() {
 
         if (getPrice) {
 
-        }
-        let validar_preco = validaPreco(getPrice);
+            let validar_preco = validaPreco(getPrice);
 
-        if (validar_preco.success) {
+            if (validar_preco.success) {
 
-            setButtonDisabled(true);
-            manageLoading(true);
-            let price = Number(getPrice)
-            try {
-                await invoke("edit_item_price", { id, price });
-                window.location.href = `/contas/items/${id}`
-                createFeedback(false, "Produto criado.");
-            } catch (e) {
-                manageLoading(false);
-                createFeedback(true, String(e));
+                setButtonDisabled(true);
+                manageLoading(true);
+                let price = Number(getPrice)
+                try {
+                    await invoke("edit_item_price", { id:itemId, price:price });
+                    createFeedback(false, "Preço editado.");
+                    window.location.href = `/contas/items/${id}`
+
+                } catch (e) {
+                    manageLoading(false);
+                    createFeedback(true, String(e));
+                }
             }
         }
 

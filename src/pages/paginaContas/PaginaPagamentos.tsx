@@ -1,114 +1,111 @@
-import { invoke } from "@tauri-apps/api";
-import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import Payment from "../../interfaces/Payment";
 import { FeedbackContext } from "../../routes/appRouter";
+import { invoke } from "@tauri-apps/api";
+import ConfirmModal from "../../components/ConfirmModal";
 
 export default function PaginaPagamentos() {
-
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
+    const [data, setData] = useState<Payment[]>([]);
+    const [toDelete, setToDelete] = useState<Payment>();
+    const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
-    const [getValue, setValue] = useState('0.00');
-    const [valueErr, setValueErr] = useState('');
-    const [buttonDisabled, setButtonDisabled] = useState(false);
-
-    const { id, total, paid } = useParams();
-
-    const criaPagamento = async (e: React.FormEvent<HTMLFormElement>) => {
-
-        e.preventDefault();
-        let amount = Number(getValue)
-        let accountId = String(id);
-        let paymentType = 0;
-    
-        if (Number(amount) <= (Number(total) - Number(paid))) {
-            manageLoading(true);
-            console.log(accountId);
-            try {
-                await invoke("create_payment", { amount, accountId, paymentType });
-                window.location.href = '/contas';
-                createFeedback(false, "Pagamento criado.");
-            } catch (e) {
-                manageLoading(false);
-                createFeedback(true, String(e));
-            }
-        } else {
-            createFeedback(true, "Valor do pagamento maior que valor da conta.")
-        }
+    const abrirModalExcluir = (paym: Payment) => {
+        setToDelete(paym);
+        setModalExcluirAberto(true);
     }
+
+    const fecharModalExcluir = () => {
+        setToDelete(undefined);
+        setModalExcluirAberto(false);
+    }
+
+    useLayoutEffect(() => {
+        manageLoading(true)
+    }, [])
+
+    const fetchData = async (): Promise<void> => {
+
+        try {
+            const p: Payment[] = await invoke('find_all_payments', {});
+            setData(p);
+        } catch (e) {
+            createFeedback(true, String(e))
+        } finally {
+            manageLoading(false);
+        }
+
+    };
 
     useEffect(() => {
-        if (getValue.length > 7) {
-            setButtonDisabled(true);
-            setValueErr('Número inválido.')
-        } else {
-            setButtonDisabled(false);
-            setValueErr('')
+        fetchData();
+    }, []);
+
+    const excluirPagamento = async () => {
+        let id = toDelete?.id
+        try {
+            await invoke('delete_payment_by_id', { id })
+            let newData = data;
+            newData = newData.filter((r) =>
+                r.id != id
+            )
+            setData(newData)
+            fecharModalExcluir();
+            createFeedback(false, "Pagamento excluído.")
         }
-    }, [getValue])
-
-    const updatevalue = (n: number) => {
-
-        let splitedvalue = getValue.split('');
-        splitedvalue.splice(getValue.indexOf('.'), 1);
-
-        let newvalue = splitedvalue.map((value, index) => {
-            if (index == 0 && value == '0') {
-                return;
-            } else {
-                return value;
-            }
-        });
-
-        newvalue.push(String(n));
-
-        newvalue.splice(newvalue.length - 2, 0, '.');
-
-        if (newvalue) {
-            setValue(newvalue.join(''));
+        catch (e) {
+            createFeedback(true, String(e))
         }
-
-    }
-
-    const clearvalue = () => {
-        setValue('0.00');
     }
 
     return (
-        <div className=" h-full flex flex-col items-center justify-center">
-            <h1 className=" text-3xl mb-4">Criar novo pagamento</h1>
-            <form onSubmit={e => criaPagamento(e)} className="flex flex-col w-96">
-                <label className="text-xs font-semibold text-slate-400" htmlFor="">Valor</label>
-                <div className=" rounded mt-2 items-center p-4  bg-slate-400 text-4xl">R${getValue}</div>
-                <span className=" mb-2 text-xs text-red-500">{valueErr}</span>
-                <div className=" self-center mt-4 w-48  bg-slate-950 rounded">
-                    <div className=" flex ">
-                        <div onClick={() => updatevalue(7)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">7</div>
-                        <div onClick={() => updatevalue(8)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">8</div>
-                        <div onClick={() => updatevalue(9)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">9</div>
-                    </div>
-                    <div className=" flex ">
-                        <div onClick={() => updatevalue(4)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">4</div>
-                        <div onClick={() => updatevalue(5)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">5</div>
-                        <div onClick={() => updatevalue(6)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">6</div>
-                    </div>
-                    <div className=" flex ">
-                        <div onClick={() => updatevalue(1)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">1</div>
-                        <div onClick={() => updatevalue(2)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">2</div>
-                        <div onClick={() => updatevalue(3)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">3</div>
-                    </div>
-                    <div className="flex ">
-                        <div onClick={() => updatevalue(0)} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-12 bg-emerald-300">0</div>
-                        <div onClick={clearvalue} className=" flex items-center justify-center text-lg text-emerald-900 font-semibold rounded cursor-pointer hover:scale-105 m-2 h-12 w-28 bg-slate-300">Limpar</div>
-                    </div>
+        <>
+            {modalExcluirAberto && <ConfirmModal
+                titulo="Tem certeza?"
+                texto="Por favor, confirme que deseja prosseguir com a exclusão do pagamento clicando no botão abaixo."
+                botaotexto="Sim, excluir."
+                callbackConfirm={() => excluirPagamento()}
+                callbackCancel={() => fecharModalExcluir()}
+            />
+            }
+            {!modalExcluirAberto &&
+                <>
+                    <table className=" w-full ">
+                        <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
+                            <tr className="flex w-full">
+                                <td className="pl-5 text-slate-600 w-1/4 ">CRIADO EM</td>
+                                <td className="pl-5 text-slate-600 w-1/4 ">VALOR</td>
+                                <td className="pl-5 text-slate-600 w-1/4 ">TIPO</td>
+                                <td className="pl-5 text-slate-600 w-1/4 "></td>
+                            </tr>
+                        </thead>
+                        <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
 
+                            {data?.length < 1 && <tr className=" w-full bg-slate-800 p-4 text-2xl"><td colSpan={5}>Não foram encontrados registros.</td></tr>}
 
-                </div>
-                <div className=" mt-4 flex items-center w-full justify-between">
-                    <Link to={'/contas'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-                    {!buttonDisabled && <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold p-2 rounded">Confirmar</button>}
-                    {buttonDisabled && <button disabled className=" opacity-50 text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold p-2 rounded">Confirmar</button>}
-                </div>
-            </form>
-        </div>
+                            {data?.map((p) => {
+                                return (
+                                    <tr key={String(p.id)} className=" w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
+                                        <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
+                                            {p.created_at.replaceAll("-", "/")}
+                                        </td>
+                                        <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap ">
+                                            {`R$${p.amount.toFixed(2)}`}
+                                        </td>
+                                        <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
+                                            {p.paymentType}
+                                        </td>
+                                        <td className=" text-center w-1/4 p-4  text-sm whitespace-nowrap">
+                                            <button onClick={() => abrirModalExcluir(p)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody></table><div className=" justify-center p-2 flex ">
+                        <Link to={`/contas/payments/${c.id}/${c.account_total}/${c.paid_amount}`}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo produto</button></Link>
+                    </div>
+                </>
+            }
+        </>
     )
 }

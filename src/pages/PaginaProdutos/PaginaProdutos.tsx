@@ -74,15 +74,15 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
             {!modalExcluirAberto &&
                 <>
                     <table className=" w-full ">
+                        <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
+                            <tr className="flex w-full">
+                                <td className="pl-5 text-slate-600 w-1/4 ">CRIADO EM</td>
+                                <td className="pl-5 text-slate-600 w-1/4 ">PRODUTO</td>
+                                <td className="pl-5 text-slate-600 w-1/4 ">PREÇO</td>
+                                <td className="pl-5 text-slate-600 w-1/4 "></td>
+                            </tr>
+                        </thead>
                         <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
-                            <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
-                                <tr className="flex w-full">
-                                    <td className="pl-5 text-slate-600 w-1/4 ">CRIADO EM</td>
-                                    <td className="pl-5 text-slate-600 w-1/4 ">PRODUTO</td>
-                                    <td className="pl-5 text-slate-600 w-1/4 ">PREÇO</td>
-                                    <td className="pl-5 text-slate-600 w-1/4 "></td>
-                                </tr>
-                            </thead>
 
                             {data?.length < 1 && <tr className=" w-full bg-slate-800 p-4 text-2xl"><td colSpan={5}>Não foram encontrados registros.</td></tr>}
 

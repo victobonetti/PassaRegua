@@ -38,11 +38,11 @@ pub fn date_now() -> String {
 }
 
 #[tauri::command]
-fn get_database_content_status()-> bool{
+fn get_database_content_status() -> bool {
     let users = find_all_users().unwrap();
     match users.len() {
-        0 =>  false,
-        _ => true
+        0 => false,
+        _ => true,
     }
 }
 
@@ -219,9 +219,20 @@ fn create_payment(amount: f64, account_id: String, payment_type: i32) -> Result<
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
     };
 
-    match Payment::create_one(&conn, amount, account_id, payment_type) {
-        Ok(result) => Ok(result),
-        Err(e) => Err(e.to_string()),
+    // Types:
+    // 0 - Dinheiro;
+    // 1 - Crédito;
+    // 2 - Débito;
+    // 3 - PIX;
+    // 4 - Vale alimentação;
+
+    if payment_type > 4 || payment_type < 0 {
+        Err("Tipo de pagamento inválido.".to_string())
+    } else {
+        match Payment::create_one(&conn, amount, account_id, payment_type) {
+            Ok(result) => Ok(result),
+            Err(e) => Err(e.to_string()),
+        }
     }
 }
 

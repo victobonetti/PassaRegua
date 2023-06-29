@@ -130,6 +130,8 @@ impl Item {
             params![price, id],
         )?;
 
+        println!("{}", price);
+
         Ok(())
     }
 

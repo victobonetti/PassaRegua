@@ -65,13 +65,13 @@ export default function FormularioEditaUsuario() {
         <h1 className=" text-3xl mb-4">Editqar novo usuário</h1>
         <form onSubmit={e => editaUsuario(e)} className="flex flex-col w-96">
             <label className=" border-none text-xs font-semibold text-slate-400" htmlFor="username">NOME</label>
-            <input value={username} onChange={e => setUsername(e.target.value)} className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="username" />
+            <input autoComplete="none" value={username} onChange={e => setUsername(e.target.value)} className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="username" />
             <span className=" mb-2 text-xs text-red-500">{usernameErr}</span>
             <label className="text-xs font-semibold text-slate-400" htmlFor="">CPF</label>
-            <input value={cpf} onChange={e => setCpf(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="password" />
+            <input autoComplete="none" value={cpf} onChange={e => setCpf(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="password" />
             <span className=" mb-2 text-xs text-red-500">{cpfErr}</span>
             <label className="text-xs font-semibold text-slate-400" htmlFor="">TELEFONE</label>
-            <input value={phone} onChange={e => setPhone(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="password" />
+            <input autoComplete="none" value={phone} onChange={e => setPhone(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="password" />
             <span className=" mb-2 text-xs text-red-500">{phoneErr}</span>
             <div className=" mt-4 flex items-center w-full justify-between">
                 <Link to={'/usuarios'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>

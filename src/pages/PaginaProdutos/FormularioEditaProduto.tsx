@@ -99,10 +99,10 @@ export default function FormularioEditaProduto() {
             <h1 className=" text-3xl mb-4">Criar novo produto</h1>
             <form onSubmit={e => editaProduto(e)} className="flex flex-col w-96">
                 <label className=" border-none text-xs font-semibold text-slate-400" htmlFor="username">NOME</label>
-                <input value={name} autoComplete="none" onChange={e => setName(e.target.value)} className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="name" />
+                <input autoComplete="none" value={name} onChange={e => setName(e.target.value)} className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="name" />
                 <span className=" mb-2 text-xs text-red-500">{nameErr}</span>
                 <label className="text-xs font-semibold text-slate-400" htmlFor="">PREÇO</label>
-                <div className=" rounded mt-2 items-center p-4  bg-slate-400 text-4xl">R${getPrice}</div>
+                <div className=" rounded mt-2 items-center p-4  bg-slate-600  text-4xl">R${getPrice}</div>
                 <span className=" mb-2 text-xs text-red-500">{priceErr}</span>
                 <div className=" self-center mt-4 w-48  bg-slate-950 rounded">
                     <div className=" flex ">

@@ -114,6 +114,8 @@ impl Product {
         new_price: f64,
     ) -> Result<(), rusqlite::Error> {
 
+        println!("price is: {}", new_price);
+
         let date = date_now();
 
         conn.execute(

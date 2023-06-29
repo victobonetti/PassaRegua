@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from '../App';
 import PaginaInicial from '../pages/PaginaInicial';
@@ -13,13 +13,14 @@ import FormularioCriaProduto from '../pages/PaginaProdutos/FormularioCriaProduto
 import FormularioEditaProduto from '../pages/PaginaProdutos/FormularioEditaProduto';
 import PaginaCriarConta from '../pages/paginaContas/PaginaCriarConta';
 import PaginaItems from '../pages/paginaContas/PaginaItems';
-import PaginaPagamentos from '../pages/paginaContas/PaginaPagamentos';
 import PaginaAdicionarItem from '../pages/paginaContas/PaginaAdicionarItem';
 import PaginaCriarNota from '../pages/paginaContas/PaginaCriarNota';
 import FormularioEditaPreco from '../pages/paginaContas/FormularioEditaPreco';
 import { User } from '../interfaces/User';
 import Account from '../interfaces/Account';
 import Product from '../interfaces/Product';
+import { invoke } from '@tauri-apps/api';
+import PaginaCriaPagamentos from '../pages/paginaContas/PaginaCriaPagamentos';
 
 export const FeedbackContext = createContext<{
   feedback: boolean;
@@ -37,15 +38,32 @@ export const FeedbackContext = createContext<{
   manageLoading: () => { }
 });
 
+
+
 export default function AppRouter(): JSX.Element {
   const [feedback, setFeedback] = useState(false);
   const [feedbacks, setFeedbacks] = useState<FeedbackInterface[]>([]);
   const [loading, setLoading] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(false);
 
   //global data
   const [users, setUsers] = useState<User[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+
+  const fetchData = async () => {
+    let data_users: User[] = await invoke('find_all_users', {})
+    let data_accounts: Account[] = await invoke('find_all_accounts', {})
+    let data_products: Product[] = await invoke('find_all_products', {})
+    setUsers(data_users);
+    setAccounts(data_accounts);
+    setProducts(data_products);
+    setFirstLoad(false);
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   const createFeedback = (isErr: boolean, text: string) => {
     let isThrottled = false;
@@ -109,36 +127,37 @@ export default function AppRouter(): JSX.Element {
             );
 
           })}  </div>}
+     
+        <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
+          <Routes>
+            <Route path={'/'} element={<App load={loading} firstLoad={firstLoad} dataStorage={{ users: users, accounts: accounts, products: products }} />}>
+              
+              <Route index element={<PaginaInicial />} />
+              <Route path='/usuarios' element={<PaginaUsuarios data={users} setData={setUsers} />} />
+              <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
+              <Route
+                path='/usuarios/editar/:id/:usernameParam/:cpfParam/:phoneParam'
+                element={<FormularioEditaUsuario />}
+              />
+              <Route path='/contas' element={<PaginaContas data={accounts} setData={setAccounts} />} />
+              <Route path='/contas/novo' element={<PaginaCriarConta />} />
+              <Route path='/contas/items/:id' element={<PaginaItems />} />
+              <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
+              <Route path='/contas/items/note/:id/:itemId/:noteText' element={<PaginaCriarNota />} />
+              <Route path='/contas/payments/:id/:total/:paid' element={<PaginaCriaPagamentos />} />
+              <Route path='/contas/items/price/:id/:itemId/:priceParam/:quantityParam' element={< FormularioEditaPreco />} />
+              {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
 
-      <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
-        <Routes>
-          <Route path={'/'} element={<App load={loading} dataStorage={{users:users, accounts:accounts, products:products}} />}>
-            <Route index element={<PaginaInicial />} />
-            <Route path='/usuarios' element={<PaginaUsuarios data={users} setData={setUsers}/>} />
-            <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
-            <Route
-              path='/usuarios/editar/:id/:usernameParam/:cpfParam/:phoneParam'
-              element={<FormularioEditaUsuario />}
-            />
-            <Route path='/contas' element={<PaginaContas data={accounts} setData={setAccounts} />} />
-            <Route path='/contas/novo' element={<PaginaCriarConta />} />
-            <Route path='/contas/items/:id' element={<PaginaItems />} />
-            <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
-            <Route path='/contas/items/note/:id/:itemId/:noteText' element={<PaginaCriarNota />} />
-            <Route path='/contas/payments/:id/:total' element={<PaginaPagamentos />} />
-            <Route path='/contas/payments/:id/:total/:paid' element={<PaginaPagamentos />} />
-            <Route path='/contas/items/price/:id/:itemId/:priceParam/:quantityParam' element={< FormularioEditaPreco />} />
-            {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
-
-            <Route path='/produtos' element={<PaginaProdutos data={products} setData={setProducts} />} />
-            <Route path='produtos/novo' element={<FormularioCriaProduto />} />
-            <Route
-              path='produtos/editar/:id/:nameParam/:priceParam'
-              element={<FormularioEditaProduto />}
-            />
-          </Route>
-        </Routes>
-      </FeedbackContext.Provider >
+              <Route path='/produtos' element={<PaginaProdutos data={products} setData={setProducts} />} />
+              <Route path='produtos/novo' element={<FormularioCriaProduto />} />
+              <Route
+                path='produtos/editar/:id/:nameParam/:priceParam'
+                element={<FormularioEditaProduto />}
+              />
+            </Route>
+          </Routes>
+        </FeedbackContext.Provider >
+      
     </Router >
 
   );
