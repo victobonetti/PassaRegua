@@ -163,20 +163,20 @@ fn test_payment_crud() {
 
     // Atualize o valor do pagamento
     let new_amount = 200.0;
-    Payment::update_amount(&conn, payment.id.clone(), new_amount).unwrap();
+    Payment::update_amount(&conn, account_id.clone(), new_amount).unwrap();
 
     // Encontre o pagamento atualizado
-    let payment = Payment::find_one(&conn, payment.id.clone()).unwrap();
-    assert!(payment.is_some());
-    let payment = payment.unwrap();
-    assert_eq!(payment.amount, new_amount);
+    let payment = Payment::find_all(&conn, account_id.clone()).unwrap();
+    assert!(payment.len() > 1);
+    let payment = payment;
+    assert_eq!(payment[0].amount, new_amount);
 
     // Exclua o pagamento
-    Payment::delete_one(&conn, payment.id.clone()).unwrap();
+    Payment::delete_one(&conn, payment[0].id.clone()).unwrap();
 
     // Verifique se o pagamento foi removido
-    let payment = Payment::find_one(&conn, payment.id.clone()).unwrap();
-    assert!(payment.is_none());
+    let payment = Payment::find_all(&conn, payment[0].id.clone()).unwrap();
+    assert!(payment[0].id.);
 
     // Exclua a conta
     Account::delete_one(&conn, account_id.clone()).unwrap();

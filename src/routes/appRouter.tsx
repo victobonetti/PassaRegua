@@ -21,6 +21,7 @@ import Account from '../interfaces/Account';
 import Product from '../interfaces/Product';
 import { invoke } from '@tauri-apps/api';
 import PaginaCriaPagamentos from '../pages/paginaContas/PaginaCriaPagamentos';
+import PaginaPagamentos from '../pages/paginaContas/PaginaPagamentos';
 
 export const FeedbackContext = createContext<{
   feedback: boolean;
@@ -144,7 +145,8 @@ export default function AppRouter(): JSX.Element {
               <Route path='/contas/items/:id' element={<PaginaItems />} />
               <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
               <Route path='/contas/items/note/:id/:itemId/:noteText' element={<PaginaCriarNota />} />
-              <Route path='/contas/payments/:id/:total/:paid' element={<PaginaCriaPagamentos />} />
+              <Route path='/contas/pagamentos/:id/:total/:paid' element={<PaginaPagamentos />} />
+              <Route path='/contas/pagamentos/add/:id/:total/:paid' element={<PaginaCriaPagamentos />} />
               <Route path='/contas/items/price/:id/:itemId/:priceParam/:quantityParam' element={< FormularioEditaPreco />} />
               {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
 

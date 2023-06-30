@@ -3,12 +3,15 @@ import Payment from "../../interfaces/Payment";
 import { FeedbackContext } from "../../routes/appRouter";
 import { invoke } from "@tauri-apps/api";
 import ConfirmModal from "../../components/ConfirmModal";
+import { Link, useParams } from "react-router-dom";
 
 export default function PaginaPagamentos() {
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [data, setData] = useState<Payment[]>([]);
     const [toDelete, setToDelete] = useState<Payment>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
+
+    const {id, total, paid} = useParams();
 
     const abrirModalExcluir = (paym: Payment) => {
         setToDelete(paym);
@@ -27,7 +30,8 @@ export default function PaginaPagamentos() {
     const fetchData = async (): Promise<void> => {
 
         try {
-            const p: Payment[] = await invoke('find_all_payments', {});
+            let accountId = id;
+            const p: Payment[] = await invoke('find_payments_by_id', {accountId});
             setData(p);
         } catch (e) {
             createFeedback(true, String(e))
@@ -102,7 +106,7 @@ export default function PaginaPagamentos() {
                                 );
                             })}
                         </tbody></table><div className=" justify-center p-2 flex ">
-                        <Link to={`/contas/payments/${c.id}/${c.account_total}/${c.paid_amount}`}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo produto</button></Link>
+                        <Link to={`/contas/pagamentos/add/${id}/${total}/${paid}`}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo produto</button></Link>
                     </div>
                 </>
             }

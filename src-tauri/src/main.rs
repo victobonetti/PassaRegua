@@ -237,13 +237,13 @@ fn create_payment(amount: f64, account_id: String, payment_type: i32) -> Result<
 }
 
 #[tauri::command]
-fn find_payment_by_id(id: String) -> Result<Option<Payment>, String> {
+fn find_payments_by_id(account_id: String) -> Result<Vec<Payment>, String> {
     let conn = match db::db::init_database() {
         Ok(conn) => conn,
         Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
     };
 
-    let payment = match Payment::find_one(&conn, id) {
+    let payment = match Payment::find_all(&conn, account_id) {
         Ok(payment) => Ok(payment),
         Err(_) => Err("Erro ao buscar pagamento.".to_owned()),
     };
@@ -434,7 +434,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             edit_product_price,
             edit_product_name,
             create_payment,
-            find_payment_by_id,
+            find_payments_by_id,
             update_payment_amount,
             delete_payment_by_id,
             create_item,

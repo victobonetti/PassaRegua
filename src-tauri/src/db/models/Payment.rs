@@ -1,6 +1,6 @@
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite::{params, Result, types::Null};
+use rusqlite::{params, types::Null, Result};
 use uuid::Uuid;
 
 #[derive(Debug)]
@@ -11,7 +11,6 @@ pub struct Payment {
     pub payment_type: i32,
     pub created_at: String,
     pub updated_at: Option<String>,
-
 }
 
 use serde::{ser::SerializeMap, Serialize, Serializer};
@@ -40,8 +39,6 @@ impl Payment {
         account_id: String,
         payment_type: i32,
     ) -> Result<String, rusqlite::Error> {
-
-
         // Verificar se o ID da conta é válido
         let account_exists: bool = conn.query_row(
             "SELECT COUNT(*) FROM accounts WHERE id = ?1",
@@ -66,12 +63,12 @@ impl Payment {
         Ok(uuid)
     }
 
-    pub fn find_one(
+    pub fn find_all(
         conn: &PooledConnection<SqliteConnectionManager>,
-        id: String,
-    ) -> Result<Option<Payment>, rusqlite::Error> {
-        let mut stmt = conn.prepare("SELECT * FROM payments WHERE id = ?1")?;
-        let mut rows = stmt.query(params![id])?;
+        account_id: String,
+    ) -> Result<Vec<Payment>, rusqlite::Error> {
+        let mut stmt = conn.prepare("SELECT * FROM payments WHERE account_id = ?1")?;
+        let mut rows = stmt.query(params![account_id])?;
 
         if let Some(row) = rows.next()? {
             let payment = Payment {
