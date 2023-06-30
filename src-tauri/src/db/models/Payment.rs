@@ -68,21 +68,23 @@ impl Payment {
         account_id: String,
     ) -> Result<Vec<Payment>, rusqlite::Error> {
         let mut stmt = conn.prepare("SELECT * FROM payments WHERE account_id = ?1")?;
-        let mut rows = stmt.query(params![account_id])?;
-
-        if let Some(row) = rows.next()? {
-            let payment = Payment {
+        let rows = stmt.query_map(params![account_id], |row|{
+            Ok(Payment {
                 id: row.get(0)?,
                 amount: row.get(1)?,
                 account_id: row.get(2)?,
                 payment_type: row.get(3)?,
                 created_at: row.get(4)?,
                 updated_at: row.get(5)?,
+            })
+        })?;
+
+            let mut payments = Vec::new();
+            for payment_iter in rows {
+                let p = payment_iter?;
+                payments.push(p);
             };
-            Ok(Some(payment))
-        } else {
-            Ok(None)
-        }
+            Ok(payments)
     }
 
     pub fn update_amount(

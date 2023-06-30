@@ -32,6 +32,7 @@ export default function PaginaPagamentos() {
         try {
             let accountId = id;
             const p: Payment[] = await invoke('find_payments_by_id', {accountId});
+            console.log(p)
             setData(p);
         } catch (e) {
             createFeedback(true, String(e))
@@ -97,7 +98,7 @@ export default function PaginaPagamentos() {
                                             {`R$${p.amount.toFixed(2)}`}
                                         </td>
                                         <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
-                                            {p.paymentType}
+                                            {p.type}
                                         </td>
                                         <td className=" text-center w-1/4 p-4  text-sm whitespace-nowrap">
                                             <button onClick={() => abrirModalExcluir(p)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>

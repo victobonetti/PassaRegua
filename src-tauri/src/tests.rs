@@ -176,7 +176,7 @@ fn test_payment_crud() {
 
     // Verifique se o pagamento foi removido
     let payment = Payment::find_all(&conn, payment[0].id.clone()).unwrap();
-    assert!(payment[0].id.);
+    assert!(payment.len() == 0);
 
     // Exclua a conta
     Account::delete_one(&conn, account_id.clone()).unwrap();
