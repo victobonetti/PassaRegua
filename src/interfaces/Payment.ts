@@ -7,6 +7,23 @@ export default interface Payment {
     updated_at?:String,
 }
 
+export function getType(n:number){
+    switch (n) {
+        case 0 :
+            return 'Dinheiro';
+        case 1 :
+            return 'Crédito';
+        case 2 :
+            return 'Débito';
+        case 3:
+            return 'PIX';
+        case 4:
+            return 'Vale Alimenação'
+        default:
+            return '???';
+    }
+}
+
 
     // Types:
     // 0 - Dinheiro;

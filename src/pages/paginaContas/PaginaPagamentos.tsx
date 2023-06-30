@@ -1,5 +1,5 @@
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
-import Payment from "../../interfaces/Payment";
+import Payment, { getType } from "../../interfaces/Payment";
 import { FeedbackContext } from "../../routes/appRouter";
 import { invoke } from "@tauri-apps/api";
 import ConfirmModal from "../../components/ConfirmModal";
@@ -98,7 +98,7 @@ export default function PaginaPagamentos() {
                                             {`R$${p.amount.toFixed(2)}`}
                                         </td>
                                         <td className=" font-semibold w-1/4 p-5 text-sm whitespace-nowrap">
-                                            {p.type}
+                                            {getType(Number(p.type))}
                                         </td>
                                         <td className=" text-center w-1/4 p-4  text-sm whitespace-nowrap">
                                             <button onClick={() => abrirModalExcluir(p)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
@@ -107,7 +107,7 @@ export default function PaginaPagamentos() {
                                 );
                             })}
                         </tbody></table><div className=" justify-center p-2 flex ">
-                        <Link to={`/contas/pagamentos/add/${id}/${total}/${paid}`}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo produto</button></Link>
+                        <Link to={`/contas/pagamentos/add/${id}/${total}/${paid}`}><button className=" transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-4 py-2 rounded text-lg">Criar novo pagamento</button></Link>
                     </div>
                 </>
             }
