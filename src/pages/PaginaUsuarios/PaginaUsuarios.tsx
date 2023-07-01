@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { User } from "../../interfaces/User";
 import { Link } from "react-router-dom";
-import ConfirmModal from "../../components/ConfirmModal";
+import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 
 export default function PaginaUsuarios({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {

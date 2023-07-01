@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Account from "../../interfaces/Account";
-import ConfirmModal from "../../components/ConfirmModal";
+import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 
 

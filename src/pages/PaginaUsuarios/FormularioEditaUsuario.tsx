@@ -4,7 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import { User } from "../../interfaces/User";
 import { FeedbackContext } from "../../routes/appRouter";
 import { ZodError, z } from 'zod'
-import { validaNome } from "../../interfaces/ZodInputs";
+import { validaCpf, validaNome, validaPhone } from "../../interfaces/ZodInputs";
+import TextInput from "../../components/inputs/TextInput";
 
 export default function FormularioEditaUsuario() {
 
@@ -30,8 +31,8 @@ export default function FormularioEditaUsuario() {
         e.preventDefault();
 
         let validar_nome = validaNome(username);
-        let validar_cpf = validaNome(cpf);
-        let validar_telefone = validaNome(phone);
+        let validar_cpf = validaCpf(cpf);
+        let validar_telefone = validaPhone(phone);
 
         if (validar_nome.success && validar_cpf.success && validar_telefone.success) {
             manageLoading(true);
@@ -49,12 +50,11 @@ export default function FormularioEditaUsuario() {
                 setInputUsernameErr("Nome deve conter, ao menos, 3 caracteres.");
             }
             if (!validar_cpf.success) {
-                setInputCpfErr("Senha deve conter, ao menos, 3 caracteres.");
+                setInputCpfErr("CPF precisa conter 11 caracteres.");
             }
             if (!validar_telefone.success) {
-                setInputCpfErr("Senha deve conter, ao menos, 3 caracteres.");
+                setInputPhoneErr("Telefone precisa conter 10 - 11 caracteres, incluindo o prefixo. Exemplo: 19991233210.");
             }
-
 
         }
 
@@ -62,22 +62,16 @@ export default function FormularioEditaUsuario() {
 
     return (
         <div className=" h-full flex flex-col items-center justify-center">
-        <h1 className=" text-3xl mb-4">Editqar novo usuário</h1>
-        <form onSubmit={e => editaUsuario(e)} className="flex flex-col w-96">
-            <label className=" border-none text-xs font-semibold text-slate-400" htmlFor="username">NOME</label>
-            <input autoComplete="none" value={username} onChange={e => setUsername(e.target.value)} className="mb-2 shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="username" />
-            <span className=" mb-2 text-xs text-red-500">{usernameErr}</span>
-            <label className="text-xs font-semibold text-slate-400" htmlFor="">CPF</label>
-            <input autoComplete="none" value={cpf} onChange={e => setCpf(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="password" />
-            <span className=" mb-2 text-xs text-red-500">{cpfErr}</span>
-            <label className="text-xs font-semibold text-slate-400" htmlFor="">TELEFONE</label>
-            <input autoComplete="none" value={phone} onChange={e => setPhone(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="password" />
-            <span className=" mb-2 text-xs text-red-500">{phoneErr}</span>
-            <div className=" mt-4 flex items-center w-full justify-between">
-                <Link to={'/usuarios'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-               <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>
-            </div>
-        </form>
-    </div>
+            <h1 className=" text-3xl mb-4">Editar novo usuário</h1>
+            <form onSubmit={e => editaUsuario(e)} className="flex flex-col w-96">
+                <TextInput value={username} set={setUsername} name={"username"} id={"username"} label={"Nome do usuário"} err={usernameErr} />
+                <TextInput value={cpf} set={setCpf} name={"cpf"} id={"cpf"} label={"Cadastro de pessoa física (CPF)"} err={cpfErr} />
+                <TextInput value={phone} set={setPhone} name={"phone"} id={"phone"} label={"Telefone celular"} err={phoneErr} />
+                <div className=" mt-4 flex items-center w-full justify-between">
+                    <Link to={'/usuarios'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
+                    <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>
+                </div>
+            </form>
+        </div>
     )
 }

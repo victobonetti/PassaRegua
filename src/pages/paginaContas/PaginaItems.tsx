@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api";
 import Account from "../../interfaces/Account";
 import { FeedbackContext } from "../../routes/appRouter";
-import ConfirmModal from "../../components/ConfirmModal";
+import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 
 export default function PaginaItems() {
 

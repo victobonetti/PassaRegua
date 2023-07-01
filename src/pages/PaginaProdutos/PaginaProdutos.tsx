@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Product from "../../interfaces/Product";
-import ConfirmModal from "../../components/ConfirmModal";
+import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 
 export default function PaginaProdutos({ data, setData }: { data: Product[], setData: Dispatch<SetStateAction<Product[]>> }) {

@@ -2,7 +2,7 @@ import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import Payment, { getType } from "../../interfaces/Payment";
 import { FeedbackContext } from "../../routes/appRouter";
 import { invoke } from "@tauri-apps/api";
-import ConfirmModal from "../../components/ConfirmModal";
+import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { Link, useParams } from "react-router-dom";
 
 export default function PaginaPagamentos() {
@@ -11,7 +11,7 @@ export default function PaginaPagamentos() {
     const [toDelete, setToDelete] = useState<Payment>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
-    const {id, total, paid} = useParams();
+    const { id, total, paid } = useParams();
 
     const abrirModalExcluir = (paym: Payment) => {
         setToDelete(paym);
@@ -31,7 +31,7 @@ export default function PaginaPagamentos() {
 
         try {
             let accountId = id;
-            const p: Payment[] = await invoke('find_payments_by_id', {accountId});
+            const p: Payment[] = await invoke('find_payments_by_id', { accountId });
             console.log(p)
             setData(p);
         } catch (e) {
