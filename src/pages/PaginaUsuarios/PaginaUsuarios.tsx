@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
+import TableComponent from "../../components/table/tableComponent";
 
 export default function PaginaUsuarios({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {
 
@@ -68,6 +69,10 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
         fetchData();
     }, []);
 
+    const editUser = (u: User) => {
+        window.location.href = `/usuarios/editar/${u.id}/${u.username}/${u.cpf}/${u.phone}`
+    }
+
     return (
         <>
 
@@ -81,43 +86,16 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
             }
 
             {!modalExcluirAberto &&
-                <><table className="w-full "><tbody className="  text-slate-300  w-full table-auto flex flex-col ">
-                    <thead className=" select-none bg-slate-400 font-semibold py-4 flex w-full text-sm ">
-                        <tr className="flex w-full">
-                            <td className="pl-5 text-slate-600 w-1/6 ">CRIADO EM</td>
-                            <td className="pl-5 text-slate-600 w-1/6 ">NOME</td>
-                            <td className="pl-5 text-slate-600 w-1/6 ">CPF</td>
-                            <td className="pl-5 text-slate-600 w-1/6 ">TELEFONE</td>
-                            <td className="pl-5 text-slate-600 w-1/6 ">STATUS</td>
-                            <td className="pl-5 text-slate-600 w-1/6 "></td>
-                        </tr>
-                    </thead>
-                    {data.map((u) => {
-                        return (
-                            <tr key={String(u.id)} className="  w-full flex justify-evenly bg-slate-800  odd:bg-slate-700">
-                                <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap ">
-                                    {u.created_at.replaceAll("-", "/")}
-                                </td>
-                                <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap ">
-                                    {u.username}
-                                </td>
-                                <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap">
-                                    {u.cpf}
-                                </td>
-                                <td className=" font-semibold w-1/6 p-5 text-sm whitespace-nowrap">
-                                    {u.phone}
-                                </td>
-                                <td className=" font-semibold w-1/6 p-5  text-sm whitespace-nowrap">
-                                    {u.account_id ? 'Tem conta em aberto' : 'Não tem conta em aberto.'}
-                                </td>
-                                <td className=" w-1/6 p-4  text-sm whitespace-nowrap">
-                                    <Link to={`/usuarios/editar/${u.id}/${u.username}/${u.cpf}/${u.phone}`}><button className=" transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-700 font-semibold px-2 py-1 rounded">Editar</button></Link>
-                                    <button onClick={() => abrirModalExcluir(u)} className="ml-2 transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold px-2 py-1 rounded">Excluir</button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody></table><div className=" justify-center p-2 flex ">
+                <>
+                    <TableComponent<User>
+                        otherMethods={[editUser]}
+                        otherMethodsText={['Editar']}
+                        data={data}
+                        dataKeys={['created_at', 'username', 'cpf', 'phone']}
+                        header={['Criado em', 'Nome', 'CPF', 'Telefone', 'Ações']}
+                        deleteMethod={abrirModalExcluir} />
+
+                    <div className=" justify-center p-2 flex ">
                         <ButtonComponentLink text={"Criar novo cliente"} color={0} path={"/usuarios/novo"} />
                     </div></>
             }

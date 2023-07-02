@@ -1,11 +1,11 @@
 export default interface Item {
-    id: String,
-    name: String,
+    id: string,
+    name: string,
     quantity: number,
     price: number,
-    notes: String | undefined,
-    account_id: String,
-    product_id: String,
-    created_at:String,
-    updated_at?:String,
+    notes: string | undefined,
+    account_id: string,
+    product_id: string,
+    created_at:string,
+    updated_at?:string,
 }

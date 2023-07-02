@@ -3,8 +3,8 @@ export default interface Payment {
     amount: number,
     account_id: string,
     type: number,
-    created_at:String,
-    updated_at?:String,
+    created_at:string,
+    updated_at?:string,
 }
 
 export function getType(n:number){

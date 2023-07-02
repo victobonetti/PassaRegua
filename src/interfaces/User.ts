@@ -1,9 +1,9 @@
 export interface User {
-    id: String,
-    username: String,
-    cpf: String,
-    phone: String,
-    account_id?: String,
-    created_at:String,
-    updated_at?:String,
+    id: string,
+    username: string,
+    cpf: string,
+    phone: string,
+    account_id?: string,
+    created_at:string,
+    updated_at?:string,
 }
