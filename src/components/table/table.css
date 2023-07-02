@@ -1,0 +1,19 @@
+.appear {
+    animation-name: appear;
+    animation-duration: .3s;
+    transform-origin: top;
+}
+
+@keyframes appear {
+    0% {
+        transform: scaleY(0);
+        z-index: 0;
+        opacity: 0%;
+
+    }
+
+    100% {
+        transform: scaleY(100%);
+        z-index: 0;
+    }
+}
