@@ -64,7 +64,7 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
     }
 
     const editarProduto = (p: Product) => {
-        window.location.href = `/produtos/editar/${p.id}/${p.name}/${p.price}`
+        window.location.href = `/produtos/editar/${p.id}/${p.name}/${Number(String(p.price).replace("R$", ""))}`
     }
 
     return (
