@@ -50,15 +50,15 @@ export default function TableComponent<T extends { created_at: string, id: strin
         <>
             <TextInput label="Buscar..." placeholder="Digite algo..." value={search} set={setSearch} name="search" id="search" />
             <table onClick={() => manageOptions()} className="w-full">
-                <thead className="select-none bg-slate-400 font-semibold flex w-full items-center text-sm p-1">
+                <thead className="select-none bg-slate-500 font-semibold flex w-full items-center text-sm p-1">
                     <tr className="w-full flex items-center">
-                        {header?.map((t:string, i:number) => <td key={i} className="text-xs w-full text-slate-600">{t.toUpperCase()}</td>)}
+                        {header?.map((t:string, i:number) => <td key={i} className="text-xs w-full text-slate-300">{t.toUpperCase()}</td>)}
                     </tr>
                 </thead>
-                <tbody className="text-slate-300 w-full flex flex-col">
+                <tbody className="text-slate-600 w-full flex flex-col">
                     {filteredData.map((d: T, i:number) => (
                         <div key={d.id}>
-                            <tr className={`bg-slate-800 odd:bg-slate-700 p-1 w-full flex items-center`}>
+                            <tr className={`bg-slate-300 p-1 w-full flex items-center border-b border-slate-400`}>
                                 {dataKeys?.map((key:string) => (
                                     <td key={key} className={`w-full text-xs whitespace-nowrap`}>
                                         {String(d[key as keyof T])}
@@ -91,7 +91,6 @@ export default function TableComponent<T extends { created_at: string, id: strin
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr></tr>
                                 </>
                             )}
                         </div>
