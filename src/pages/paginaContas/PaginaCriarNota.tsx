@@ -22,6 +22,7 @@ export default function PaginaCriarNota() {
 
     const { id, itemId, noteText } = useParams();
     const [note, setNote] = useState('');
+
     const createNote = async () => {
 
         let valida = validaTexto(note)
@@ -47,7 +48,7 @@ export default function PaginaCriarNota() {
         <div className=" h-full w-full flex items-center justify-center">
             <div className=" w-1/3 flex flex-col">
                 <TextInput name={"note"} id={"note"} set={setNote} err={err} label={"Editar anotação do produto"} />
-                <ButtonComponentLink text={"Anotar"} color={0} method={() => createNote} />
+                <ButtonComponentLink text={"Anotar"} color={0} method={() => createNote()} />
                 <Link to={`/contas/items/${id}`}><p className=" text-slate-400 underline cursor-pointer text-center">Voltar</p></Link>
             </div>
         </div>

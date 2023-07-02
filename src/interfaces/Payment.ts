@@ -1,8 +1,8 @@
 export default interface Payment {
     id: string,
-    amount: number,
+    amount: number | string,
     account_id: string,
-    type: number,
+    type: number | string,
     created_at:string,
     updated_at?:string,
 }

@@ -144,7 +144,7 @@ export default function AppRouter(): JSX.Element {
               <Route path='/contas/novo' element={<PaginaCriarConta />} />
               <Route path='/contas/items/:id' element={<PaginaItems />} />
               <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
-              <Route path='/contas/items/note/:id/:itemId/:noteText' element={<PaginaCriarNota />} />
+              <Route path='/contas/items/note/:id/:itemId/:noteText?' element={<PaginaCriarNota />} />
               <Route path='/contas/pagamentos/:id/:total/:paid' element={<PaginaPagamentos />} />
               <Route path='/contas/pagamentos/add/:id/:total/:paid' element={<PaginaCriaPagamentos />} />
               <Route path='/contas/items/price/:id/:itemId/:priceParam/:quantityParam' element={< FormularioEditaPreco />} />

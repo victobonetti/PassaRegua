@@ -2,7 +2,7 @@ export default interface Item {
     id: string,
     name: string,
     quantity: number,
-    price: number,
+    price: number | string,
     notes: string | undefined,
     account_id: string,
     product_id: string,

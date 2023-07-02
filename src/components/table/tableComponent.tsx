@@ -4,16 +4,16 @@ import './table.css'
 import React from 'react';
 
 
-interface tableComponentProps<T extends { created_at: string, id: string }> {
+interface tableComponentProps<T extends { created_at: string, id: string }, Y = never> {
     data: T[],
     dataKeys: string[],
     header: string[],
-    deleteMethod?: (data: T) => void,
-    otherMethods?: ((data: T) => void)[]
+    deleteMethod?: (data: T | Y) => void,
+    otherMethods?: ((data: T | Y) => void)[]
     otherMethodsText?: string[]
 }
 
-export default function TableComponent<T extends { created_at: string, id: string }>({ data, dataKeys, header, deleteMethod, otherMethods, otherMethodsText }: tableComponentProps<T>) {
+export default function TableComponent<T extends { created_at: string, id: string }, Y = never>({ data, dataKeys, header, deleteMethod, otherMethods, otherMethodsText }: tableComponentProps<T, Y>) {
     const [optionsActive, setOptionsActive] = useState('');
     const [search, setSearch] = useState('');
     const [filteredData, setFilteredData] = useState(data);
@@ -23,7 +23,7 @@ export default function TableComponent<T extends { created_at: string, id: strin
     }
 
     const handleSearch = () => {
-        if (search.trim().length > 1) {
+        if (search.trim().length > 0) {
             const searchData = search.trim().toLowerCase();
             const filtered = data.filter((item: T) =>
                 Object.values(item).some((search) =>
@@ -41,20 +41,25 @@ export default function TableComponent<T extends { created_at: string, id: strin
         handleSearch()
     }, [search])
 
+    useEffect(() => {
+        console.log('data:')
+        console.log(data)
+    }, [])
+
     return (
         <>
             <TextInput label="Buscar..." placeholder="Digite algo..." value={search} set={setSearch} name="search" id="search" />
             <table onClick={() => manageOptions()} className="w-full">
                 <thead className="select-none bg-slate-400 font-semibold flex w-full items-center text-sm p-1">
                     <tr className="w-full flex items-center">
-                        {header?.map((t, i) => <td key={i} className="text-xs w-full text-slate-600">{t.toUpperCase()}</td>)}
+                        {header?.map((t:string, i:number) => <td key={i} className="text-xs w-full text-slate-600">{t.toUpperCase()}</td>)}
                     </tr>
                 </thead>
                 <tbody className="text-slate-300 w-full flex flex-col">
-                    {filteredData.map((d: T, i) => (
+                    {filteredData.map((d: T, i:number) => (
                         <div key={d.id}>
                             <tr className={`bg-slate-800 odd:bg-slate-700 p-1 w-full flex items-center`}>
-                                {dataKeys?.map((key) => (
+                                {dataKeys?.map((key:string) => (
                                     <td key={key} className={`w-full text-xs whitespace-nowrap`}>
                                         {String(d[key as keyof T])}
                                     </td>
@@ -72,14 +77,14 @@ export default function TableComponent<T extends { created_at: string, id: strin
                                             <td className="w-full"></td>
                                         ))}
                                         <td className="flex w-full">
-                                            <div className="rounded-b w-20 appear bg-slate-200 self-start flex flex-col justify-start items-start py-3 pl-1 pr-4">
+                                            <div className="rounded-b w-32 appear bg-slate-200 self-start flex flex-col justify-start items-start py-3 pl-1 pr-4">
                                                 {deleteMethod && (
-                                                    <button className="text-start text-red-400 cursor-pointer hover:opacity-50 border-b w-full border-slate-300" onClick={() => deleteMethod(d)}>
+                                                    <button className=" py-1 text-start text-red-400 cursor-pointer hover:opacity-50 border-b w-full border-slate-300" onClick={() => deleteMethod(d)}>
                                                         Excluir
                                                     </button>
                                                 )}
                                                 {otherMethods && otherMethodsText && otherMethods.length === otherMethodsText.length && otherMethods.map((m, i) => (
-                                                    <button className="text-start border-b w-full border-slate-300 cursor-pointer hover:opacity-50" onClick={() => m(d)} key={i}>
+                                                    <button className=" py-1 text-start border-b w-full border-slate-300 cursor-pointer hover:opacity-50" onClick={() => m(d)} key={i}>
                                                         {otherMethodsText[i]}
                                                     </button>
                                                 ))}

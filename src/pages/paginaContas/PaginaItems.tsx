@@ -5,6 +5,8 @@ import Account from "../../interfaces/Account";
 import { FeedbackContext } from "../../routes/appRouter";
 import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
+import TableComponent from "../../components/table/tableComponent";
+import Item from "../../interfaces/Item";
 
 export default function PaginaItems() {
 
@@ -56,9 +58,12 @@ export default function PaginaItems() {
         }
     };
 
-    const abrirModalExcluir = (id: string) => {
-        setToDelete(id);
-        setModalExcluirAberto(true);
+    const abrirModalExcluir = (c: Account | Item) => {
+        if ('owner' in c) {
+            setToDelete(c.id);
+            setModalExcluirAberto(true);
+        }
+
     }
 
     const fecharModalExcluir = () => {
@@ -66,20 +71,26 @@ export default function PaginaItems() {
         setModalExcluirAberto(false);
     }
 
-    const formatNote = (note: String | undefined) => {
-
-        if (note) {
-            return (
-                <p className="text-emerald-400">{note}</p>
-            )
+    const formatNote = (note: string | undefined) => {
+        if (!note) {
+            return ""
         } else {
-            return <p className=" text-slate-500 ">Não contém notas...</p>
+            return note
         }
-
     }
 
-    const editaPgt = () => {
+    const escreveNota = (data: Item | Account) => {
+        if ('notes' in data) {
+            const item = data as Item;
+            window.location.href = `/contas/items/note/${data.account_id}/${data.id}/${data.notes}`;
+        }
+    }
 
+    const editaPreco = (data: Item | Account) => {
+        if ('notes' in data) {
+            const item = data as Item;
+            window.location.href = `/contas/items/price/${data.account_id}/${data.id}/${String(data.price).replace("R$", "")}/${data.quantity}`;
+        }
     }
 
 
@@ -99,7 +110,7 @@ export default function PaginaItems() {
                 <div className=" flex w-full h-full">
                     <div className="bg-slate-900 w-3/4 h-full">
                         <h2 className=" my-2 w-full text-center text-xl font-semibold text-slate-300">{account?.owner.toUpperCase()}</h2>
-                        <table className=" w-full">
+                        {/* <table className=" w-full">
                             <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
                                 <thead className=" select-none bg-slate-400 font-semibold flex w-full text-sm ">
                                     <tr className="flex w-full items-center">
@@ -135,7 +146,20 @@ export default function PaginaItems() {
                                     );
                                 })}
                             </tbody>
-                        </table>
+                        </table> */}
+                        {account && <TableComponent<Item, Account>
+                            data={account.items?.map((i) => ({
+                                ...i,
+                                price: `R$${Number(i.price).toFixed(2)}`,
+                                notes: formatNote(i.notes),
+                            }))}
+                            dataKeys={['created_at', 'name', 'quantity', 'price', 'notes']}
+                            header={['CRIADO EM', 'produto', 'quantidade', 'preço', 'notas', 'Ações']}
+                            deleteMethod={abrirModalExcluir}
+                            otherMethods={[escreveNota, editaPreco]}
+                            otherMethodsText={['Fazer anotação', 'Editar valor unitário']}
+                        />}
+
                     </div>
                     <div className=" border-l-8 border-slate-950 bg-slate-700 w-1/4 h-full flex flex-col  p-4">
                         <div className=" shadow-inner bg-slate-800 p-4">
