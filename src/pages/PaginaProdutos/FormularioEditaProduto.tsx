@@ -5,6 +5,7 @@ import { FeedbackContext } from "../../routes/appRouter";
 import { validaNome, validaPreco } from "../../interfaces/ZodInputs";
 import NumberInput from "../../components/numberInput.tsx/NumberInput";
 import TextInput from "../../components/inputs/TextInput";
+import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 
 export default function FormularioEditaProduto() {
 
@@ -107,8 +108,7 @@ export default function FormularioEditaProduto() {
                 <NumberInput updateVal={updatePrice} clearVal={clearPrice} />
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/produtos'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-                    {!buttonDisabled && <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>}
-                    {buttonDisabled && <button disabled className=" opacity-50 text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>}
+                    {!buttonDisabled && <ButtonComponentLink text={"Editar produto"} color={0} />}
                 </div>
             </form>
         </div>

@@ -4,6 +4,7 @@ import { FeedbackContext } from "../../routes/appRouter";
 import { invoke } from "@tauri-apps/api";
 import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { Link, useParams } from "react-router-dom";
+import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 
 export default function PaginaPagamentos() {
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
@@ -107,7 +108,7 @@ export default function PaginaPagamentos() {
                                 );
                             })}
                         </tbody></table><div className=" justify-center p-2 flex ">
-                        <Link to={`/contas/pagamentos/add/${id}/${total}/${paid}`}><button className=" transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-900 font-semibold px-4 py-2 rounded text-lg">Criar novo pagamento</button></Link>
+                        <ButtonComponentLink text={"Criar novo pagamento"} color={1} path={`/contas/pagamentos/add/${id}/${total}/${paid}`} />
                     </div>
                 </>
             }

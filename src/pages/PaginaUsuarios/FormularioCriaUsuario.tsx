@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaCpf, validaNome, validaPhone } from "../../interfaces/ZodInputs";
 import TextInput from "../../components/inputs/TextInput";
+import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 
 export default function FormularioCriaUsuario() {
 
@@ -62,8 +63,7 @@ export default function FormularioCriaUsuario() {
                 <TextInput value={phone} set={setPhone} name={"phone"} id={"phone"} label={"Telefone celular"} err={phoneErr} />
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/usuarios'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-                    {!buttonDisabled && <button type="submit" className=" text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>}
-                    {buttonDisabled && <button disabled className=" opacity-50 text-xl w-36 transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-emerald-700 font-semibold p-2 rounded">Confirmar</button>}
+                    {!buttonDisabled && <ButtonComponentLink text={"Criar cliente"} color={0} />}
                 </div>
             </form>
         </div>

@@ -4,6 +4,7 @@ import { invoke } from "@tauri-apps/api";
 import Account from "../../interfaces/Account";
 import { FeedbackContext } from "../../routes/appRouter";
 import ConfirmModal from "../../components/confirmModal/ConfirmModal";
+import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 
 export default function PaginaItems() {
 
@@ -149,7 +150,7 @@ export default function PaginaItems() {
                             </div>
                             <p className=" border-t pt-2 border-slate-500 mt-2 text-slate-300 text-sm ">Total da conta:</p> <span className=" text-2xl font-semibold text-slate-400">R${account && Number(account.account_total).toFixed(2)}</span>
                         </div >
-                        <Link to={`/contas/items/add/${account?.id}`}><button type="submit" className=" w-full mt-4 transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Adicionar item</button></Link>
+                        <ButtonComponentLink text={"Adicionar Item"} color={0} path={`/contas/items/add/${account?.id}`} />
                         <Link className=" w-full text-center" to={'/contas'}><p className=" mt-2 text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
                     </div >
                 </div >

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Product from "../../interfaces/Product";
 import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
+import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 
 export default function PaginaProdutos({ data, setData }: { data: Product[], setData: Dispatch<SetStateAction<Product[]>> }) {
 
@@ -106,7 +107,7 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
                                 );
                             })}
                         </tbody></table><div className=" justify-center p-2 flex ">
-                        <Link to={'/produtos/novo'}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar novo produto</button></Link>
+                        <ButtonComponentLink text={"Criar novo produto"} color={0} path={'/produtos/novo'} />
                     </div>
                 </>
             }

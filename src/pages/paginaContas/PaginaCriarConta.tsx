@@ -3,6 +3,7 @@ import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { User } from "../../interfaces/User";
 import { FeedbackContext } from "../../routes/appRouter";
+import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 
 export default function PaginaCriarConta() {
 
@@ -59,7 +60,7 @@ export default function PaginaCriarConta() {
                     }
 
                 </select>
-                <button type="submit" className=" ml-2 transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar nova conta</button>
+                <ButtonComponentLink text={"Criar conta"} color={0} />
             </div>
             <Link to={'/contas'}><p className=" mt-2 text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
         </form>

@@ -6,6 +6,7 @@ import Item from "../../interfaces/Item";
 import { Link, useParams } from "react-router-dom";
 import { table } from "console";
 import { FeedbackContext } from "../../routes/appRouter";
+import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 
 interface selectedProduct {
     product: Product,
@@ -59,7 +60,7 @@ export default function PaginaAdicionarItem() {
     }
 
     const selectProduct = (product: Product) => {
-        if (product.price + total > 1000 ) {
+        if (product.price + total > 1000) {
             createFeedback(true, 'Valor máximo excedido (R$1000.00).')
         } else {
 
@@ -133,7 +134,8 @@ export default function PaginaAdicionarItem() {
                                     <tr className=" w-full flex justify-evenly items-center bg-slate-800  odd:bg-slate-700" key={String(p.id)}>
                                         <td className="  w-1/3 p-2 flex whitespace-nowrap ">{p.name}</td>
                                         <td className="  w-1/3 p-2 flex whitespace-nowrap ">R${p.price.toFixed(2)}</td>
-                                        <td className="  w-1/3 p-2 flex whitespace-nowrap "><button onClick={() => selectProduct(p)} className=" transition-all hover:bg-transparent hover:text-blue-300 border border-blue-300  bg-blue-300 text-blue-900  px-2 py-1 rounded ">Adicionar</button></td>
+                                        <td className="  w-1/3 p-2 flex whitespace-nowrap "><ButtonComponentLink text={"Adicionar"} color={0} method={() => selectProduct(p)} />
+                                        </td>
                                     </tr>
                                 )
                             }
