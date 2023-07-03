@@ -6,7 +6,6 @@ use uuid::Uuid;
 
 // Estrutura para o usuário
 #[derive(Debug)]
-#[allow(dead_code)]
 pub struct User {
     pub id: String,
     pub username: String,
@@ -38,7 +37,6 @@ impl Serialize for User {
 }
 
 impl User {
-    #[allow(dead_code)]
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         username: String,
@@ -54,7 +52,6 @@ impl User {
         Ok(uuid)
     }
 
-    #[allow(dead_code)]
     pub fn find_all(
         conn: &PooledConnection<SqliteConnectionManager>,
     ) -> Result<Vec<User>, rusqlite::Error> {
@@ -74,7 +71,7 @@ impl User {
         users
     }
 
-    #[allow(dead_code)]
+    
     pub fn find_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
@@ -99,7 +96,6 @@ impl User {
         }
     }
 
-    #[allow(dead_code)]
     pub fn delete_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
@@ -108,7 +104,6 @@ impl User {
         Ok(())
     }
 
-    #[allow(dead_code)]
     pub fn edit_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,

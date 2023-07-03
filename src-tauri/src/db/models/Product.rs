@@ -4,7 +4,6 @@ use rusqlite::{params, types::Null, Result};
 use uuid::Uuid;
 
 // Estrutura para o produto
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct Product {
     pub id: String,
@@ -33,7 +32,7 @@ impl Serialize for Product {
 }
 
 impl Product {
-    #[allow(dead_code)]
+    
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         name: &str,
@@ -51,7 +50,7 @@ impl Product {
         Ok(uuid)
     }
 
-    #[allow(dead_code)]
+    
     pub fn find_all(
         conn: &PooledConnection<SqliteConnectionManager>,
     ) -> Result<Vec<Product>, rusqlite::Error> {
@@ -76,7 +75,7 @@ impl Product {
         Ok(products)
     }
 
-    #[allow(dead_code)]
+    
     pub fn find_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
@@ -98,7 +97,7 @@ impl Product {
         }
     }
 
-    #[allow(dead_code)]
+    
     pub fn delete_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
@@ -107,7 +106,7 @@ impl Product {
         Ok(())
     }
 
-    #[allow(dead_code)]
+    
     pub fn edit_price(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
@@ -125,7 +124,7 @@ impl Product {
         Ok(())
     }
 
-    #[allow(dead_code)]
+    
     pub fn edit_name(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,

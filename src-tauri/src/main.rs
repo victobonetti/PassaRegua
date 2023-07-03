@@ -14,17 +14,11 @@ mod db {
     }
 }
 
-#[allow(unused_imports)]
 use crate::db::models::account::Account;
-#[allow(unused_imports)]
 use crate::db::models::item::Item;
-#[allow(unused_imports)]
 use crate::db::models::payment::Payment;
-#[allow(unused_imports)]
 use crate::db::models::product::Product;
-#[allow(unused_imports)]
 use crate::db::models::user::User;
-
 use chrono::Utc;
 
 #[cfg(test)]
