@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useLayoutEffect, useState } from "react";
 import TextInput from "../inputs/TextInput";
 import './table.css'
 import React from 'react';
@@ -23,16 +23,21 @@ export default function TableComponent<T extends { created_at: string, id: strin
         id ? (optionsActive === id ? setOptionsActive('') : setOptionsActive(id)) : (optionsActive !== '' ? setOptionsActive('') : null);
     }
 
-    const handleSearch = () => {
-
+    const getFormatedData = () => {
         let formated_data;
-
         if (formatDataMethod) {
             console.log(formatDataMethod(data))
             formated_data = formatDataMethod(data)
         } else {
             formated_data = data;
         }
+
+        return formated_data
+    }
+
+    const handleSearch = () => {
+
+        let formated_data = getFormatedData();
 
         if (search.trim().length > 0) {
             const searchData = search.trim().toLowerCase();
@@ -52,13 +57,15 @@ export default function TableComponent<T extends { created_at: string, id: strin
     }, [search])
 
     useEffect(() => {
-
+        if(getFormatedData)
+        setFilteredData(getFormatedData())
     }, [])
+
 
     return (
         <>
             <TextInput label="Buscar..." placeholder="Digite algo..." value={search} set={setSearch} name="search" id="search" />
-            <table onClick={() => manageOptions()} className="w-full">
+            <table className="w-full">
                 <thead className="select-none bg-slate-500 font-semibold flex w-full items-center text-sm p-1">
                     <tr className="w-full flex items-center">
                         {header?.map((t: string, i: number) => <td key={i} className="text-xs w-full text-slate-300">{t.toUpperCase()}</td>)}
@@ -78,14 +85,15 @@ export default function TableComponent<T extends { created_at: string, id: strin
                                         Editar
                                     </button>
                                     {optionsActive === d.id && (
-                                        <div className=" shadow-xl rounded-tr text-xs rounded-b absolute w-32 appear bg-slate-200 self-start flex flex-col justify-start items-start py-3 pl-1 pr-4">
+                                        <div className=" rounded shadow-xl text-xs  absolute w-32 appear bg-slate-100 self-start flex flex-col justify-start items-start  ">
+                                            {/* <h3 className=" select-none text-slate-400 mb-2">Opções</h3> */}
                                             {deleteMethod && (
-                                                <button className=" py-1 text-start text-red-400 cursor-pointer hover:opacity-50 border-b w-full border-slate-300" onClick={() => deleteMethod(d)}>
+                                                <button className=" rounded p-2 hover:bg-slate-200 py-1 text-start text-red-400 cursor-pointer w-full " onClick={() => deleteMethod(d)}>
                                                     Excluir
                                                 </button>
                                             )}
                                             {otherMethods && otherMethodsText && otherMethods.length === otherMethodsText.length && otherMethods.map((m, i) => (
-                                                <button className=" py-1 text-start border-b w-full border-slate-300 cursor-pointer hover:opacity-50" onClick={() => m(d)} key={i}>
+                                                <button className="rounded p-2 hover:bg-slate-200 py-1 text-start w-full cursor-pointer" onClick={() => m(d)} key={i}>
                                                     {otherMethodsText[i]}
                                                 </button>
                                             ))}

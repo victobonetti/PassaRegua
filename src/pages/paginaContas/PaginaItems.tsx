@@ -112,54 +112,20 @@ export default function PaginaItems() {
                 <div className=" flex w-full h-full">
                     <div className="bg-slate-900 w-3/4 h-full">
                         <h2 className=" my-2 w-full text-center text-xl font-semibold text-slate-300">{account?.owner.toUpperCase()}</h2>
-                        {/* <table className=" w-full">
-                            <tbody className=" text-slate-300  w-full table-auto flex flex-col ">
-                                <thead className=" select-none bg-slate-400 font-semibold flex w-full text-sm ">
-                                    <tr className="flex w-full items-center">
-                                        <td className=" text-sm text-center p-2 text-slate-600 w-3/12 ">LANÇADO EM</td>
-                                        <td className=" text-sm text-center p-2 text-slate-600 w-2/12 ">PRODUTO</td>
-                                        <td className=" text-sm text-center p-2 text-slate-600 w-1/12 ">QTD.</td>
-                                        <td className=" text-sm text-center p-2 text-slate-600 w-1/12 ">PREÇO UN.</td>
-                                        <td className=" text-sm text-center p-2 text-slate-600 w-1/12 ">TOTAL</td>
-                                        <td className=" text-sm text-center p-2 text-slate-600 w-2/12 ">OBSERVAÇÕES</td>
-                                        <td className=" text-sm text-center p-2 text-slate-600 w-2/12 ">AÇÕES</td>
-                                    </tr>
-                                </thead>
-
-                                {account && account.items.length < 1 && <tr className=" w-full bg-slate-800 p-4 text-2xl">Não foram encontrados registros.</tr>}
-
-                                {account && account.items?.map((data) => {
-                                    return (
-                                        <tr key={String(data.id)} className=" w-full flex justify-evenly items-center bg-slate-800  odd:bg-slate-700">
-                                            <td className=" text-sm p-2 text-slate-300 w-3/12 ">{data.created_at}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-2/12 ">{data.name}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">{data.quantity}</td>
-                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${data.price.toFixed(2)}
-
-                                            </td>
-                                            <td className=" text-sm p-2 text-slate-300 w-1/12 ">R${Number(data.quantity * data.price).toFixed(2)}</td>
-                                            <td className="  p-2 text-slate-300 w-2/12 text-xs ">{formatNote(data.notes)}</td>
-                                            <td className=" text-center text-sm p-2 text-slate-300 w-1/12 flex flex-col justify-evenly">
-                                                <button onClick={() => abrirModalExcluir(String(data.id))} className=" transition-all hover:bg-transparent hover:text-red-300 border border-red-300  bg-red-300 text-red-900 font-semibold rounded text-xs my-2 p-1">Excluir</button>
-                                                <Link to={`/contas/items/note/${data.account_id}/${data.id}/${data.notes}`}><button className=" w-full transition-all hover:bg-transparent hover:text-neutral-300 border border-neutral-300  bg-neutral-300 text-neutral-900 font-semibold rounded text-xs my-2 p-1">Anotar</button></Link>
-                                                <Link to={`/contas/items/price/${data.account_id}/${data.id}/${data.price.toFixed(2)}/${data.quantity}`}><button className=" w-full transition-all hover:bg-transparent hover:text-emerald-300 border border-emerald-300  bg-emerald-300 text-neutral-900 font-semibold rounded text-xs my-2 p-1">Editar preço</button></Link>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table> */}
                         {account && <TableComponent<Item, Account>
-                            data={account.items?.map((i) => ({
-                                ...i,
-                                price: `R$${Number(i.price).toFixed(2)}`,
-                                notes: formatNote(i.notes),
-                            }))}
+                            data={account.items}
                             dataKeys={['created_at', 'name', 'quantity', 'price', 'notes']}
                             header={['CRIADO EM', 'produto', 'quantidade', 'preço', 'notas', 'Ações']}
                             deleteMethod={abrirModalExcluir}
                             otherMethods={[escreveNota, editaPreco]}
                             otherMethodsText={['Fazer anotação', 'Editar valor unitário']}
+                            formatDataMethod={(data) => {
+                                return data.map((i) => ({
+                                    ...i,
+                                    price: `R$${Number(i.price).toFixed(2)}`,
+                                    notes: formatNote(i.notes),
+                                }))
+                            }}
                         />}
 
                     </div>
