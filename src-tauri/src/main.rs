@@ -3,20 +3,25 @@
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
-use crate::db::models::account::Account;
-use crate::db::models::item::Item;
-use crate::db::models::payment::Payment;
-use crate::db::models::product::Product;
-use crate::db::models::user::User;
+use db::models::Account::Account;
+use db::models::Item::Item;
+use db::models::Payment::Payment;
+use db::models::Product::Product;
+use db::models::User::User;
 
 mod db {
     pub mod db;
     pub mod models {
-        pub mod account;
-        pub mod item;
-        pub mod payment;
-        pub mod product;
-        pub mod user;
+        #[allow(non_snake_case)]
+        pub mod Account;
+        #[allow(non_snake_case)]
+        pub mod Item;
+        #[allow(non_snake_case)]
+        pub mod Payment;
+        #[allow(non_snake_case)]
+        pub mod Product;
+        #[allow(non_snake_case)]
+        pub mod User;
     }
 }
 

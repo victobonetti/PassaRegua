@@ -1,7 +1,7 @@
 // Estrutura para a conta de fiado
-use crate::db::models::item::Item;
-use crate::db::models::user::User;
-use crate::{date_now, db::models::payment::Payment};
+use crate::db::models::Item::Item;
+use crate::db::models::User::User;
+use crate::{date_now, db::models::Payment::Payment};
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::types::Null;
