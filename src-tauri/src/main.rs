@@ -3,6 +3,12 @@
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
+use crate::db::models::account::Account;
+use crate::db::models::item::Item;
+use crate::db::models::payment::Payment;
+use crate::db::models::product::Product;
+use crate::db::models::user::User;
+
 mod db {
     pub mod db;
     pub mod models {
@@ -14,11 +20,6 @@ mod db {
     }
 }
 
-use crate::db::models::account::Account;
-use crate::db::models::item::Item;
-use crate::db::models::payment::Payment;
-use crate::db::models::product::Product;
-use crate::db::models::user::User;
 use chrono::Utc;
 
 #[cfg(test)]
