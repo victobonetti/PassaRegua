@@ -43,7 +43,6 @@
     },
     "windows": [
       {
-        "installMode": "passive",
         "fullscreen": false,
         "resizable": true,
         "title": "FiadoPro",
