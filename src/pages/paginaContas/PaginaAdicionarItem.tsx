@@ -3,7 +3,7 @@ import Product from "../../interfaces/Product";
 import { invoke } from "@tauri-apps/api";
 import Account from "../../interfaces/Account";
 import Item from "../../interfaces/Item";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { table } from "console";
 import { FeedbackContext } from "../../routes/appRouter";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
@@ -27,6 +27,9 @@ export default function PaginaAdicionarItem() {
     const { id } = useParams();[
     ]
 
+    let navigate = useNavigate();
+
+
     const createItems = async () => {
         manageLoading(true)
         try {
@@ -41,7 +44,7 @@ export default function PaginaAdicionarItem() {
                     await invoke('create_item', { name, quantity, price, accountId, productId });
                 })
             );
-            window.location.href = `/contas/items/${id}`
+            navigate(`/contas/items/${id}`);
         }
         catch (e) {
             createFeedback(true, String(e));
@@ -54,13 +57,13 @@ export default function PaginaAdicionarItem() {
     const updateTotal = () => {
         let n = 0;
         selected.map((s) => {
-            n += s.quantity * s.product.price
+            n += s.quantity * Number(s.product.price)
         })
         setTotal(n);
     }
 
     const selectProduct = (product: Product) => {
-        if (product.price + total > 1000) {
+        if (Number(product.price) + total > 1000) {
             createFeedback(true, 'Valor máximo excedido (R$1000.00).')
         } else {
 
@@ -133,7 +136,7 @@ export default function PaginaAdicionarItem() {
                                 return (
                                     <tr className=" w-full flex justify-evenly items-center bg-slate-800  odd:bg-slate-700" key={String(p.id)}>
                                         <td className="  w-1/3 p-2 flex whitespace-nowrap ">{p.name}</td>
-                                        <td className="  w-1/3 p-2 flex whitespace-nowrap ">R${p.price.toFixed(2)}</td>
+                                        <td className="  w-1/3 p-2 flex whitespace-nowrap ">R${Number(p.price).toFixed(2)}</td>
                                         <td className="  w-1/3 p-2 flex whitespace-nowrap "><ButtonComponentLink text={"Adicionar"} color={0} method={() => selectProduct(p)} />
                                         </td>
                                     </tr>
@@ -157,7 +160,7 @@ export default function PaginaAdicionarItem() {
                             {selected?.map((s) => {
                                 return (<tr className=" w-full flex justify-evenly bg-yellow-200  odd:bg-yellow-100 text-yellow-900" key={String(s.product.id)}>
                                     <td className="  w-1/3 p-2 flex whitespace-nowrap ">{s.product.name}</td>
-                                    <td className="  w-1/3 p-2 flex whitespace-nowrap ">R${s.product.price.toFixed(2)}</td>
+                                    <td className="  w-1/3 p-2 flex whitespace-nowrap ">R${Number(s.product.price).toFixed(2)}</td>
                                     <td className="  w-1/3 p-2 flex whitespace-nowrap ">{s.quantity} <span onClick={() => spliceProduct(s)} className=" ml-4 bg-red-400 text-red-900 px-2 rounded cursor-pointer">X</span></td>
                                 </tr>)
                             })}

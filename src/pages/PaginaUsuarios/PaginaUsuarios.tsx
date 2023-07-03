@@ -6,12 +6,15 @@ import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 import TableComponent from "../../components/table/tableComponent";
+import { useNavigate } from "react-router-dom";
 
 export default function PaginaUsuarios({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {
 
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState<User>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
+    
+
 
     const abrirModalExcluir = (user: User) => {
         setToDelete(user);
@@ -69,8 +72,10 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
         fetchData();
     }, []);
 
+    let navigate = useNavigate();
+
     const editUser = (u: User) => {
-        window.location.href = `/usuarios/editar/${u.id}/${u.username}/${u.cpf}/${u.phone}`
+        navigate(`/usuarios/editar/${u.id}/${u.username}/${u.cpf}/${u.phone}`);
     }
 
     return (

@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../interfaces/User";
 import { FeedbackContext } from "../../routes/appRouter";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
@@ -16,13 +16,16 @@ export default function PaginaCriarConta() {
         manageLoading(true);
     }, [])
 
+    let navigate = useNavigate();
+    
+
     const criaConta = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         manageLoading(true);
         try {
             let userId = id;
             await invoke("create_account", { userId });
-            window.location.href = '/contas';
+            navigate('/contas');
         } catch (e) {
             manageLoading(false);
             createFeedback(true, String(e))

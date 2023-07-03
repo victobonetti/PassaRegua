@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaNome, validaPreco } from "../../interfaces/ZodInputs";
 import NumberInput from "../../components/numberInput.tsx/NumberInput";
@@ -35,7 +35,7 @@ export default function FormularioEditaPreco() {
                 try {
                     await invoke("edit_item_price", { id: itemId, price: price });
                     createFeedback(false, "Preço editado.");
-                    window.location.href = `/contas/items/${id}`
+                    navigate(`/contas/items/${id}`);
 
                 } catch (e) {
                     manageLoading(false);
@@ -46,11 +46,13 @@ export default function FormularioEditaPreco() {
 
     }
 
+    let navigate = useNavigate();
+
     useEffect(() => {
         if (priceParam) {
             setPrice(priceParam);
         } else {
-            window.location.href = `/contas/items/${id}`
+            navigate(`/contas/items/${id}`);
             createFeedback(true, "Ocorreu um erro.");
         }
     }, []);

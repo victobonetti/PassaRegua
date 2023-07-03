@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaTexto } from "../../interfaces/ZodInputs";
 import TextInput from "../../components/inputs/TextInput";
@@ -23,16 +23,20 @@ export default function PaginaCriarNota() {
     const { id, itemId, noteText } = useParams();
     const [note, setNote] = useState('');
 
+    let navigate = useNavigate();
+
     const createNote = async () => {
 
         let valida = validaTexto(note)
         console.log(valida)
 
+
+
         if (valida.success) {
             try {
                 manageLoading(true);
                 await invoke('edit_item_note', { id: itemId, notes: note.trim() })
-                window.location.href = `/contas/items/${id}`
+                navigate(`/contas/items/${id}`)
                 createFeedback(false, "Anotação criada.");
             } catch (e) {
                 createFeedback(true, String(e));

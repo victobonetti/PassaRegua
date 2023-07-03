@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Product from "../../interfaces/Product";
 import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
@@ -63,8 +63,10 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
         }
     }
 
+    let navigate = useNavigate();
+
     const editarProduto = (p: Product) => {
-        window.location.href = `/produtos/editar/${p.id}/${p.name}/${Number(String(p.price).replace("R$", ""))}`
+        navigate(`/produtos/editar/${p.id}/${p.name}/${Number(String(p.price).replace("R$", ""))}`);
     }
 
     return (
@@ -80,10 +82,13 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
             {!modalExcluirAberto &&
                 <>
                     <TableComponent<Product>
-                        data={data.map((d) => ({
-                            ...d,
-                            price: `R$${Number(d.price).toFixed(2)}`
-                        }))}
+                        data={data}
+                        formatDataMethod={(data) => {
+                            return data.map((d) => ({
+                                ...d,
+                                price: `R$${Number(d.price).toFixed(2)}`
+                            }))
+                        }}
                         dataKeys={['created_at', 'name', 'price']}
                         header={['CRIADO EM', 'Produto', 'Preço', 'Ações']}
                         otherMethods={[editarProduto]}

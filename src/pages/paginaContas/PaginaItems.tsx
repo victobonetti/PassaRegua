@@ -1,5 +1,5 @@
 import { useContext, useEffect, useLayoutEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api";
 import Account from "../../interfaces/Account";
 import { FeedbackContext } from "../../routes/appRouter";
@@ -79,17 +79,19 @@ export default function PaginaItems() {
         }
     }
 
+    let navigate = useNavigate();
+
     const escreveNota = (data: Item | Account) => {
         if ('notes' in data) {
             const item = data as Item;
-            window.location.href = `/contas/items/note/${data.account_id}/${data.id}/${data.notes}`;
+            navigate(`/contas/items/note/${data.account_id}/${data.id}/${data.notes}`);
         }
     }
 
     const editaPreco = (data: Item | Account) => {
         if ('notes' in data) {
             const item = data as Item;
-            window.location.href = `/contas/items/price/${data.account_id}/${data.id}/${String(data.price).replace("R$", "")}/${data.quantity}`;
+            navigate(`/contas/items/price/${data.account_id}/${data.id}/${String(data.price).replace("R$", "")}/${data.quantity}`);
         }
     }
 

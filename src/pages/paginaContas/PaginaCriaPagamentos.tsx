@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import NumberInput from "../../components/numberInput.tsx/NumberInput";
 import PaymentTypeSelection from "../../components/numberInput.tsx/paymentType/PaymentType";
@@ -17,6 +17,9 @@ export default function PaginaCriaPagamentos() {
 
     const { id, total, paid } = useParams();
 
+    let navigate = useNavigate();
+
+
     const criaPagamento = async (e: React.FormEvent<HTMLFormElement>) => {
 
         e.preventDefault();
@@ -28,7 +31,7 @@ export default function PaginaCriaPagamentos() {
             console.log(accountId);
             try {
                 await invoke("create_payment", { amount, accountId, paymentType });
-                window.location.href = '/contas';
+                navigate('/contas');
                 createFeedback(false, "Pagamento criado.");
             } catch (e) {
                 manageLoading(false);
