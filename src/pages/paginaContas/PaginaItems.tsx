@@ -110,8 +110,8 @@ export default function PaginaItems() {
 
             {!modalExcluirAberto &&
                 <div className=" flex w-full h-full">
-                    <div className="bg-slate-900 w-3/4 h-full">
-                        <h2 className=" my-2 w-full text-center text-xl font-semibold text-slate-300">{account?.owner.toUpperCase()}</h2>
+                    <div className="dark:bg-slate-900 w-3/4 h-full">
+                        <h2 className=" my-2 w-full text-center text-xl font-semibold dark:text-slate-300">{account?.owner.toUpperCase()}</h2>
                         {account && <TableComponent<Item, Account>
                             data={account.items}
                             dataKeys={['created_at', 'name', 'quantity', 'price', 'notes']}
@@ -129,21 +129,23 @@ export default function PaginaItems() {
                         />}
 
                     </div>
-                    <div className=" border-l-8 border-slate-950 bg-slate-700 w-1/4 h-full flex flex-col  p-4">
-                        <div className=" shadow-inner bg-slate-800 p-4">
+                    <div className=" border-l-8 dark:border-slate-950 dark:bg-slate-700 w-1/4 h-full flex flex-col  p-4">
+                        <div className=" shadow-inner dark:bg-slate-800 p-4">
                             <div className=" w-40 flex justify-between mb-4">
                                 <div>
-                                    <p className=" text-slate-300 text-sm ">Dívida:</p> <span className=" font-semibold text-red-400">R${account && Number(account.account_total - account.paid_amount).toFixed(2)}</span>
+                                    <p className=" dark:text-slate-300 text-sm ">Dívida:</p> <span className=" font-semibold text-red-400">R${account && Number(account.account_total - account.paid_amount).toFixed(2)}</span>
                                 </div>
 
                                 <div>
-                                    <p className=" text-slate-300 text-sm ">Valor pago:</p> <span className=" font-semibold text-emerald-400">R${account && Number(account.paid_amount).toFixed(2)}</span>
+                                    <p className=" dark:text-slate-300 text-sm ">Valor pago:</p> <span className=" font-semibold text-emerald-400">R${account && Number(account.paid_amount).toFixed(2)}</span>
                                 </div>
                             </div>
-                            <p className=" border-t pt-2 border-slate-500 mt-2 text-slate-300 text-sm ">Total da conta:</p> <span className=" text-2xl font-semibold text-slate-400">R${account && Number(account.account_total).toFixed(2)}</span>
+                            <p className=" border-t pt-2 dark:border-slate-500 mt-2 dark:text-slate-300 text-sm ">Total da conta:</p> <span className=" text-2xl font-semibold text-slate-400">R${account && Number(account.account_total).toFixed(2)}</span>
                         </div >
-                        <ButtonComponentLink text={"Adicionar Item"} color={0} path={`/contas/items/add/${account?.id}`} />
-                        <Link className=" w-full text-center" to={'/contas'}><p className=" mt-2 text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
+                        <div className=" justify-center p-2 flex ">
+                            <ButtonComponentLink text={"Adicionar Item"} color={0} path={`/contas/items/add/${account?.id}`} />
+                        </div>
+                        <Link className=" w-full text-center" to={'/contas'}><p className=" mt-2 dark:text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
                     </div >
                 </div >
             }

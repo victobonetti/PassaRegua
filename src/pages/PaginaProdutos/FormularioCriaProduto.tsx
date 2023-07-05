@@ -95,8 +95,8 @@ export default function FormularioCriaProduto() {
             <h1 className=" text-3xl mb-4">Criar novo produto</h1>
             <form onSubmit={e => criaProduto(e)} className="flex flex-col w-96">
                 <TextInput name={"Name"} id={"Name"} set={setName} err={nameErr} label={"Nome do produto"} />
-                <label className="text-xs font-semibold text-slate-400" htmlFor="">PREÇO</label>
-                <div className=" rounded mt-2 items-center p-4  bg-slate-600  text-4xl">R${getPrice}</div>
+                <label className="text-xs font-semibold dark:text-slate-400" htmlFor="">PREÇO</label>
+                <div className=" rounded mt-2 items-center p-4  dark:bg-slate-600  text-4xl">R${getPrice}</div>
                 <span className=" mb-2 text-xs text-red-500">{priceErr}</span>
                 <NumberInput updateVal={updatePrice} clearVal={clearPrice} />
                 <div className=" mt-4 flex items-center w-full justify-between">

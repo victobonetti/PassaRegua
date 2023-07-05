@@ -53,7 +53,7 @@ export default function PaginaCriarNota() {
             <div className=" w-1/3 flex flex-col">
                 <TextInput name={"note"} id={"note"} set={setNote} err={err} label={"Editar anotação do produto"} />
                 <ButtonComponentLink text={"Anotar"} color={0} method={() => createNote()} />
-                <Link to={`/contas/items/${id}`}><p className=" text-slate-400 underline cursor-pointer text-center">Voltar</p></Link>
+                <Link to={`/contas/items/${id}`}><p className=" dark:text-slate-400 underline cursor-pointer text-center">Voltar</p></Link>
             </div>
         </div>
     )

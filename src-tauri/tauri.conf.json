@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "FiadoPro",
+    "productName": "FrilaHub",
     "version": "1.0.0"
   },
   "tauri": {
@@ -21,7 +21,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.fiadopro.dev",
+      "identifier": "com.frilahub.dev",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -45,7 +45,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "FiadoPro",
+        "title": "FrilaHub",
         "width": 1280,
         "height": 720,
         "minWidth": 1280,

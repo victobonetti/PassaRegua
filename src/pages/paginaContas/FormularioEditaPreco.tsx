@@ -103,7 +103,7 @@ export default function FormularioEditaPreco() {
             <h1 className=" text-3xl mb-4">Editar preço</h1>
             <form onSubmit={e => editaPreco(e)} className="flex flex-col w-96">
                 <label className="text-xs font-semibold text-slate-400" htmlFor="">PREÇO</label>
-                <div className=" rounded mt-2 items-center p-4  bg-slate-400 text-4xl">R${getPrice}</div>
+                <div  className=" border border-slate-300  rounded mt-2 items-center p-4  dark:bg-slate-400 text-4xl">R${getPrice}</div>
                 <span className=" mb-2 text-xs text-red-500">{priceErr}</span>
                 <NumberInput updateVal={updatePrice} clearVal={clearPrice} />
                 <div className=" mt-4 flex items-center w-full justify-between">

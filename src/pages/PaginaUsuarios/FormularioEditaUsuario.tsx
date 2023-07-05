@@ -69,7 +69,7 @@ export default function FormularioEditaUsuario() {
                 <TextInput value={cpf} set={setCpf} name={"cpf"} id={"cpf"} label={"Cadastro de pessoa física (CPF)"} err={cpfErr} />
                 <TextInput value={phone} set={setPhone} name={"phone"} id={"phone"} label={"Telefone celular"} err={phoneErr} />
                 <div className=" mt-4 flex items-center w-full justify-between">
-                    <Link to={'/usuarios'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
+                    <Link to={'/usuarios'}><p className=" dark:text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
                     <ButtonComponentLink text={"Editar cliente"} color={0} />                </div>
             </form>
         </div>
