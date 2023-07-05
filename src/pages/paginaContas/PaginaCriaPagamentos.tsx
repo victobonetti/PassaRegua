@@ -83,13 +83,13 @@ export default function PaginaCriaPagamentos() {
         <div className=" h-full flex flex-col items-center justify-center">
             <h1 className=" text-3xl mb-4">Criar novo pagamento</h1>
             <form onSubmit={e => criaPagamento(e)} className="flex flex-col w-96">
-                <label className="text-xs font-semibold text-slate-400" htmlFor="">Valor</label>
-                <div className=" rounded mt-2 items-center p-4  bg-slate-600 text-4xl">R${getValue}</div>
+                <label className="text-xs font-semibold dark:text-slate-400" htmlFor="">Valor</label>
+                <div className=" border border-slate-300 rounded mt-2 items-center p-4  dark:bg-slate-600 text-4xl">R${getValue}</div>
                 <span className=" mb-2 text-xs text-red-500">{valueErr}</span>
                 <NumberInput updateVal={updateValue} clearVal={clearValue} />
                 <PaymentTypeSelection paymentType={paymentType} setPaymentType={setPaymentType} />
                 <div className=" mt-4 flex items-center w-full justify-between">
-                    <Link to={'/contas'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
+                    <Link to={'/contas'}><p className=" dark:text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
                     {!buttonDisabled && <ButtonComponentLink text={"Criar pagamento"} color={1} />
                     }
 

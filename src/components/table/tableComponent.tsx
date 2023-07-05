@@ -57,14 +57,17 @@ export default function TableComponent<T extends { created_at: string, id: strin
     }, [search])
 
     useEffect(() => {
-        if(getFormatedData)
-        setFilteredData(getFormatedData())
+        if (getFormatedData)
+            setFilteredData(getFormatedData())
     }, [])
 
 
     return (
         <>
-            <TextInput label="Buscar..." placeholder="Digite algo..." value={search} set={setSearch} name="search" id="search" />
+            <div className=" px-4 py-1">
+                <TextInput label="Buscar..." placeholder="Digite algo..." value={search} set={setSearch} name="search" id="search" />
+
+            </div>
             <table className="w-full">
                 <thead className="select-none bg-slate-500 font-semibold flex w-full items-center text-sm p-1">
                     <tr className="w-full flex items-center">
@@ -105,7 +108,7 @@ export default function TableComponent<T extends { created_at: string, id: strin
                         </div>
                     ))}
                 </tbody>
-            </table>
+            </table >
         </>
     )
 }
