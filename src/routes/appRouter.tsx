@@ -133,7 +133,7 @@ export default function AppRouter(): JSX.Element {
           <Routes>
             <Route path={'/'} element={<App load={loading} firstLoad={firstLoad} dataStorage={{ users: users, accounts: accounts, products: products }} />}>
               
-              <Route index element={<PaginaInicial />} />
+              <Route index element={<PaginaInicial data={accounts}  setData={setAccounts}/>} />
               <Route path='/usuarios' element={<PaginaUsuarios data={users} setData={setUsers} />} />
               <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
               <Route
