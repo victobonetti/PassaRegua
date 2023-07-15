@@ -128,9 +128,9 @@ export default function PaginaAdicionarItem() {
             <h1 className=" my-8 text-4xl text-slate-300">Selecionar produtos</h1>
             <div className=" flex w-full">
                 <div className=" p-4 w-3/5 flex flex-col items-center justify-center">
-                    <span className=" mb-2 text-slate-400 text-xs">Digite um produto, e então clique em adicionar para coloca-lo em seu carrinho.</span>
+                    <span className=" mb-2 text-slate-400 text-xs">Digite um produto, e então clique em "adicionar" para coloca-lo em seu carrinho.</span>
                     <input placeholder="Buscar produto..." autoComplete="none" onChange={e => setSearch(e.target.value)} className=" w-full mb-2 shadow appearance-none border rounded py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="name" />
-                    <table className="dark:border-none border border-slate-300 text-slate-700 overflow-y-scroll bg-slate-200 dark:bg-slate-500 overflow-scroll h-96 w-full">
+                    <table className="dark:border-none border border-slate-300 text-slate-700 dark:text-slate-300 overflow-y-scroll bg-slate-200 dark:bg-slate-500 overflow-scroll h-96 w-full">
                         {resposta?.map((p) => {
                             if (p.name.includes(search) || search.trim().length == 0) {
                                 return (
@@ -152,13 +152,13 @@ export default function PaginaAdicionarItem() {
                     <div className=" dark:border-none border border-slate-300 bg-slate-200 dark:bg-slate-800 h-96 w-full overflow-y-scroll">
                         <table className=" w-full"> <thead className=" select-none dark:bg-slate-400 font-semibold flex w-full text-sm ">
                             <tr className=" dark:border-none border border-slate-300  flex w-full">
-                                <td className="  p-2 text-slate-600 w-1/3 text-sm flex whitespace-nowrap">PRODUTO</td>
-                                <td className="  p-2 text-slate-600 w-1/3 text-sm flex whitespace-nowrap">PREÇO</td>
-                                <td className="  p-2 text-slate-600 w-1/3 text-sm flex whitespace-nowrap">QUANTIDADE</td>
+                                <td className="  p-2 text-slate-600 dark:text-slate-300 w-1/3 text-sm flex whitespace-nowrap">PRODUTO</td>
+                                <td className="  p-2 text-slate-600 dark:text-slate-300 w-1/3 text-sm flex whitespace-nowrap">PREÇO</td>
+                                <td className="  p-2 text-slate-600 dark:text-slate-300 w-1/3 text-sm flex whitespace-nowrap">QUANTIDADE</td>
                             </tr>
                         </thead>
                             {selected?.map((s) => {
-                                return (<tr className=" text-slate-700 w-full flex justify-evenly border-b border-slate-300 dark:border-slate-600" key={String(s.product.id)}>
+                                return (<tr className=" text-slate-700 dark:text-slate-300 w-full flex justify-evenly border-b border-slate-300 dark:border-slate-600" key={String(s.product.id)}>
                                     <td className="  w-1/3 p-2 flex whitespace-nowrap ">{s.product.name}</td>
                                     <td className="  w-1/3 p-2 flex whitespace-nowrap ">R${Number(s.product.price).toFixed(2)}</td>
                                     <td className="  w-1/3 p-2 flex whitespace-nowrap ">{s.quantity} <span onClick={() => spliceProduct(s)} className=" ml-4 bg-red-400 text-red-900 px-2 rounded cursor-pointer font-black">x</span></td>
