@@ -1,3 +1,4 @@
+use crate::db::models::Log::Log;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, types::Null};
@@ -79,6 +80,14 @@ impl Item {
             params![uuid, name, quantity, price, account_id, product_id, date, Null],
         )?;
 
+        let _ = Log::create_one(
+            &conn,
+            uuid.clone(),
+            String::from("CREATE"),
+            String::from("Create item."),
+            format!("Created item with id: {}, name: {}, quantity: {}, price: {}, account_id: {}, product_id: {}", uuid, name, quantity, price, account_id, product_id),
+        )?;
+
         Ok(uuid)
     }
 
@@ -117,6 +126,14 @@ impl Item {
             params![notes, id],
         )?;
 
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("UPDATE"),
+            String::from("Edit item note."),
+            format!("Edited note for item with id: {}, notes: {:?}", id, notes),
+        )?;
+
         Ok(())
     }
 
@@ -130,7 +147,13 @@ impl Item {
             params![price, id],
         )?;
 
-        println!("{}", price);
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("UPDATE"),
+            String::from("Edit item price."),
+            format!("Edited price for item with id: {}, price: {}", id, price),
+        )?;
 
         Ok(())
     }
@@ -145,6 +168,14 @@ impl Item {
             params![name, id],
         )?;
 
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("UPDATE"),
+            String::from("Edit item name."),
+            format!("Edited name for item with id: {}, name: {}", id, name),
+        )?;
+
         Ok(())
     }
 
@@ -153,6 +184,15 @@ impl Item {
         id: String,
     ) -> Result<(), rusqlite::Error> {
         conn.execute("DELETE FROM items WHERE id = ?1", params![id])?;
+
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("DELETE"),
+            String::from("Delete item."),
+            format!("Deleted item with id: {}", id),
+        )?;
+
         Ok(())
     }
 }

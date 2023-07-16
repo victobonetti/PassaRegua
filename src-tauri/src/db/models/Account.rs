@@ -1,5 +1,6 @@
 // Estrutura para a conta de fiado
 use crate::db::models::Item::Item;
+use crate::db::models::Log::Log;
 use crate::db::models::User::User;
 use crate::{date_now, db::models::Payment::Payment};
 use r2d2::PooledConnection;
@@ -162,6 +163,14 @@ impl Account {
         // Excluir a conta da tabela accounts
         conn.execute("DELETE FROM accounts WHERE id = ?1", params![account_id])?;
 
+        let _ = Log::create_one(
+            &conn,
+            account_id.clone(),
+            String::from("DELETE"),
+            String::from("Delete account."),
+            format!("Deleted account with id: {}", account_id),
+        )?;
+        
         Ok(())
     }
 
@@ -201,6 +210,14 @@ impl Account {
         conn.execute(
             "UPDATE users SET account_id = ?1 WHERE id = ?2",
             params![uuid, user_id.clone()],
+        )?;
+
+        let _ = Log::create_one(
+            &conn,
+            uuid.clone(),
+            String::from("CREATE"),
+            String::from("Create account."),
+            format!("Created account with id: {} for user: {}", uuid, user_id),
         )?;
 
         Ok(uuid)

@@ -7,7 +7,8 @@ use crate::Account;
 use crate::Item;
 use crate::Payment;
 use crate::Product;
-use crate::User; // Importe o módulo user do arquivo principal
+use crate::User;
+use crate::db::models::Log::Log; // Importe o módulo user do arquivo principal
 
 fn setup() -> PooledConnection<SqliteConnectionManager> {
     // Crie uma conexão do banco de dados
@@ -18,6 +19,38 @@ fn setup() -> PooledConnection<SqliteConnectionManager> {
     let _init_database = build_database(&conn);
 
     return conn;
+}
+
+#[test]
+fn test_create_and_find_all_logs() {
+    // Criação de uma conexão com o banco de dados em memória usando o SqliteConnectionManager
+    let conn = setup();
+
+    // Criação de um log de exemplo
+    let target_id = "example_target_id".to_string();
+    let operation_type = "example_operation_type".to_string();
+    let action = "example_action".to_string();
+    let description = "example_description".to_string();
+    Log::create_one(
+        &conn,
+        target_id.clone(),
+        operation_type.clone(),
+        action.clone(),
+        description.clone(),
+    )
+    .unwrap();
+
+    // Busca de todos os logs do banco de dados
+    let logs = Log::find_all(&conn).unwrap();
+
+    // Verificação do resultado
+    assert_eq!(logs.len(), 1);
+    let log = &logs[0];
+    assert_eq!(log.target_id, target_id);
+    assert_eq!(log.operation_type, operation_type);
+    assert_eq!(log.action, action);
+    assert_eq!(log.description, description);
+    
 }
 
 #[test]

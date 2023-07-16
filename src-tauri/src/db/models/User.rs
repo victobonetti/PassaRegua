@@ -1,3 +1,4 @@
+use crate::db::models::Log::Log;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::types::Null;
@@ -49,6 +50,19 @@ impl User {
             "INSERT INTO users (id, username, cpf, phone, account_id, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
             params![uuid, username, cpf, phone, Null, date, Null],
         )?;
+
+        // Criar log
+        let _ = Log::create_one(
+            &conn,
+            String::from(&uuid),
+            String::from("CREATE"), //must be CREATE, UPDATE OR DELETE.
+            String::from("Create user."),
+            format!(
+                "Created user with name: {}, cpf: {}, phone: {}",
+                username, cpf, phone
+            ),
+        );
+
         Ok(uuid)
     }
 
@@ -71,7 +85,6 @@ impl User {
         users
     }
 
-    
     pub fn find_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
@@ -101,6 +114,15 @@ impl User {
         id: String,
     ) -> Result<(), rusqlite::Error> {
         conn.execute("DELETE FROM users WHERE id = ?1", params![id])?;
+
+        let _ = Log::create_one(
+            &conn,
+            String::from(&id),
+            String::from("DELETE"), // Must be CREATE, UPDATE, or DELETE.
+            String::from("Delete user."),
+            format!("Deleted user with id: {}", id),
+        )?;
+
         Ok(())
     }
 
@@ -116,12 +138,24 @@ impl User {
             "UPDATE users SET username = ?, cpf = ?, phone = ?, updated_at = ? WHERE id = ?",
             params![username, cpf, phone, date, id],
         )?;
-        let resultados = User::find_one(conn, id)?;
+        let resultados = User::find_one(conn, id.to_owned())?;
         if let Some(resultados) = resultados {
             assert_eq!(resultados.username, username);
             assert_eq!(resultados.cpf, cpf);
             assert_eq!(resultados.phone, phone);
         }
+
+        let _ = Log::create_one(
+            &conn,
+            String::from(&id),
+            String::from("UPDATE"), // Must be CREATE, UPDATE, or DELETE.
+            String::from("Edit user."),
+            format!(
+                "Edited user with id: {}. New name: {}, new cpf: {}, new phone: {}",
+                id, username, cpf, phone
+            ),
+        )?;
+
         Ok(())
     }
 

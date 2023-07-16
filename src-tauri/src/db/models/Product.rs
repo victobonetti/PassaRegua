@@ -1,3 +1,4 @@
+use crate::db::models::Log::Log;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, types::Null, Result};
@@ -32,7 +33,6 @@ impl Serialize for Product {
 }
 
 impl Product {
-    
     pub fn create_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         name: &str,
@@ -47,10 +47,17 @@ impl Product {
             params![uuid, name, price, date, Null],
         )?;
 
+        let _ = Log::create_one(
+            &conn,
+            uuid.clone(),
+            String::from("CREATE"),
+            String::from("Create product."),
+            format!("Created product with name: {}, price: {}", name, price),
+        )?;
+
         Ok(uuid)
     }
 
-    
     pub fn find_all(
         conn: &PooledConnection<SqliteConnectionManager>,
     ) -> Result<Vec<Product>, rusqlite::Error> {
@@ -75,7 +82,6 @@ impl Product {
         Ok(products)
     }
 
-    
     pub fn find_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
@@ -97,7 +103,6 @@ impl Product {
         }
     }
 
-    
     pub fn delete_one(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
@@ -106,13 +111,11 @@ impl Product {
         Ok(())
     }
 
-    
     pub fn edit_price(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
         new_price: f64,
     ) -> Result<(), rusqlite::Error> {
-
         println!("price is: {}", new_price);
 
         let date = date_now();
@@ -121,22 +124,48 @@ impl Product {
             "UPDATE products SET price = ?1, updated_at = ?2 WHERE id = ?3",
             params![new_price, date, id],
         )?;
+
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("DELETE"),
+            String::from("Delete product."),
+            format!("Deleted product with id: {}", id),
+        )?;
+
+        // Criar log
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("UPDATE"),
+            String::from("Edit product price."),
+            format!("Edited product price with id: {} to: {}", id, new_price),
+        )?;
+
         Ok(())
     }
 
-    
     pub fn edit_name(
         conn: &PooledConnection<SqliteConnectionManager>,
         id: String,
         new_name: &str,
     ) -> Result<(), rusqlite::Error> {
-
         let date = date_now();
 
         conn.execute(
             "UPDATE products SET name = ?1, updated_at = ?2 WHERE id = ?3",
             params![new_name, date, id],
         )?;
+
+        // Criar log
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("UPDATE"),
+            String::from("Edit product name."),
+            format!("Edited product name with id: {} to: {}", id, new_name),
+        )?;
+
         Ok(())
     }
 }

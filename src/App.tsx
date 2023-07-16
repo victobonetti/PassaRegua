@@ -34,6 +34,9 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
   const [darkmode, setDarkmode] = useState(false);
 
   const getRouteTitle = (c: string) => {
+    if (c.includes("logs")) {
+      return ("Logs")
+    } else
     if (c.includes("usuario")) {
       return ("Usuários")
     } else

@@ -1,3 +1,4 @@
+use crate::db::models::Log::Log;
 use r2d2::PooledConnection;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite::{params, types::Null, Result};
@@ -60,6 +61,18 @@ impl Payment {
             params![uuid, amount, account_id, payment_type, date, Null],
         )?;
 
+        // Criar log
+        let _ = Log::create_one(
+            &conn,
+            uuid.clone(),
+            String::from("CREATE"),
+            String::from("Create payment."),
+            format!(
+                "Created payment with id: {}, amount: {}, account_id: {}, payment_type: {}",
+                uuid, amount, account_id, payment_type
+            ),
+        )?;
+
         Ok(uuid)
     }
 
@@ -68,7 +81,7 @@ impl Payment {
         account_id: String,
     ) -> Result<Vec<Payment>, rusqlite::Error> {
         let mut stmt = conn.prepare("SELECT * FROM payments WHERE account_id = ?1")?;
-        let rows = stmt.query_map(params![account_id], |row|{
+        let rows = stmt.query_map(params![account_id], |row| {
             Ok(Payment {
                 id: row.get(0)?,
                 amount: row.get(1)?,
@@ -79,12 +92,12 @@ impl Payment {
             })
         })?;
 
-            let mut payments = Vec::new();
-            for payment_iter in rows {
-                let p = payment_iter?;
-                payments.push(p);
-            };
-            Ok(payments)
+        let mut payments = Vec::new();
+        for payment_iter in rows {
+            let p = payment_iter?;
+            payments.push(p);
+        }
+        Ok(payments)
     }
 
     pub fn update_amount(
@@ -97,6 +110,15 @@ impl Payment {
             params![amount, id],
         )?;
 
+        // Criar log
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("UPDATE"),
+            String::from("Update payment amount."),
+            format!("Updated payment amount with id: {} to: {}", id, amount),
+        )?;
+
         Ok(())
     }
 
@@ -105,6 +127,16 @@ impl Payment {
         id: String,
     ) -> Result<(), rusqlite::Error> {
         conn.execute("DELETE FROM payments WHERE id = ?1", params![id])?;
+
+        // Criar log
+        let _ = Log::create_one(
+            &conn,
+            id.clone(),
+            String::from("DELETE"),
+            String::from("Delete payment."),
+            format!("Deleted payment with id: {}", id),
+        )?;
+
         Ok(())
     }
 }

@@ -25,8 +25,6 @@ pub fn init_database(
     Ok(pool.get()?)
 }
 
-
-
 pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Result<()> {
     // Crie a tabela users
     conn.execute(
@@ -94,6 +92,19 @@ pub fn build_database(conn: &PooledConnection<SqliteConnectionManager>) -> Resul
                 updated_at TEXT,
                 FOREIGN KEY (product_id) REFERENCES products(id),
                 FOREIGN KEY (account_id) REFERENCES accounts(id)
+            )",
+        params![],
+    )
+    .unwrap();
+
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS logs (
+            id TEXT PRIMARY KEY,
+            target_id TEXT NOT NULL,
+            operation_type TEXT NOT NULL,
+            action TEXT NOT NULL,
+            description TEXT NOT NULL,
+            created_at TEXT NOT NULL
             )",
         params![],
     )

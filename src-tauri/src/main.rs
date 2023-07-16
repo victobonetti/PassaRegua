@@ -5,6 +5,7 @@
 
 use db::models::Account::Account;
 use db::models::Item::Item;
+use db::models::Log::Log;
 use db::models::Payment::Payment;
 use db::models::Product::Product;
 use db::models::User::User;
@@ -16,6 +17,8 @@ mod db {
         pub mod Account;
         #[allow(non_snake_case)]
         pub mod Item;
+        #[allow(non_snake_case)]
+        pub mod Log;
         #[allow(non_snake_case)]
         pub mod Payment;
         #[allow(non_snake_case)]
@@ -44,6 +47,24 @@ fn get_database_content_status() -> bool {
         0 => false,
         _ => true,
     }
+}
+
+//Logs Service
+#[tauri::command]
+fn get_logs() -> Result<Vec<Log>, String> {
+    let conn = match db::db::init_database() {
+        Ok(conn) => conn,
+        Err(_) => return Err("Erro ao gerar conexão com pool do banco de dados.".to_owned()),
+    };
+
+    match Log::find_all(&conn) {
+        Ok(logs) => {
+            println!("{}", logs.len());
+            Ok(logs)
+        }
+        Err(e) => Err(e.to_string()),
+    }
+
 }
 
 //User Service
@@ -447,7 +468,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             find_account_by_id,
             delete_account_by_id,
             find_all_accounts,
-            get_database_content_status
+            get_database_content_status,
+            get_logs
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
