@@ -74,7 +74,7 @@ export default function PaginaContas({ data, setData }: { data: Account[], setDa
             }
 
             {!modalExcluirAberto &&
-                <><div className=" justify-end p-2 flex dark:bg-slate-950 ">
+                <><div className=" justify-end p-2 flex  ">
                     <Link to={'/contas/novo'}><button className=" transition-all hover:bg-transparent hover:text-cyan-300 border border-cyan-300  bg-cyan-300 text-cyan-900 font-semibold px-4 py-2 rounded text-lg">Criar nova conta</button></Link>
                 </div>
                     <div className=" p-4 flex flex-wrap">

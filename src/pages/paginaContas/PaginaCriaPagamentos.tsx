@@ -87,6 +87,7 @@ export default function PaginaCriaPagamentos() {
                 <div className=" border border-slate-300 rounded mt-2 items-center p-4  dark:bg-slate-600 text-4xl">R${getValue}</div>
                 <span className=" mb-2 text-xs text-red-500">{valueErr}</span>
                 <NumberInput updateVal={updateValue} clearVal={clearValue} />
+                <span onClick={() => setValue(Number(Number(total) - Number(paid)).toFixed(2))} className=" hover:scale-105 transition-all text-center cursor-pointer border rounded text-lg py-2 px-4 bg-blue-400 text-blue-50 mt-2 ">Inserir valor pendente &#40;{"R$" + Number(Number(total) - Number(paid)).toFixed(2)}&#41;</span>
                 <PaymentTypeSelection paymentType={paymentType} setPaymentType={setPaymentType} />
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/contas'}><p className=" dark:text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>

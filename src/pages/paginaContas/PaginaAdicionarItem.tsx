@@ -8,6 +8,7 @@ import { table } from "console";
 import { FeedbackContext } from "../../routes/appRouter";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 
+
 interface selectedProduct {
     product: Product,
     quantity: number
@@ -125,7 +126,7 @@ export default function PaginaAdicionarItem() {
 
     return (
         <div className=" w-full h-full flex flex-col items-center ">
-            <h1 className=" my-8 text-4xl text-slate-300">Selecionar produtos</h1>
+            <h1 className=" my-8 text-4xl text-slate-300">Selecionar produtos </h1>
             <div className=" flex w-full">
                 <div className=" p-4 w-3/5 flex flex-col items-center justify-center">
                     <span className=" mb-2 text-slate-400 text-xs">Digite um produto, e então clique em "adicionar" para coloca-lo em seu carrinho.</span>
