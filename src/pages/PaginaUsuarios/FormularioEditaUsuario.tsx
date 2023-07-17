@@ -66,8 +66,8 @@ export default function FormularioEditaUsuario() {
             <h1 className=" text-3xl mb-4">Editar novo usuário</h1>
             <form onSubmit={e => editaUsuario(e)} className="flex flex-col w-96">
                 <TextInput value={username} set={setUsername} name={"username"} id={"username"} label={"Nome do usuário"} err={usernameErr} />
-                <TextInput value={cpf} set={setCpf} name={"cpf"} id={"cpf"} label={"Cadastro de pessoa física (CPF)"} err={cpfErr} />
-                <TextInput value={phone} set={setPhone} name={"phone"} id={"phone"} label={"Telefone celular"} err={phoneErr} />
+                <TextInput value={cpf} set={setCpf} name={"cpf"} id={"cpf"} label={"Cadastro de pessoa física - CPF (Sem caracteres especiais, apenas números)"} err={cpfErr} />
+                <TextInput value={phone} set={setPhone} name={"phone"} id={"phone"} label={"Telefone celular (Sem caracteres especiais, apenas números)" } err={phoneErr} />
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/usuarios'}><p className=" dark:text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
                     <ButtonComponentLink text={"Editar cliente"} color={0} />                </div>

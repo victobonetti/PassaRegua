@@ -24,20 +24,24 @@ export function validaTexto(text: string) {
         .nonempty()
         .safeParse(text)
 }
-
 export function validaCpf(text: string) {
-    return z.string().trim()
-        .length(11, { message: "Cpf deve haver 11 caracteres." })
-        .nonempty()
-        .safeParse(text)
+    const sanitizedText = text.replace(/[-e]/gi, "");
+
+    return z.string()
+        .trim()
+        .min(11, { message: "CPF deve ter no mínimo 11 caracteres." })
+        .max(11, { message: "CPF deve ter no máximo 11 caracteres." })
+        .nonempty({ message: "CPF não pode ser vazio." })
+        .safeParse(sanitizedText);
 }
 
 
 export function validaPhone(text: string) {
+    const sanitizedText = text.replace(/[-e]/gi, "");
     return z.string().trim()
         .min(10, { message: "Telefone deve ter 10 - 11 caracteres." })
         .max(11, { message: "Telefone deve ter 10 - 11 caracteres." })
         .nonempty()
-        .safeParse(text)
+        .safeParse(sanitizedText);
 }
 

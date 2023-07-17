@@ -102,7 +102,6 @@ export default function FormularioCriaProduto() {
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/produtos'}><p className=" text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
                     {!buttonDisabled && <ButtonComponentLink text={"Criar produto"} color={0} />}
-
                 </div>
             </form>
         </div>

@@ -9,9 +9,7 @@ import regua from "../../src-tauri/icons/icon.ico"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 
-
-
-export default function PaginaInicial({ data, setData }: { data: Account[], setData: Dispatch<SetStateAction<Account[]>> }) {
+export default function PaginaInicial({ data, setData, setLang }: { data: Account[], setData: Dispatch<SetStateAction<Account[]>>, setLang:Dispatch<SetStateAction<boolean>> }) {
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [paidValue, setPaidValue] = useState(0)
     const [unpaidValue, setUnpaidValue] = useState(0)
@@ -112,14 +110,14 @@ export default function PaginaInicial({ data, setData }: { data: Account[], setD
                 <>
                     <div className="w-full  flex "><div className=" flex-col w-1/2">
                         <h1 className="text-3xl mb-8">Descubra o Passa<span className=" font-bold">Régua</span>:</h1>
-                        <p className="text-lg mb-4">Com apenas alguns cliques, você pode criar colaboradores e suas contas fiado. Essas contas fiado consistem em itens que representam produtos pré-registrados. Além disso, o PassaRégua permite que você faça pagamentos para reduzir o saldo pendente nas contas.</p>
-                        <ul className="text-lg list-disc ml-8 mb-8">
-                            <li>Crie facilmente um novo colaborador e atribua uma conta fiado.</li>
+                        <p className=" text-sm mb-4">Com apenas alguns cliques, você pode cadastrar pessoas e suas contas fiado. Essas contas fiado consistem em itens que representam produtos pré-registrados. Além disso, o PassaRégua permite que você faça pagamentos para reduzir o saldo pendente nas contas.</p>
+                        <ul className=" text-sm list-disc ml-8 mb-8">
+                            <li>Crie facilmente uma nova pessoa e atribua uma conta fiado.</li>
                             <li>Adicione itens à conta fiado, representando os produtos escolhidos.</li>
                             <li>Faça pagamentos na conta fiado para deduzir o saldo pendente.</li>
                             <li>Mantenha o controle e a transparência das transações.</li>
                         </ul>
-                        <Link to={'/usuarios'} className="bg-emerald-400 hover:bg-emerald-700 text-emerald-50 font-bold py-2 px-4 rounded">Cadastrar pessoas</Link>
+                        <Link to={'/usuarios'} className="bg-emerald-500 hover:bg-emerald-600 text-emerald-50 font-bold py-2 px-4 rounded">Cadastrar pessoas</Link>
                     </div>
 
                         <div className=" flex flex-col w-1/2 items-center justify-center">
