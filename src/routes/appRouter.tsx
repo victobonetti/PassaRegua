@@ -54,6 +54,7 @@ export default function AppRouter(): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
 
   const fetchData = async () => {
+    
     let data_users: User[] = await invoke('find_all_users', {})
     let data_accounts: Account[] = await invoke('find_all_accounts', {})
     let data_products: Product[] = await invoke('find_all_products', {})
@@ -97,20 +98,6 @@ export default function AppRouter(): JSX.Element {
 
   const manageLoading = (active: boolean) => {
     setLoading(active);
-    // if (active == false) {
-    //   setTimeout(() => {
-    //     setLoading(false);
-    //   }, 100)
-    // }
-
-    // if (loading == true && active == true) {
-    //   return;
-    // }
-
-    // if (loading == false && active == true) {
-    //   setLoading(true);
-    // }
-
   }
 
   return (
@@ -129,39 +116,39 @@ export default function AppRouter(): JSX.Element {
             );
 
           })}  </div>}
-     
-        <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
-          <Routes>
-            <Route path={'/'} element={<App load={loading} firstLoad={firstLoad} dataStorage={{ users: users, accounts: accounts, products: products }} />}>
-              
-              <Route index element={<PaginaInicial data={accounts}  setData={setAccounts}/>} />
-              <Route path='/usuarios' element={<PaginaUsuarios data={users} setData={setUsers} />} />
-              <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
-              <Route
-                path='/usuarios/editar/:id/:usernameParam/:cpfParam/:phoneParam'
-                element={<FormularioEditaUsuario />}
-              />
-              <Route path='/contas' element={<PaginaContas data={accounts} setData={setAccounts} />} />
-              <Route path='/contas/novo' element={<PaginaCriarConta />} />
-              <Route path='/contas/items/:id' element={<PaginaItems />} />
-              <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
-              <Route path='/contas/items/note/:id/:itemId/:noteText?' element={<PaginaCriarNota />} />
-              <Route path='/contas/pagamentos/:id/:total/:paid' element={<PaginaPagamentos />} />
-              <Route path='/contas/pagamentos/add/:id/:total/:paid' element={<PaginaCriaPagamentos />} />
-              <Route path='/contas/items/price/:id/:itemId/:priceParam/:quantityParam' element={< FormularioEditaPreco />} />
-              {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
 
-              <Route path='/produtos' element={<PaginaProdutos data={products} setData={setProducts} />} />
-              <Route path='produtos/novo' element={<FormularioCriaProduto />} />
-              <Route path='logs' element={<PaginaLogs />} />
-              <Route
-                path='produtos/editar/:id/:nameParam/:priceParam'
-                element={<FormularioEditaProduto />}
-              />
-            </Route>
-          </Routes>
-        </FeedbackContext.Provider >
-      
+      <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
+        <Routes>
+          <Route path={'/'} element={<App load={loading} firstLoad={firstLoad} dataStorage={{ users: users, accounts: accounts, products: products }} />}>
+
+            <Route index element={<PaginaInicial data={accounts} setData={setAccounts} />} />
+            <Route path='/usuarios' element={<PaginaUsuarios data={users} setData={setUsers} />} />
+            <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
+            <Route
+              path='/usuarios/editar/:id/:usernameParam/:cpfParam/:phoneParam'
+              element={<FormularioEditaUsuario />}
+            />
+            <Route path='/contas' element={<PaginaContas data={accounts} setData={setAccounts} />} />
+            <Route path='/contas/novo' element={<PaginaCriarConta />} />
+            <Route path='/contas/items/:id' element={<PaginaItems />} />
+            <Route path='/contas/items/add/:id' element={<PaginaAdicionarItem />} />
+            <Route path='/contas/items/note/:id/:itemId/:noteText?' element={<PaginaCriarNota />} />
+            <Route path='/contas/pagamentos/:id/:total/:paid' element={<PaginaPagamentos />} />
+            <Route path='/contas/pagamentos/add/:id/:total/:paid' element={<PaginaCriaPagamentos />} />
+            <Route path='/contas/items/price/:id/:itemId/:priceParam/:quantityParam' element={< FormularioEditaPreco />} />
+            {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
+
+            <Route path='/produtos' element={<PaginaProdutos data={products} setData={setProducts} />} />
+            <Route path='produtos/novo' element={<FormularioCriaProduto />} />
+            <Route path='logs' element={<PaginaLogs />} />
+            <Route
+              path='produtos/editar/:id/:nameParam/:priceParam'
+              element={<FormularioEditaProduto />}
+            />
+          </Route>
+        </Routes>
+      </FeedbackContext.Provider >
+
     </Router >
 
   );

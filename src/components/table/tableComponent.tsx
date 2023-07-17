@@ -88,7 +88,7 @@ export default function TableComponent<T extends { created_at: string, id: strin
                                         Editar
                                     </button>
                                     {optionsActive === d.id && (
-                                        <div className=" rounded shadow-xl text-xs  absolute w-32 appear dark:bg-slate-600 bg-slate-100 self-start flex flex-col justify-start items-start  ">
+                                        <span className=" rounded shadow-xl text-xs  absolute w-32 appear dark:bg-slate-600 bg-slate-100 self-start flex flex-col justify-start items-start  ">
                                             {/* <h3 className=" select-none text-slate-400 mb-2">Opções</h3> */}
                                             {deleteMethod && (
                                                 <button className=" rounded p-2 dark:hover:bg-slate-700 hover:bg-slate-200 py-1 text-start text-red-400 cursor-pointer w-full " onClick={() => deleteMethod(d)}>
@@ -100,7 +100,7 @@ export default function TableComponent<T extends { created_at: string, id: strin
                                                     {otherMethodsText[i]}
                                                 </button>
                                             ))}
-                                        </div>
+                                        </span>
                                     )}
                                 </td>
 

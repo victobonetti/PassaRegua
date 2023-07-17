@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "passaregua",
-    "version": "1.0.0"
+    "version": "0.2.2"
   },
   "tauri": {
     "allowlist": {
@@ -36,7 +36,7 @@
       "updater": {
       "active": true,
       "endpoints": [
-        "https://localhost:3000/api/{{target}}/{{arch}}/{{current_version}}"
+        "https://victor-portifolio.vercel.app/api/victobonetti/passaregua/{{target}}/{{arch}}/{{current_version}}"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNFQ0Y4MjZENEI4NDIwNTEKUldSUklJUkxiWUxQUHBhbDR2a1ozZ0hMajFCOFlFZFhka1g5Q3VIMVFVblpreks3bkJZMUs5UEsK"

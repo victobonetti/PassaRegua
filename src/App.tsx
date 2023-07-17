@@ -16,10 +16,17 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
   const location = useLocation();
 
   const findUpdates = async () => {
-    const update = await checkUpdate();
-    if (update.shouldUpdate && update.manifest) {
-      console.log(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest.body}`);
-      await installUpdate().then(relaunch);
+    try {
+      const update = await checkUpdate();
+      console.log(update)
+      if (update.shouldUpdate && update.manifest) {
+        console.log(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest.body}`);
+        await installUpdate().then(relaunch);
+      } else {
+        console.log("No Updates...")
+      }
+    } catch (e) {
+      console.log(e)
     }
   }
 

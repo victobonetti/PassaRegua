@@ -9,7 +9,7 @@ import regua from "../../src-tauri/icons/icon.ico"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 
-export default function PaginaInicial({ data, setData, setLang }: { data: Account[], setData: Dispatch<SetStateAction<Account[]>>, setLang:Dispatch<SetStateAction<boolean>> }) {
+export default function PaginaInicial({ data, setData }: { data: Account[], setData: Dispatch<SetStateAction<Account[]>> }) {
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [paidValue, setPaidValue] = useState(0)
     const [unpaidValue, setUnpaidValue] = useState(0)
@@ -34,15 +34,25 @@ export default function PaginaInicial({ data, setData, setLang }: { data: Accoun
         fetchData()
     }, [])
 
-    useEffect(() => {
-        let totalPayments = 0;
-        let totalUnpaid = 0;
+    const incrementPayments = (p = 0, u = 0) => {
+
+        let paid = p;
+        let unpaid = u;
+
         data.map((ac) => {
-            totalPayments += Number(ac.paid_amount);
-            totalUnpaid += Number(ac.account_total - ac.paid_amount);
+            paid += Number(ac.paid_amount);
+            unpaid += Number(ac.account_total - ac.paid_amount);
         });
-        setPaidValue(totalPayments);
-        setUnpaidValue(totalUnpaid);
+        return {
+            totalPayments: paid,
+            totalUnpaid: unpaid
+        }
+    }
+
+    useEffect(() => {
+        let iterator = incrementPayments()
+        setPaidValue(iterator.totalPayments);
+        setUnpaidValue(iterator.totalUnpaid);
     }, data)
 
 
