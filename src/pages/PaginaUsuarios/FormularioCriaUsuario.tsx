@@ -56,14 +56,14 @@ export default function FormularioCriaUsuario() {
 
     return (
         <div className=" h-full flex flex-col items-center justify-center">
-            <h1 className=" text-3xl mb-4">Criar novo usuário</h1>
+            <h1 className=" text-3xl mb-4">Criar nova pessoa</h1>
             <form onSubmit={e => criaUsuario(e)} className="flex flex-col w-96">
-                <TextInput value={username} set={setUsername} name={"username"} id={"username"} label={"Nome do usuário"} err={usernameErr} />
+                <TextInput value={username} set={setUsername} name={"username"} id={"username"} label={"Nome da pessoa"} err={usernameErr} />
                 <TextInput value={cpf} set={setCpf} name={"cpf"} id={"cpf"} label={"Cadastro de pessoa física (CPF)"} err={cpfErr} />
                 <TextInput value={phone} set={setPhone} name={"phone"} id={"phone"} label={"Telefone celular"} err={phoneErr} />
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/usuarios'}><p className=" dark:text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
-                    {!buttonDisabled && <ButtonComponentLink text={"Criar cliente"} color={0} />}
+                    {!buttonDisabled && <ButtonComponentLink text={"Criar pessoa"} color={0} />}
                 </div>
             </form>
         </div>

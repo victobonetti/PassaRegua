@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "FrilaHub",
+    "productName": "passaregua",
     "version": "1.0.0"
   },
   "tauri": {
@@ -21,7 +21,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.frilahub.dev",
+      "identifier": "com.passaregua.dev",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -45,7 +45,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "FrilaHub",
+        "title": "PassaRégua",
         "width": 1280,
         "height": 720,
         "minWidth": 1280,

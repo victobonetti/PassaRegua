@@ -101,7 +101,7 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
                         deleteMethod={abrirModalExcluir} />
 
                     <div className=" justify-center p-2 flex ">
-                        <ButtonComponentLink text={"Criar novo cliente"} color={0} path={"/usuarios/novo"} />
+                        <ButtonComponentLink text={"Criar nova pessoa"} color={0} path={"/usuarios/novo"} />
                     </div></>
             }
 

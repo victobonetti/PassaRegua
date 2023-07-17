@@ -3,6 +3,7 @@ import TableComponent from "../../components/table/tableComponent";
 import { invoke } from "@tauri-apps/api";
 import Log from "../../interfaces/Log";
 import { FeedbackContext } from "../../routes/appRouter";
+import { P } from "@tauri-apps/api/event-41a9edf5";
 
 // export default interface Log {
 //     id: string,
@@ -22,8 +23,7 @@ export default function PaginaLogs() {
     const fetch = async () => {
         try {
             let data: Log[] = await invoke("get_logs", {})
-            console.log(data)
-            setLogs(data);
+            setLogs(data.reverse());
         } catch {
             createFeedback(true, "Erro ao encontrar logs.")
         } finally {
@@ -38,10 +38,17 @@ export default function PaginaLogs() {
     }, [])
 
     return (
-        <>
-            {logs &&
-                <TableComponent< Log > data={logs} dataKeys={["target_id", "operation_type", "action", "description", "created_at"]} header={["Coluna alterada", "Tipo de operação", "Ação", "Descrição", "Data de criação."]} />
+        <div className=" p-4">
+            {logs.length > 0 &&
+                logs?.map((log, i) => {
+                    return (
+                        <div className=" mb-2 h-fit w-full p-1 border rounded bg-slate-200">
+                            <div className=" w-fit p-1 text-sm rounded-full bg-slate-400 text-slate-100">{log.operation_type}</div>
+                                <p className=" my-1 text-xs text-slate-500">{log.description}</p> <p>{log.created_at}</p>
+                        </div>
+                    )
+                })
             }
-        </>
+        </div>
     )
 }

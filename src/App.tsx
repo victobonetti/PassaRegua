@@ -38,7 +38,7 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
       return ("Logs")
     } else
     if (c.includes("usuario")) {
-      return ("Usuários")
+      return ("Pessoas")
     } else
       if (c.includes("produtos")) {
         return ("Produtos")
@@ -63,14 +63,15 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
         {!firstLoad &&
           <><aside className="flex flex-col bg-slate-100 dark:bg-slate-900  mr-2 w-48 test-sm h-full justify-between">
             <div>
-              <h2 className="  dark:text-slate-50 select-none  my-2 text-4xl text-center" >Frila<span className="font-black">Hub</span></h2>
+              <h2 className="  dark:text-slate-50 select-none  mt-2 text-2xl text-center" >Passa<span className="font-black">Régua</span></h2>
+              <h3 className=" font-bold mb-2 select-none text-xs dark:text-slate-100 text-slate-700 text-center ">Gestor de contas fiado</h3>
               <nav className=" flex flex-col">
                 <p className=" text-xs text-slate-400 dark:text-slate-500 ml-2 mt-4 mb-2">Informações</p>
                 <Link to={'/'}><li className={` ${currentPage === '/' ? 'border-l-4                 dark:border-emerald-500 border-emerald-300 text-slate-800 dark:text-slate-200 dark:bg-slate-800 pl-2' : 'pl-3'}                 cursor-pointer flex items-center list-none                                             hover:bg-slate-200 dark:hover:bg-slate-700 h-12 font-semibold   text-sm`}><FontAwesomeIcon className="mr-1.5 w-3" icon={faBarChart} />Dashboard</li></Link>
                 <p className=" text-xs text-slate-400 dark:text-slate-500 ml-2 mt-4 mb-2">Contas fiado</p>
-                <Link to={dataStorage.users.length == 0 ? currentPage : '/contas'}><li className={` ${currentPage === '/contas' ? 'border-l-4     dark:border-emerald-500 border-emerald-300 text-slate-800 dark:text-slate-200 dark:bg-slate-800 pl-2' : 'pl-3'}     ${dataStorage.users.length == 0 ? ' opacity-30 cursor-default hover:bg-transparent ' : ' '} cursor-pointer flex items-center list-none hover:bg-slate-200 dark:hover:bg-slate-700 h-12     text-sm`}><FontAwesomeIcon className="mr-1.5 w-3" icon={faFileText} />Acessar contas</li></Link>
-                <Link to={'/usuarios'}><li className={` ${currentPage === '/usuarios' ? 'border-l-4 dark:border-emerald-500 border-emerald-300 text-slate-800 dark:text-slate-200 dark:bg-slate-800 pl-2' : 'pl-3'} cursor-pointer flex items-center list-none                                                             hover:bg-slate-200 dark:hover:bg-slate-700 h-12 text-sm`}><FontAwesomeIcon className="mr-1.5 w-3" icon={faUser} />Gerenciar frilas</li></Link>
-                <Link to={'/produtos'}><li className={` ${currentPage === '/produtos' ? 'border-l-4 dark:border-emerald-500 border-emerald-300 text-slate-800 dark:text-slate-200 dark:bg-slate-800 pl-2' : 'pl-3'} cursor-pointer flex items-center list-none                                                             hover:bg-slate-200 dark:hover:bg-slate-700 h-12 text-sm`}><FontAwesomeIcon className="mr-1.5 w-3" icon={faLemon} />Gerenciar produtos</li></Link>
+                <Link to={dataStorage.users.length == 0 ? currentPage : '/contas'}><li className={` ${currentPage === '/contas' ? 'border-l-4     dark:border-emerald-500 border-emerald-300 text-slate-800 dark:text-slate-200 dark:bg-slate-800 pl-2' : 'pl-3'}     ${dataStorage.users.length == 0 ? ' opacity-30 cursor-default hover:bg-transparent ' : ' '} cursor-pointer flex items-center list-none hover:bg-slate-200 dark:hover:bg-slate-700 h-12     text-sm`}><FontAwesomeIcon className="mr-1.5 w-3" icon={faFileText} />Contas</li></Link>
+                <Link to={'/usuarios'}><li className={` ${currentPage === '/usuarios' ? 'border-l-4 dark:border-emerald-500 border-emerald-300 text-slate-800 dark:text-slate-200 dark:bg-slate-800 pl-2' : 'pl-3'} cursor-pointer flex items-center list-none                                                             hover:bg-slate-200 dark:hover:bg-slate-700 h-12 text-sm`}><FontAwesomeIcon className="mr-1.5 w-3" icon={faUser} />Pessoas</li></Link>
+                <Link to={'/produtos'}><li className={` ${currentPage === '/produtos' ? 'border-l-4 dark:border-emerald-500 border-emerald-300 text-slate-800 dark:text-slate-200 dark:bg-slate-800 pl-2' : 'pl-3'} cursor-pointer flex items-center list-none                                                             hover:bg-slate-200 dark:hover:bg-slate-700 h-12 text-sm`}><FontAwesomeIcon className="mr-1.5 w-3" icon={faLemon} />Produtos</li></Link>
                 <p className=" text-xs text-slate-400 dark:text-slate-500 ml-2 mt-4 mb-2">Logs</p>
                 <Link to={'/logs'}><li className={` ${currentPage === '/logs' ? 'border-l-4 dark:border-emerald-500 border-emerald-300 text-slate-800 dark:text-slate-200 dark:bg-slate-800 pl-2' : 'pl-3'} cursor-pointer flex items-center list-none                                                             hover:bg-slate-200 dark:hover:bg-slate-700 h-12 text-sm`}><FontAwesomeIcon className="mr-1.5 w-3" icon={faNewspaper} />Checar logs</li></Link>
 
