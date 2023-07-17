@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-
 use db::models::Account::Account;
 use db::models::Item::Item;
 use db::models::Log::Log;
@@ -64,7 +63,6 @@ fn get_logs() -> Result<Vec<Log>, String> {
         }
         Err(e) => Err(e.to_string()),
     }
-
 }
 
 //User Service
@@ -473,6 +471,5 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-
     Ok(())
 }
