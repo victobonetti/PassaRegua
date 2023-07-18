@@ -53,7 +53,7 @@ export default function PaginaInicial({ data, setData }: { data: Account[], setD
         let iterator = incrementPayments()
         setPaidValue(iterator.totalPayments);
         setUnpaidValue(iterator.totalUnpaid);
-    }, data)
+    }, [data])
 
 
 
@@ -61,7 +61,7 @@ export default function PaginaInicial({ data, setData }: { data: Account[], setD
 
     return (
         <div className=" p-4">
-            { data.length > 1 &&
+            { data.length > 0 &&
                 <><h1 className="  text-4xl w-full border-b border-slate-300 dark:border-slate-700 p-2">Bem-vindo de volta!</h1><h2 className="font-bold m-4 dark:text-slate-400 text-slate-600">Dashboard</h2><div className=" h-80 flex justify-evenly items-center">
                     <div className=" h-72 ml-6 mt-4">
                         <Pie
@@ -116,7 +116,6 @@ export default function PaginaInicial({ data, setData }: { data: Account[], setD
                 </div></>
             }
             {paidValue === 0 && unpaidValue === 0 &&
-
                 <>
                     <div className="w-full  flex "><div className=" flex-col w-1/2">
                         <h1 className="text-3xl mb-8">Descubra o Passa<span className=" font-bold">Régua</span>:</h1>

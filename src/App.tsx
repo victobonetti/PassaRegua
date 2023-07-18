@@ -7,27 +7,61 @@ import Account from "./interfaces/Account";
 import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
 import { relaunch } from "@tauri-apps/api/process";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faFileText, faBarChart, faLemon, faNewspaper, faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
+import { faUser, faFileText, faBarChart, faLemon, faNewspaper, faCircleQuestion, faLightbulb as face } from "@fortawesome/free-regular-svg-icons";
+import ButtonComponentLink from "./components/buttons/ButtonComponentLink";
 
 function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boolean, dataStorage: { users: User[], accounts: Account[], products: Product[] } }) {
 
   const [currentPage, setCurrentPage] = useState('');
   const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const [updaterActive, setUpdaterActive] = useState(false);
+  const [updateNotes, setUpdateNotes] = useState('');
+  const [updateVersion, setUpdateVersion] = useState('');
+  const [installingUpdate, setInstallingUpdate] = useState(false);
+  const [updateErr, setUpdateErr] = useState('')
   const location = useLocation();
+
+  interface updateProps {
+    shouldUpdate: boolean
+    manifest?: manifestProps
+  }
+
+  interface manifestProps {
+    body: string,
+    version: string
+  }
 
   const findUpdates = async () => {
     try {
-      const update = await checkUpdate();
+      const update: updateProps = await checkUpdate();
       console.log(update)
-      if (update.shouldUpdate && update.manifest) {
-        console.log(`Installing update ${update.manifest?.version}, ${update.manifest?.date}, ${update.manifest.body}`);
-        await installUpdate().then(relaunch);
-      } else {
-        console.log("No Updates...")
+      if (update.shouldUpdate) {
+        setUpdaterActive(true)
+      }
+      if (update.manifest?.body) {
+        setUpdateNotes(update.manifest?.body)
+      }
+
+      if (update.manifest?.version) {
+        setUpdateVersion(update.manifest?.version)
       }
     } catch (e) {
+
       console.log(e)
     }
+  }
+
+  const update = () => {
+    setInstallingUpdate(true)
+    installUpdate().then((data) => {
+      console.log(data)
+      relaunch()
+    }).catch((e) => {
+      setInstallingUpdate(false)
+      setUpdateErr(`Updatin stoped due an error: ${e}`)
+      console.log('UpdatingError :')
+      console.log(e)
+    })
   }
 
   useEffect(() => {
@@ -67,8 +101,36 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
   return (
 
     <main className={`${darkmode ? ' dark text-slate-300' : ' text-slate-800 '}`}>
+
+      {/* updater */}
+      {updaterActive &&
+        <div className=" absolute w-screen h-screen text-slate-200 bg-slate-800 flex flex-col items-center justify-center">
+          <h2 className="  dark:text-slate-50 select-none  mb-2 text-3xl text-center" >Passa<span className="font-black">Régua</span></h2>
+
+          {
+            installingUpdate &&
+            <h2 className="  animate-pulse text-xl">Updating...</h2>
+          }
+
+
+          {!installingUpdate &&
+            <><h1 className=" text-lg mb-4">New version available: {updateVersion}</h1><div className="w-1/2">
+              <p className="text-sm opacity-60"> Release notes</p>
+              <div className=" p-4 h-64 overflow-y-scroll text-xs bg-slate-900 text-slate-200 ">
+                {updateNotes}
+              </div>
+              <p className=" text-red-500 ">{updateErr}</p>
+            </div><div className=" w-1/2 flex py-4 justify-end items-center">
+                <p onClick={() => setUpdaterActive(false)} className=" mr-4 cursor-pointer text-slate-600 text-sm underline">Remind me later</p>
+                <ButtonComponentLink method={update} text={"Install"} color={1} />
+              </div></>
+          }
+        </div>
+      }
+
+      {/* app */}
       <div className="dark:bg-slate-950 bg-slate-200 dark:text-slate-200 overflow-hidden w-full h-screen flex  p-2">
-        {!firstLoad &&
+        {!firstLoad && !updaterActive &&
           <><aside className="flex flex-col bg-slate-100 dark:bg-slate-900  mr-2 w-48 test-sm h-full justify-between">
             <div>
               <h2 className="  dark:text-slate-50 select-none  mt-2 text-2xl text-center" >Passa<span className="font-black">Régua</span></h2>

@@ -54,7 +54,6 @@ export default function AppRouter(): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
 
   const fetchData = async () => {
-    
     let data_users: User[] = await invoke('find_all_users', {})
     let data_accounts: Account[] = await invoke('find_all_accounts', {})
     let data_products: Product[] = await invoke('find_all_products', {})

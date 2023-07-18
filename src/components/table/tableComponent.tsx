@@ -1,7 +1,6 @@
 import { SetStateAction, useEffect, useLayoutEffect, useState } from "react";
 import TextInput from "../inputs/TextInput";
 import './table.css'
-import React from 'react';
 
 
 interface tableComponentProps<T extends { created_at: string, id: string }, Y = never> {
@@ -15,6 +14,7 @@ interface tableComponentProps<T extends { created_at: string, id: string }, Y = 
 }
 
 export default function TableComponent<T extends { created_at: string, id: string }, Y = never>({ data, dataKeys, header, deleteMethod, otherMethods, otherMethodsText, formatDataMethod }: tableComponentProps<T, Y>) {
+
     const [optionsActive, setOptionsActive] = useState('');
     const [search, setSearch] = useState('');
     const [filteredData, setFilteredData] = useState(data);
@@ -31,7 +31,6 @@ export default function TableComponent<T extends { created_at: string, id: strin
         } else {
             formated_data = data;
         }
-
         return formated_data
     }
 
@@ -53,12 +52,12 @@ export default function TableComponent<T extends { created_at: string, id: strin
     };
 
     useEffect(() => {
-        handleSearch()
+        handleSearch();
     }, [search])
 
     useEffect(() => {
         if (getFormatedData)
-            setFilteredData(getFormatedData())
+            setFilteredData(getFormatedData());
     }, [])
 
 
@@ -76,8 +75,8 @@ export default function TableComponent<T extends { created_at: string, id: strin
                 </thead>
                 <tbody className="text-slate-600 dark:text-slate-300 w-full flex flex-col">
                     {filteredData.map((d: T, i: number) => (
-                        <div key={d.id}>
-                            <tr className={`bg-slate-300 dark:bg-slate-500 p-1 w-full flex items-center border-b dark:border-slate-700 border-slate-400`}>
+                        <>
+                            <tr key={d.id} className={`bg-slate-300 dark:bg-slate-500 p-1 w-full flex items-center border-b dark:border-slate-700 border-slate-400`}>
                                 {dataKeys?.map((key: string) => (
                                     <td key={key} className={`w-full text-xs whitespace-nowrap`}>
                                         {String(d[key as keyof T])}
@@ -87,27 +86,31 @@ export default function TableComponent<T extends { created_at: string, id: strin
                                     <button onClick={() => manageOptions(d.id)} className={`${optionsActive !== d.id ? "bg-slate-400 dark:bg-slate-300 dark:text-slate-500 text-slate-100" : "bg-slate-100 text-slate-600"} rounded w-12 text-xs hover:opacity-95 h-4 font-black`}>
                                         Editar
                                     </button>
-                                    {optionsActive === d.id && (
-                                        <span className=" rounded shadow-xl text-xs  absolute w-32 appear dark:bg-slate-600 bg-slate-100 self-start flex flex-col justify-start items-start  ">
-                                            {/* <h3 className=" select-none text-slate-400 mb-2">Opções</h3> */}
-                                            {deleteMethod && (
-                                                <button className=" rounded p-2 dark:hover:bg-slate-700 hover:bg-slate-200 py-1 text-start text-red-400 cursor-pointer w-full " onClick={() => deleteMethod(d)}>
-                                                    Excluir
-                                                </button>
-                                            )}
-                                            {otherMethods && otherMethodsText && otherMethods.length === otherMethodsText.length && otherMethods.map((m, i) => (
-                                                <button className="rounded p-2 dark:hover:bg-slate-700 hover:bg-slate-200 py-1 text-start w-full cursor-pointer" onClick={() => m(d)} key={i}>
-                                                    {otherMethodsText[i]}
-                                                </button>
-                                            ))}
-                                        </span>
-                                    )}
+
                                 </td>
 
                             </tr>
-                        </div>
-                    ))}
-                </tbody>
+                            {optionsActive === d.id && (
+                                <td className=" text-xs w-full appear dark:bg-slate-400 bg-slate-200  self-start flex flex-col   ">
+
+                                    {deleteMethod && (
+                                        <button className=" bg-slate-100  dark:bg-slate-500 dark:border-slate-600 border ml-2 my-2 w-24 rounded p-2 dark:hover:bg-slate-700 hover:bg-slate-50 py-1 text-start text-red-400 cursor-pointer  " onClick={() => deleteMethod(d)}>
+                                            Excluir
+                                        </button>
+                                    )}
+                                    {otherMethods && otherMethodsText && otherMethods.length === otherMethodsText.length && otherMethods.map((m, i) => (
+                                        <button className=" bg-slate-100  dark:border-slate-600 dark:bg-slate-500  border ml-2 mb-2 w-24 rounded p-2 dark:hover:bg-slate-700 hover:bg-slate-50 py-1 text-start cursor-pointer" onClick={() => m(d)} key={d.id}>
+                                            {otherMethodsText[i]}
+                                        </button>
+                                    ))}
+
+                                </td>
+                            )}
+                        </>
+                    ))
+                    }
+
+                </tbody >
             </table >
         </>
     )
