@@ -17,7 +17,7 @@ export default function FormularioCriaProduto() {
     const [nameErr, setNameErr] = useState('');
     const [priceErr, setPriceErr] = useState('');
     const [buttonDisabled, setButtonDisabled] = useState(false);
-
+    const history = useNavigate()
 
     const criaProduto = async (e: React.FormEvent<HTMLFormElement>) => {
 
@@ -34,7 +34,6 @@ export default function FormularioCriaProduto() {
             let price = Number(getPrice)
             try {
                 await invoke("create_product", { name, price });
-                const history = useNavigate()
                 history('/produtos')
                 createFeedback(false, "Produto criado.");
             } catch (e) {

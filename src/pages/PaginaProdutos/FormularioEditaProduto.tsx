@@ -28,6 +28,8 @@ export default function FormularioEditaProduto() {
         }
     }, [nameParam, priceParam]);
 
+    const history = useNavigate()
+
 
     const editaProduto = async (e: React.FormEvent<HTMLFormElement>) => {
 
@@ -48,7 +50,6 @@ export default function FormularioEditaProduto() {
                 let newName = name;
                 await invoke("edit_product_price", { id, newPrice });
                 await invoke("edit_product_name", { id, newName });
-                const history = useNavigate()
                 history('/produtos')
                 createFeedback(false, "Produto editado.");
             } catch (e) {
