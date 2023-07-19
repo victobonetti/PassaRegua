@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaNome, validaPreco } from "../../interfaces/ZodInputs";
 import NumberInput from "../../components/numberInput.tsx/NumberInput";
@@ -34,7 +34,8 @@ export default function FormularioCriaProduto() {
             let price = Number(getPrice)
             try {
                 await invoke("create_product", { name, price });
-                window.location.href = '/produtos';
+                const history = useNavigate()
+                history('/produtos')
                 createFeedback(false, "Produto criado.");
             } catch (e) {
                 manageLoading(false);

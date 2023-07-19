@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaCpf, validaNome, validaPhone } from "../../interfaces/ZodInputs";
 import TextInput from "../../components/inputs/TextInput";
@@ -31,7 +31,8 @@ export default function FormularioCriaUsuario() {
             setButtonDisabled(true);
             try {
                 await invoke("create_user", { username, cpf, phone });
-                window.location.href = '/usuarios';
+                const history = useNavigate()
+                history('/usuarios');
                 createFeedback(false, "Usuário criado.")
             } catch (e) {
                 createFeedback(true, String(e))

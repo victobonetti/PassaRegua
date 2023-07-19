@@ -7,6 +7,7 @@ import { ZodError, z } from 'zod'
 import { validaCpf, validaNome, validaPhone } from "../../interfaces/ZodInputs";
 import TextInput from "../../components/inputs/TextInput";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
+import { useNavigate } from "react-router-dom";
 
 export default function FormularioEditaUsuario() {
 
@@ -27,6 +28,8 @@ export default function FormularioEditaUsuario() {
         }
     }, [usernameParam, cpfParam, phoneParam]);
 
+    const history = useNavigate()
+
 
     const editaUsuario = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -40,7 +43,7 @@ export default function FormularioEditaUsuario() {
             try {
                 await invoke("edit_user", { id, username, cpf, phone });
                 createFeedback(false, "Usuário editado.")
-                window.location.href = '/usuarios';
+                history('/usuarios');
             } catch (e) {
                 createFeedback(true, String(e))
             } finally {
@@ -67,7 +70,7 @@ export default function FormularioEditaUsuario() {
             <form onSubmit={e => editaUsuario(e)} className="flex flex-col w-96">
                 <TextInput value={username} set={setUsername} name={"username"} id={"username"} label={"Nome do usuário"} err={usernameErr} />
                 <TextInput value={cpf} set={setCpf} name={"cpf"} id={"cpf"} label={"Cadastro de pessoa física - CPF (Sem caracteres especiais, apenas números)"} err={cpfErr} />
-                <TextInput value={phone} set={setPhone} name={"phone"} id={"phone"} label={"Telefone celular (Sem caracteres especiais, apenas números)" } err={phoneErr} />
+                <TextInput value={phone} set={setPhone} name={"phone"} id={"phone"} label={"Telefone celular (Sem caracteres especiais, apenas números)"} err={phoneErr} />
                 <div className=" mt-4 flex items-center w-full justify-between">
                     <Link to={'/usuarios'}><p className=" dark:text-slate-400 underline cursor-pointer ml-2">Voltar</p></Link>
                     <ButtonComponentLink text={"Editar cliente"} color={0} />                </div>

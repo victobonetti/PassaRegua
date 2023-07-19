@@ -115,7 +115,7 @@ export default function PaginaInicial({ data, setData }: { data: Account[], setD
                     </div>
                 </div></>
             }
-            {paidValue === 0 && unpaidValue === 0 &&
+            {paidValue === 0 && unpaidValue === 0 && data.length === 0 &&
                 <>
                     <div className="w-full  flex "><div className=" flex-col w-1/2">
                         <h1 className="text-3xl mb-8">Descubra o Passa<span className=" font-bold">Régua</span>:</h1>

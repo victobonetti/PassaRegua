@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api";
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaNome, validaPreco } from "../../interfaces/ZodInputs";
 import NumberInput from "../../components/numberInput.tsx/NumberInput";
@@ -48,7 +48,8 @@ export default function FormularioEditaProduto() {
                 let newName = name;
                 await invoke("edit_product_price", { id, newPrice });
                 await invoke("edit_product_name", { id, newName });
-                window.location.href = '/produtos';
+                const history = useNavigate()
+                history('/produtos')
                 createFeedback(false, "Produto editado.");
             } catch (e) {
                 manageLoading(false);
