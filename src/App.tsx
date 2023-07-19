@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import "./loading.css"
 import { User } from "./interfaces/User";
@@ -9,6 +9,8 @@ import { relaunch } from "@tauri-apps/api/process";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faFileText, faBarChart, faLemon, faNewspaper, faCircleQuestion, faLightbulb as face } from "@fortawesome/free-regular-svg-icons";
 import ButtonComponentLink from "./components/buttons/ButtonComponentLink";
+import { sendNotification } from '@tauri-apps/api/notification';
+import { FeedbackContext } from "./routes/appRouter";
 
 function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boolean, dataStorage: { users: User[], accounts: Account[], products: Product[] } }) {
 
@@ -31,6 +33,8 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
     version: string
   }
 
+  const { createFeedback, manageLoading } = useContext(FeedbackContext);
+
   const findUpdates = async () => {
     try {
       const update: updateProps = await checkUpdate();
@@ -50,17 +54,20 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
     }
   }
 
-  const update = () => {
+  const update = async () => {
+    sendNotification('There is an update!')
     setInstallingUpdate(true)
-    installUpdate().then((data) => {
-      console.log(data)
-      relaunch()
-    }).catch((e) => {
+    try {
+      await installUpdate()
+      createFeedback(false, 'Update installed!')
+      await relaunch()
+    } catch (e) {
+      createFeedback(true, 'Update failed')
       setInstallingUpdate(false)
       setUpdateErr(`Updatin stoped due an error: ${e}`)
       console.log('UpdatingError :')
       console.log(e)
-    })
+    }
   }
 
   useEffect(() => {
