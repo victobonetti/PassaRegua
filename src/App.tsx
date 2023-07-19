@@ -46,7 +46,6 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
         setUpdateVersion(update.manifest?.version)
       }
     } catch (e) {
-
       console.log(e)
     }
   }
@@ -128,6 +127,48 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
         </div>
       }
 
+      {preferencesOpen &&
+        <div className=" bg-slate-500 h-screen w-screen z-60 absolute flex items-center justify-center">
+          <div className=" absolute flex flex-col items-center p-4 w-96 h-96 border dark:border-slate-600 rounded dark:bg-slate-700 bg-slate-200 shadow">
+
+            <h2 className=" text-xl">Darkmode</h2>
+            <div className=" w-4/5 justify-center p-2 flex border-b dark:border-slate-600 border-slate-300">
+              <input
+                onClick={() => setDarkmode(!darkmode)}
+                className="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-emerald-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-emerald-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-emerald-600 dark:after:bg-emerald-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                type="checkbox"
+                role="switch"
+                id="flexSwitchCheckDefault" />
+              <label
+                className="inline-block pl-[0.15rem] hover:cursor-pointer"
+                htmlFor="flexSwitchCheckDefault"
+              >Darkmode</label>
+            </div>
+            <div className=" flex-col w-4/5 justify-center p-2 flex border-b dark:border-slate-600 border-slate-300">
+              <h2 className=" text-center text-xl mb-1">Linguagem</h2>
+              <div className=" w-full flex justify-center">
+                <label
+                  className="inline-block pr-[0.50rem] hover:cursor-pointer"
+                  htmlFor="flexSwitchCheckDefault"
+                >PT-BR</label>
+                <input
+                  disabled
+                  className=" opacity-30 mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-emerald-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-emerald-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-emerald-600 dark:after:bg-emerald-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
+                  type="checkbox"
+                  role="switch"
+                  id="flexSwitchCheckDefault" />
+                <label
+                  className="inline-block pl-[0.15rem] hover:cursor-pointer"
+                  htmlFor="flexSwitchCheckDefault"
+                >EN-US</label>
+              </div>
+            </div>
+            <button onClick={() => setPreferencesOpen(false)} className=" border dark:border-red-500 dark:bg-red-400 border-red-400 rounded mt-8 bg-red-300 text-red-50 py-2 px-4 text-xl">Fechar janela de preferências</button>
+          </div>
+
+        </div>
+      }
+
       {/* app */}
       <div className="dark:bg-slate-950 bg-slate-200 dark:text-slate-200 overflow-hidden w-full h-screen flex  p-2">
         {!firstLoad && !updaterActive &&
@@ -153,47 +194,7 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
           </aside><div className=" overflow-hidden flex justify-center w-full ">
               <div className={`${load ? 'load_anim' : 'close_anim'} load-bar  h-1`}></div>
               <div className={`  overflow-y-scroll shadow-inner bg-slate-100 dark:bg-slate-900 w-full mr-2 h-full`}>
-                {preferencesOpen &&
-                  <div className="h-screen w-full flex items-center justify-center">
-                    <div className=" absolute flex flex-col items-center p-4 w-96 h-96 border dark:border-slate-600 rounded dark:bg-slate-700 bg-slate-200 shadow">
 
-                      <h2 className=" text-xl">Darkmode</h2>
-                      <div className=" w-4/5 justify-center p-2 flex border-b dark:border-slate-600 border-slate-300">
-                        <input
-                          onClick={() => setDarkmode(!darkmode)}
-                          className="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-emerald-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-emerald-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-emerald-600 dark:after:bg-emerald-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
-                          type="checkbox"
-                          role="switch"
-                          id="flexSwitchCheckDefault" />
-                        <label
-                          className="inline-block pl-[0.15rem] hover:cursor-pointer"
-                          htmlFor="flexSwitchCheckDefault"
-                        >Darkmode</label>
-                      </div>
-                      <div className=" flex-col w-4/5 justify-center p-2 flex border-b dark:border-slate-600 border-slate-300">
-                        <h2 className=" text-center text-xl mb-1">Linguagem</h2>
-                        <div className=" w-full flex justify-center">
-                          <label
-                            className="inline-block pr-[0.50rem] hover:cursor-pointer"
-                            htmlFor="flexSwitchCheckDefault"
-                          >PT-BR</label>
-                          <input
-                            disabled
-                            className=" opacity-30 mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-emerald-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-emerald-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-emerald-600 dark:after:bg-emerald-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
-                            type="checkbox"
-                            role="switch"
-                            id="flexSwitchCheckDefault" />
-                          <label
-                            className="inline-block pl-[0.15rem] hover:cursor-pointer"
-                            htmlFor="flexSwitchCheckDefault"
-                          >EN-US</label>
-                        </div>
-                      </div>
-                      <button onClick={() => setPreferencesOpen(false)} className=" border dark:border-red-500 dark:bg-red-400 border-red-400 rounded mt-8 bg-red-300 text-red-50 py-2 px-4 text-xl">Fechar janela de preferências</button>
-                    </div>
-
-                  </div>
-                }
                 {!preferencesOpen &&
                   <><div className=" w-full h-12 dark:bg-slate-800 bg-slate-200 text-slate-600 dark:text-slate-300 flex items-center justify-center text-2xl">{getRouteTitle(currentPage)}</div><Outlet /></>}
               </div>

@@ -108,7 +108,7 @@ export default function PaginaInicial({ data, setData }: { data: Account[], setD
                             }
 
 {
-                                data.length > 3 && <div className=" flex "><FontAwesomeIcon className=" text-6xl mt-6 mx-1" icon={faUser} /><FontAwesomeIcon className=" text-6xl mt-6 mx-1" icon={faUser} /><FontAwesomeIcon className=" text-6xl mt-6 mx-1" icon={faUser} /></div>
+                                data.length > 2 && <div className=" flex "><FontAwesomeIcon className=" text-6xl mt-6 mx-1" icon={faUser} /><FontAwesomeIcon className=" text-6xl mt-6 mx-1" icon={faUser} /><FontAwesomeIcon className=" text-6xl mt-6 mx-1" icon={faUser} /></div>
                             }
 
                         </div>
