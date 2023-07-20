@@ -1,13 +1,14 @@
 import { invoke } from "@tauri-apps/api";
-import { useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaNome, validaPreco } from "../../interfaces/ZodInputs";
 import NumberInput from "../../components/numberInput.tsx/NumberInput";
 import TextInput from "../../components/inputs/TextInput";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
+import Product from "../../interfaces/Product";
 
-export default function FormularioEditaProduto() {
+export default function FormularioEditaProduto({ data, setData }: { data: Product[], setData: Dispatch<SetStateAction<Product[]>> }) {
 
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -50,7 +51,16 @@ export default function FormularioEditaProduto() {
                 let newName = name;
                 await invoke("edit_product_price", { id, newPrice });
                 await invoke("edit_product_name", { id, newName });
-                history('/');
+                let newData = data;
+                const index = data.findIndex(p => p.id === id);
+                // Verifica se o 'id' foi encontrado no array
+                if (index !== -1) {
+                    // Fazer as alterações necessárias no objeto encontrado
+                    newData[index].price = newPrice;
+                    newData[index].name = newName;
+                }
+                setData(newData);
+                history('/produtos');
                 createFeedback(false, "Produto editado.");
             } catch (e) {
                 manageLoading(false);

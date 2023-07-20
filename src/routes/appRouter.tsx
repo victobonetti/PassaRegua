@@ -169,7 +169,7 @@ export default function AppRouter(): JSX.Element {
             <Route path='logs' element={<PaginaLogs />} />
             <Route
               path='produtos/editar/:id/:nameParam/:priceParam'
-              element={<FormularioEditaProduto />}
+              element={<FormularioEditaProduto data={products} setData={setProducts}  />}
             />
           </Route>
         </Routes>
