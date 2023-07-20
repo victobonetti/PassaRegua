@@ -34,7 +34,7 @@ export default function FormularioCriaProduto() {
             let price = Number(getPrice)
             try {
                 await invoke("create_product", { name, price });
-                history('/produtos')
+                history('/');
                 createFeedback(false, "Produto criado.");
             } catch (e) {
                 manageLoading(false);

@@ -25,7 +25,7 @@ export default function PaginaCriarConta() {
         try {
             let userId = id;
             await invoke("create_account", { userId });
-            navigate('/contas');
+            navigate('/');
         } catch (e) {
             manageLoading(false);
             createFeedback(true, String(e))

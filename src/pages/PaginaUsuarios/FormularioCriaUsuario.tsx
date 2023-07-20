@@ -34,7 +34,7 @@ export default function FormularioCriaUsuario() {
             try {
                 await invoke("create_user", { username, cpf, phone });
                 fetchData("user")
-                history('/usuarios');
+                history('/');
                 createFeedback(false, "Usuário criado.")
             } catch (e) {
                 createFeedback(true, String(e))

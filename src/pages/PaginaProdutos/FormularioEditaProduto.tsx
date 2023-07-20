@@ -50,7 +50,7 @@ export default function FormularioEditaProduto() {
                 let newName = name;
                 await invoke("edit_product_price", { id, newPrice });
                 await invoke("edit_product_name", { id, newName });
-                history('/produtos')
+                history('/');
                 createFeedback(false, "Produto editado.");
             } catch (e) {
                 manageLoading(false);

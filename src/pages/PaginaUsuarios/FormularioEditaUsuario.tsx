@@ -43,7 +43,7 @@ export default function FormularioEditaUsuario() {
             try {
                 await invoke("edit_user", { id, username, cpf, phone });
                 createFeedback(false, "Usuário editado.")
-                history('/usuarios');
+                history('/');
             } catch (e) {
                 createFeedback(true, String(e))
             } finally {
