@@ -15,12 +15,13 @@ export default function FormularioCriaUsuario() {
     const [cpfErr, setInputCpfErr] = useState('');
     const [phoneErr, setInputPhoneErr] = useState('');
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading, fetchData } = useContext(FeedbackContext);
 
+    const history = useNavigate()
 
     const criaUsuario = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const history = useNavigate()
+
 
 
         let validar_nome = validaNome(username);
@@ -32,6 +33,7 @@ export default function FormularioCriaUsuario() {
             setButtonDisabled(true);
             try {
                 await invoke("create_user", { username, cpf, phone });
+                fetchData("user")
                 history('/usuarios');
                 createFeedback(false, "Usuário criado.")
             } catch (e) {

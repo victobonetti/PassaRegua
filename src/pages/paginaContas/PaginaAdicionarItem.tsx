@@ -25,11 +25,9 @@ export default function PaginaAdicionarItem() {
     const [total, setTotal] = useState(0);
     const [itemErr, setItemErr] = useState('');
 
-    const { id } = useParams();[
-    ]
+    const { id } = useParams();
 
     let navigate = useNavigate();
-
 
     const createItems = async () => {
         manageLoading(true)
@@ -41,7 +39,6 @@ export default function PaginaAdicionarItem() {
                     let price = s.product.price;
                     let accountId = id;
                     let productId = s.product.id;
-
                     await invoke('create_item', { name, quantity, price, accountId, productId });
                 })
             );
@@ -51,9 +48,7 @@ export default function PaginaAdicionarItem() {
             createFeedback(true, String(e));
             manageLoading(false);
         }
-
     };
-
 
     const updateTotal = () => {
         let n = 0;
@@ -83,9 +78,7 @@ export default function PaginaAdicionarItem() {
             if (!has_product || selected.length == 0) {
                 data.push({ product: product, quantity: 1 })
             }
-
             console.log(data)
-
             setSelected(data);
         }
     }
@@ -133,7 +126,7 @@ export default function PaginaAdicionarItem() {
                     <input placeholder="Buscar produto..." autoComplete="none" onChange={e => setSearch(e.target.value)} className=" w-full mb-2 shadow appearance-none border rounded py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="name" />
                     <table className="dark:border-none border border-slate-300 text-slate-700 dark:text-slate-300 overflow-y-scroll bg-slate-200 dark:bg-slate-500 overflow-scroll h-96 w-full">
                         {resposta?.map((p) => {
-                            if (p.name.includes(search) || search.trim().length == 0) {
+                            if (p.name.toLowerCase().includes(search.toLowerCase()) || search.trim().length == 0) {
                                 return (
                                     <tr className=" dark:border-none border-b border-slate-300   w-full flex justify-evenly items-center dark:bg-slate-800  odd:dark:bg-slate-700" key={String(p.id)}>
                                         <td className="  w-1/3 p-2 flex whitespace-nowrap ">{p.name}</td>

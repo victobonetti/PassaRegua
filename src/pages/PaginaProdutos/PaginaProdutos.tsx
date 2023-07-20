@@ -9,7 +9,7 @@ import TableComponent from "../../components/table/tableComponent";
 
 export default function PaginaProdutos({ data, setData }: { data: Product[], setData: Dispatch<SetStateAction<Product[]>> }) {
 
-    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading, fetchData } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState<Product>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -27,13 +27,9 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
         manageLoading(true)
     }, [])
 
-    const fetchData = async (): Promise<void> => {
-
+    const fetch = async (): Promise<void> => {
         try {
-            const p: Product[] = await invoke('find_all_products', {});
-            if (data !== p) {
-                setData(p);
-            }
+            fetchData("product")
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
@@ -43,7 +39,7 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
     };
 
     useEffect(() => {
-        fetchData();
+        fetch();
     }, []);
 
     const excluirProduto = async () => {
@@ -54,7 +50,6 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
             newData = newData.filter((r) =>
                 r.id != id
             )
-            setData(newData)
             fecharModalExcluir();
             createFeedback(false, "Produto excluído.")
         }

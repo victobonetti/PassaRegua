@@ -8,7 +8,7 @@ import { FeedbackContext } from "../../routes/appRouter";
 
 export default function PaginaContas({ data, setData }: { data: Account[], setData: Dispatch<SetStateAction<Account[]>> }) {
 
-    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading, fetchData } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState('');
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -22,6 +22,7 @@ export default function PaginaContas({ data, setData }: { data: Account[], setDa
         manageLoading(true);
         try {
             await invoke("delete_account_by_id", { accountId });
+            fetch()
             fecharModalExcluir();
             createFeedback(false, "Conta excluída com sucesso.");
             setData(data.filter((c) => c.id !== accountId));
@@ -39,17 +40,9 @@ export default function PaginaContas({ data, setData }: { data: Account[], setDa
         setModalExcluirAberto(false);
     }
 
-    useLayoutEffect(() => {
-        manageLoading(true);
-    }, [])
-
-
-    const fetchData = async (): Promise<void> => {
+    const fetch = async (): Promise<void> => {
         try {
-            let all: Account[] = await invoke('find_all_accounts', {});
-            if (all !== data) {
-                setData(all);
-            }
+            fetchData("account")
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
@@ -57,8 +50,12 @@ export default function PaginaContas({ data, setData }: { data: Account[], setDa
         }
     };
 
+    useLayoutEffect(() => {
+        manageLoading(true);
+    }, [])
+
     useEffect(() => {
-        fetchData();
+        fetch();
     }, []);
 
     return (

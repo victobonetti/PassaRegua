@@ -10,11 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function PaginaUsuarios({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {
 
-    const { createFeedback, manageLoading } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading, fetchData } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState<User>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
-    
-
 
     const abrirModalExcluir = (user: User) => {
         setToDelete(user);
@@ -50,13 +48,9 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
         setModalExcluirAberto(false);
     }
 
-
-    const fetchData = async (): Promise<void> => {
+    const fetch = async (): Promise<void> => {
         try {
-            const all: User[] = await invoke('find_all_users', {});
-            if (all !== data) {
-                setData(all);
-            }
+            fetchData("user")
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
@@ -69,10 +63,13 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
     }, [])
 
     useEffect(() => {
-        fetchData();
+        manageLoading(true);
+        fetch();
+        manageLoading(false);
     }, []);
 
-    let navigate = useNavigate();
+
+    const navigate = useNavigate();
 
     const editUser = (u: User) => {
         navigate(`/usuarios/editar/${u.id}/${u.username}/${u.cpf}/${u.phone}`);

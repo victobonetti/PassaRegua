@@ -8,6 +8,7 @@ import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 import TableComponent from "../../components/table/tableComponent";
 import Item from "../../interfaces/Item";
 
+
 export default function PaginaItems() {
 
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
@@ -58,9 +59,9 @@ export default function PaginaItems() {
         }
     };
 
-    const abrirModalExcluir = (c: Account | Item) => {
-        if ('owner' in c) {
-            setToDelete(c.id);
+    const abrirModalExcluir = (i: Account | Item) => {
+        if ('account_id' in i) {
+            setToDelete(i.id);
             setModalExcluirAberto(true);
         }
 

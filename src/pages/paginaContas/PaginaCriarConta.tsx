@@ -32,19 +32,20 @@ export default function PaginaCriarConta() {
         }
     }
 
+    const fetch = async (): Promise<void> => {
+        manageLoading(true);
+        try {
+            const data: User[] = await invoke('find_all_users', {});
+            setUsuarios(data);
+        } catch (e) {
+            createFeedback(true, String(e));
+        } finally {
+            manageLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            manageLoading(true);
-            try {
-                const data: User[] = await invoke('find_all_users', {});
-                setUsuarios(data);
-            } catch (e) {
-                createFeedback(true, String(e));
-            } finally {
-                manageLoading(false);
-            }
-        };
-        fetchData();
+        fetch();
     }, []);
 
     return (
