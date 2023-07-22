@@ -11,6 +11,7 @@ import { faUser, faFileText, faBarChart, faLemon, faNewspaper, faCircleQuestion,
 import ButtonComponentLink from "./components/buttons/ButtonComponentLink";
 import { sendNotification } from '@tauri-apps/api/notification';
 import { FeedbackContext } from "./routes/appRouter";
+import { getVersion } from '@tauri-apps/api/app';
 
 function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boolean, dataStorage: { users: User[], accounts: Account[], products: Product[] } }) {
 
@@ -22,6 +23,7 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
   const [installingUpdate, setInstallingUpdate] = useState(false);
   const [updateErr, setUpdateErr] = useState('')
   const location = useLocation();
+  const [version, setVersion] = useState('');
 
   interface updateProps {
     shouldUpdate: boolean
@@ -54,6 +56,11 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
     }
   }
 
+  const fetchVersion = async () => {
+        let v:string = await getVersion();
+        setVersion(String(v))
+  }
+
   const update = async () => {
     sendNotification('There is an update!')
     setInstallingUpdate(true)
@@ -76,7 +83,10 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
 
   useEffect(() => {
     findUpdates()
+    fetchVersion()
   }, [])
+
+
 
   const [status, setStatus] = useState(false);
   const [darkmode, setDarkmode] = useState(true);
@@ -197,7 +207,7 @@ function App({ load, firstLoad, dataStorage }: { load: boolean, firstLoad: boole
               </nav>
             </div>
 
-
+          <p className=" select-none z-10 opacity-60 m-2 text-slate-400 dark:text-slate-300">PassaRégua v{version}</p>
           </aside><div className=" overflow-hidden flex justify-center w-full ">
               <div className={`${load ? 'load_anim' : 'close_anim'} load-bar  h-1`}></div>
               <div className={`  overflow-y-scroll shadow-inner bg-slate-100 dark:bg-slate-900 w-full mr-2 h-full`}>

@@ -70,7 +70,7 @@ export default function TableComponent<T extends { created_at: string, id: strin
             <table className="w-full">
                 <thead className="select-none bg-slate-500 dark:bg-slate-700 font-semibold flex w-full items-center text-sm p-1">
                     <tr className="w-full flex items-center">
-                        {header?.map((t: string, i: number) => <td key={i} className="text-xs w-full text-slate-300">{t.toUpperCase()}</td>)}
+                        {header?.map((t: string, i: number) => <td key={t} className="text-xs w-full text-slate-300">{t.toUpperCase()}</td>)}
                     </tr>
                 </thead>
                 <tbody className="text-slate-600 dark:text-slate-300 w-full flex flex-col">

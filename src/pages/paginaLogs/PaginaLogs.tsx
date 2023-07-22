@@ -43,7 +43,7 @@ export default function PaginaLogs() {
                 logs?.map((log, i) => {
                     return (
                         <div key={i} className=" dark:border-slate-800 dark:text-slate-400 mb-2 h-fit w-full p-1 border rounded dark:bg-slate-700 bg-slate-200">
-                            <div className=" w-fit p-1 text-sm rounded-full dark:bg-slate-600 dark:text-slate-300 bg-slate-400 text-slate-100">{log.operation_type}</div>
+                            <div className=" w-fit p-1 text-sm rounded-full dark:bg-slate-600 dark:text-slate-300 bg-slate-100 text-slate-500 border dark:border-slate-700 border-slate-300">{log.operation_type}</div>
                                 <p className=" my-1 text-xs dark:text-slate-400 text-slate-500">{log.description}</p> <p>{log.created_at}</p>
                         </div>
                     )
