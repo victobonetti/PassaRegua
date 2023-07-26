@@ -26,6 +26,7 @@ export default function PaginaItems() {
     const fetchData = async () => {
         let accountId = id;
         try {
+            setAccount(undefined)
             let data: Account = await invoke('find_account_by_id', { accountId })
             setAccount(data);
             console.log(data)
@@ -45,11 +46,7 @@ export default function PaginaItems() {
         manageLoading(true);
         try {
             await invoke('delete_item_by_id', { id: toDelete });
-            setAccount(prevAccount => {
-                if (!prevAccount) return prevAccount;
-                const updatedItems = prevAccount.items.filter(item => item.id !== toDelete);
-                return { ...prevAccount, items: updatedItems };
-            });
+            fetchData()
             createFeedback(false, "Item deletado com sucesso");
             fecharModalExcluir();
         } catch (error) {

@@ -32,7 +32,9 @@ export const FeedbackContext = createContext<{
   close: (self: FeedbackInterface) => void;
   loading: boolean;
   manageLoading: (active: boolean) => void;
-  fetchData: (t?: string) => void;
+  fetchUsers: () => Promise<User[]>;
+  fetchAccounts: () => Promise<Account[]>;
+  fetchProducts: () => Promise<Product[]>;
 }>({
   feedback: false,
   feedbacks: [],
@@ -40,7 +42,9 @@ export const FeedbackContext = createContext<{
   close: () => { },
   loading: false,
   manageLoading: () => { },
-  fetchData: (t?: string) => { },
+  fetchUsers: async () => [],
+  fetchAccounts: async () => [],
+  fetchProducts: async () => [],
 });
 
 
@@ -56,42 +60,30 @@ export default function AppRouter(): JSX.Element {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
-  const fetchData = async (component?: string) => {
+  const fetchUsers = async () => {
+    let data_users: User[] = await invoke('find_all_users', {})
+    return data_users;
+  }
 
-    if (component == 'user') {
-      console.log('fetch user')
-      let data_users: User[] = await invoke('find_all_users', {})
-      setUsers(data_users);
+  const fetchAccounts = async () => {
+    let data_accounts: Account[] = await invoke('find_all_accounts', {})
+    return data_accounts;
+  }
 
-    }
-
-    if (component == 'account') {
-      console.log('fetch acc')
-      let data_accounts: Account[] = await invoke('find_all_accounts', {})
-      setAccounts(data_accounts);
-    }
-
-    if (component == 'product') {
-      console.log('fetch prods')
-      let data_products: Product[] = await invoke('find_all_products', {})
-      setProducts(data_products);
-    }
-
-    if (!component) {
-      console.log('fetch all')
-      let data_users: User[] = await invoke('find_all_users', {})
-      let data_accounts: Account[] = await invoke('find_all_accounts', {})
-      let data_products: Product[] = await invoke('find_all_products', {})
-      setUsers(data_users);
-      setAccounts(data_accounts);
-      setProducts(data_products);
-    }
-
-    setFirstLoad(false);
+  const fetchProducts = async () => {
+    let data_products: Product[] = await invoke('find_all_products', {})
+    return data_products;
   }
 
   useEffect(() => {
-    fetchData()
+    const fetchFirstData = async () => {
+      setFirstLoad(true)
+      setAccounts(await fetchAccounts())
+      setProducts(await fetchProducts())
+      setUsers(await fetchUsers())
+      setFirstLoad(false)
+    }
+    fetchFirstData()
   }, [])
 
   const createFeedback = (isErr: boolean, text: string) => {
@@ -143,7 +135,7 @@ export default function AppRouter(): JSX.Element {
 
           })}  </div>}
 
-      <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading, fetchData }}>
+      <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading, fetchUsers, fetchAccounts, fetchProducts }}>
         <Routes>
           <Route path={'/'} element={<App load={loading} firstLoad={firstLoad} dataStorage={{ users: users, accounts: accounts, products: products }} />}>
 
@@ -169,7 +161,7 @@ export default function AppRouter(): JSX.Element {
             <Route path='logs' element={<PaginaLogs />} />
             <Route
               path='produtos/editar/:id/:nameParam/:priceParam'
-              element={<FormularioEditaProduto data={products} setData={setProducts}  />}
+              element={<FormularioEditaProduto data={products} setData={setProducts} />}
             />
           </Route>
         </Routes>

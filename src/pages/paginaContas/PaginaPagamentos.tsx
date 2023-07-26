@@ -30,8 +30,8 @@ export default function PaginaPagamentos() {
     }, [])
 
     const fetchData = async (): Promise<void> => {
-
         try {
+            setData([])
             let accountId = id;
             const p: Payment[] = await invoke('find_payments_by_id', { accountId });
             console.log(p)
@@ -52,11 +52,7 @@ export default function PaginaPagamentos() {
         let id = toDelete?.id
         try {
             await invoke('delete_payment_by_id', { id })
-            let newData = data;
-            newData = newData.filter((r) =>
-                r.id != id
-            )
-            setData(newData)
+            fetchData()
             fecharModalExcluir();
             createFeedback(false, "Pagamento excluído.")
         }
