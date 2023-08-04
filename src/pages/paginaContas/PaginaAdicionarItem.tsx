@@ -124,11 +124,11 @@ export default function PaginaAdicionarItem() {
                 <div className=" p-4 w-3/5 flex flex-col items-center justify-center">
                     <span className=" mb-2 text-slate-400 text-xs">Digite um produto, e então clique em "adicionar" para coloca-lo em seu carrinho.</span>
                     <input placeholder="Buscar produto..." autoComplete="none" onChange={e => setSearch(e.target.value)} className=" w-full mb-2 shadow appearance-none border rounded py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="" id="name" />
-                    <table className="dark:border-none border border-slate-300 text-slate-700 dark:text-slate-300 overflow-y-scroll bg-slate-200 dark:bg-slate-500 overflow-scroll h-96 w-full">
+                    <table className="h-96 dark:border-none border border-slate-300 text-slate-700 dark:text-slate-300  bg-slate-200 dark:bg-slate-500 overflow-hidden w-full">
                         {resposta?.map((p) => {
                             if (p.name.toLowerCase().includes(search.toLowerCase()) || search.trim().length == 0) {
                                 return (
-                                    <tr className=" dark:border-none border-b border-slate-300   w-full flex justify-evenly items-center dark:bg-slate-800  odd:dark:bg-slate-700" key={String(p.id)}>
+                                    <tr className=" dark:border-none border-b border-slate-300  w-full flex justify-evenly items-center dark:bg-slate-800  odd:dark:bg-slate-700" key={String(p.id)}>
                                         <td className="  w-1/3 p-2 flex whitespace-nowrap ">{p.name}</td>
                                         <td className="  w-1/3 p-2 flex whitespace-nowrap ">R${Number(p.price).toFixed(2)}</td>
                                         <td className="  w-1/3 p-2 flex whitespace-nowrap "><ButtonComponentLink text={"Adicionar"} color={0} method={() => selectProduct(p)} />
@@ -139,7 +139,7 @@ export default function PaginaAdicionarItem() {
                         })}
                     </table>
                 </div>
-                <div className=" p-4 w-2/5 flex flex-col items-center justify-center h-full ">
+                <div className=" p-4 w-2/5 flex flex-col items-center h-full  ">
                     <span className=" mb-2 text-slate-400 text-xs">Aqui aparecem os produtos selecionados e sua quantidade.</span>
 
                     <div className=" rounded flex items-center justify-center mb-2 h-9 w-full dark:bg-slate-300 text-center text-slate-600">Carrinho</div>

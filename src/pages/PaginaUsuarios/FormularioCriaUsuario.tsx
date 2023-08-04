@@ -1,12 +1,14 @@
 import { invoke } from "@tauri-apps/api";
-import { useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaCpf, validaNome, validaPhone } from "../../interfaces/ZodInputs";
 import TextInput from "../../components/inputs/TextInput";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
+import fetchService from "../../services/fetchService";
+import { User } from "../../interfaces/User";
 
-export default function FormularioCriaUsuario() {
+export default function FormularioCriaUsuario({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {
 
     const [username, setUsername] = useState('');
     const [cpf, setCpf] = useState('');
@@ -15,14 +17,12 @@ export default function FormularioCriaUsuario() {
     const [cpfErr, setInputCpfErr] = useState('');
     const [phoneErr, setInputPhoneErr] = useState('');
     const [buttonDisabled, setButtonDisabled] = useState(false);
-    const { createFeedback, manageLoading, fetchData } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
 
     const history = useNavigate()
 
     const criaUsuario = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-
 
         let validar_nome = validaNome(username);
         let validar_cpf = validaCpf(cpf);
@@ -33,8 +33,8 @@ export default function FormularioCriaUsuario() {
             setButtonDisabled(true);
             try {
                 await invoke("create_user", { username, cpf, phone });
-                fetchData("user")
-                history('/');
+                setData(await fetchService.fetchUsers());
+                history('/usuarios');
                 createFeedback(false, "Usuário criado.")
             } catch (e) {
                 createFeedback(true, String(e))

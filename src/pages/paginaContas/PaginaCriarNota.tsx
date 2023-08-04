@@ -14,14 +14,17 @@ export default function PaginaCriarNota() {
     const [err, setErr] = useState('');
 
 
+
+    const { id, itemId, noteText } = useParams();
+    const [note, setNote] = useState('');
+
+
+
     useEffect(() => {
         if (noteText) {
             setNote(noteText);
         }
     }, [])
-
-    const { id, itemId, noteText } = useParams();
-    const [note, setNote] = useState('');
 
     let navigate = useNavigate();
 
@@ -29,8 +32,6 @@ export default function PaginaCriarNota() {
 
         let valida = validaTexto(note)
         console.log(valida)
-
-
 
         if (valida.success) {
             try {

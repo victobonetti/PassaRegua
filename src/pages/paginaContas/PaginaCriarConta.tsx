@@ -35,6 +35,7 @@ export default function PaginaCriarConta() {
     const fetch = async (): Promise<void> => {
         manageLoading(true);
         try {
+            setUsuarios([])
             const data: User[] = await invoke('find_all_users', {});
             setUsuarios(data);
         } catch (e) {

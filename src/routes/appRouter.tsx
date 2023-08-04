@@ -23,6 +23,7 @@ import { invoke } from '@tauri-apps/api';
 import PaginaCriaPagamentos from '../pages/paginaContas/PaginaCriaPagamentos';
 import PaginaPagamentos from '../pages/paginaContas/PaginaPagamentos';
 import PaginaLogs from '../pages/paginaLogs/PaginaLogs';
+import fetchService from '../services/fetchService';
 
 
 export const FeedbackContext = createContext<{
@@ -32,7 +33,9 @@ export const FeedbackContext = createContext<{
   close: (self: FeedbackInterface) => void;
   loading: boolean;
   manageLoading: (active: boolean) => void;
-  fetchData: (t?: string) => void;
+  // fetchUsers: () => Promise<User[]>;
+  // fetchAccounts: () => Promise<Account[]>;
+  // fetchProducts: () => Promise<Product[]>;
 }>({
   feedback: false,
   feedbacks: [],
@@ -40,60 +43,23 @@ export const FeedbackContext = createContext<{
   close: () => { },
   loading: false,
   manageLoading: () => { },
-  fetchData: (t?: string) => { },
+  // fetchUsers: async () => [],
+  // fetchAccounts: async () => [],
+  // fetchProducts: async () => [],
 });
 
 
 
 export default function AppRouter(): JSX.Element {
-  const [feedback, setFeedback] = useState(false);
-  const [feedbacks, setFeedbacks] = useState<FeedbackInterface[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [firstLoad, setFirstLoad] = useState(false);
 
   //global data
   const [users, setUsers] = useState<User[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
-  const fetchData = async (component?: string) => {
-
-    if (component == 'user') {
-      console.log('fetch user')
-      let data_users: User[] = await invoke('find_all_users', {})
-      setUsers(data_users);
-
-    }
-
-    if (component == 'account') {
-      console.log('fetch acc')
-      let data_accounts: Account[] = await invoke('find_all_accounts', {})
-      setAccounts(data_accounts);
-    }
-
-    if (component == 'product') {
-      console.log('fetch prods')
-      let data_products: Product[] = await invoke('find_all_products', {})
-      setProducts(data_products);
-    }
-
-    if (!component) {
-      console.log('fetch all')
-      let data_users: User[] = await invoke('find_all_users', {})
-      let data_accounts: Account[] = await invoke('find_all_accounts', {})
-      let data_products: Product[] = await invoke('find_all_products', {})
-      setUsers(data_users);
-      setAccounts(data_accounts);
-      setProducts(data_products);
-    }
-
-    setFirstLoad(false);
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
-
+  //feedback (pop-ups)
+  const [feedback, setFeedback] = useState(false);
+  const [feedbacks, setFeedbacks] = useState<FeedbackInterface[]>([]);
   const createFeedback = (isErr: boolean, text: string) => {
     let isThrottled = false;
 
@@ -114,7 +80,6 @@ export default function AppRouter(): JSX.Element {
       isThrottled = false;
     }, 1000); // Define o intervalo de 1 segundo (1000 milissegundos)
   };
-
   const close = (self: FeedbackInterface) => {
     setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => feedback.text !== self.text));
     if (feedbacks.length < 1) {
@@ -122,9 +87,23 @@ export default function AppRouter(): JSX.Element {
     }
   };
 
+  //loading
+  const [loading, setLoading] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(false);
   const manageLoading = (active: boolean) => {
     setLoading(active);
   }
+
+  useEffect(() => {
+    const fetchFirstData = async () => {
+      setFirstLoad(true)
+      setAccounts(await fetchService.fetchAccounts())
+      setProducts(await fetchService.fetchProducts())
+      setUsers(await fetchService.fetchUsers())
+      setFirstLoad(false)
+    }
+    fetchFirstData()
+  }, [])
 
   return (
 
@@ -143,13 +122,13 @@ export default function AppRouter(): JSX.Element {
 
           })}  </div>}
 
-      <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading, fetchData }}>
+      <FeedbackContext.Provider value={{ feedback, feedbacks, createFeedback, close, loading, manageLoading }}>
         <Routes>
           <Route path={'/'} element={<App load={loading} firstLoad={firstLoad} dataStorage={{ users: users, accounts: accounts, products: products }} />}>
 
             <Route index element={<PaginaInicial data={accounts} setData={setAccounts} />} />
             <Route path='/usuarios' element={<PaginaUsuarios data={users} setData={setUsers} />} />
-            <Route path='/usuarios/novo' element={<FormularioCriaUsuario />} />
+            <Route path='/usuarios/novo' element={<FormularioCriaUsuario data={users} setData={setUsers} />} />
             <Route
               path='/usuarios/editar/:id/:usernameParam/:cpfParam/:phoneParam'
               element={<FormularioEditaUsuario data={users} setData={setUsers} />}
@@ -165,11 +144,11 @@ export default function AppRouter(): JSX.Element {
             {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
 
             <Route path='/produtos' element={<PaginaProdutos data={products} setData={setProducts} />} />
-            <Route path='produtos/novo' element={<FormularioCriaProduto />} />
+            <Route path='produtos/novo' element={<FormularioCriaProduto data={products} setData={setProducts} />} />
             <Route path='logs' element={<PaginaLogs />} />
             <Route
               path='produtos/editar/:id/:nameParam/:priceParam'
-              element={<FormularioEditaProduto data={products} setData={setProducts}  />}
+              element={<FormularioEditaProduto data={products} setData={setProducts} />}
             />
           </Route>
         </Routes>

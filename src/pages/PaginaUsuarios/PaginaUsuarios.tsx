@@ -7,10 +7,11 @@ import { FeedbackContext } from "../../routes/appRouter";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 import TableComponent from "../../components/table/tableComponent";
 import { useNavigate } from "react-router-dom";
+import fetchService from "../../services/fetchService";
 
 export default function PaginaUsuarios({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {
 
-    const { createFeedback, manageLoading, fetchData } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState<User>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -20,17 +21,11 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
     }
 
     const excluirUsuario = async () => {
-
         manageLoading(true);
         let id = toDelete?.id
-
         try {
             await invoke('delete_user_by_id', { id })
-            let newData = data;
-            newData = newData.filter((r) =>
-                r.id != id
-            )
-            setData(newData)
+            fetchData();
             fecharModalExcluir();
             createFeedback(false, "Usuário excluído.")
         }
@@ -48,9 +43,9 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
         setModalExcluirAberto(false);
     }
 
-    const fetch = async (): Promise<void> => {
-        try {
-            fetchData("user")
+    const fetchData = async (): Promise<void> => {
+        try{
+            setData(await fetchService.fetchUsers());
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
@@ -63,9 +58,8 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
     }, [])
 
     useEffect(() => {
-        manageLoading(true);
-        fetch();
-        manageLoading(false);
+        // useNavigate()(0)
+        fetchData();
     }, []);
 
 

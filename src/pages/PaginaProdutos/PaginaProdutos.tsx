@@ -6,10 +6,11 @@ import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 import TableComponent from "../../components/table/tableComponent";
+import fetchService from "../../services/fetchService";
 
 export default function PaginaProdutos({ data, setData }: { data: Product[], setData: Dispatch<SetStateAction<Product[]>> }) {
 
-    const { createFeedback, manageLoading, fetchData } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState<Product>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -29,7 +30,7 @@ export default function PaginaProdutos({ data, setData }: { data: Product[], set
 
     const fetch = async (): Promise<void> => {
         try {
-            fetchData("product")
+            setData(await fetchService.fetchProducts());
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
