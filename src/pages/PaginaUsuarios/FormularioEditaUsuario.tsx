@@ -8,6 +8,7 @@ import { validaCpf, validaNome, validaPhone } from "../../interfaces/ZodInputs";
 import TextInput from "../../components/inputs/TextInput";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 import { useNavigate } from "react-router-dom";
+import fetchService from "../../services/fetchService";
 
 export default function FormularioEditaUsuario({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {
 
@@ -43,17 +44,7 @@ export default function FormularioEditaUsuario({ data, setData }: { data: User[]
             try {
                 await invoke("edit_user", { id, username, cpf, phone });
                 createFeedback(false, "Usuário editado.")
-                const index = data.findIndex(item => item.id === id);
-                let newData = data;
-                // Verifica se o 'id' foi encontrado no array
-                if (index !== -1) {
-                    // Fazer as alterações necessárias no objeto encontrado
-                    newData[index].username = username;
-                    newData[index].cpf = cpf;
-                    newData[index].phone = phone;
-                    setData(data);
-                }
-                setData(newData);
+                setData(await fetchService.fetchUsers());
                 history('/usuarios');
             } catch (e) {
                 createFeedback(true, String(e))

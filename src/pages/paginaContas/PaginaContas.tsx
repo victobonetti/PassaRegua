@@ -8,7 +8,7 @@ import { FeedbackContext } from "../../routes/appRouter";
 
 export default function PaginaContas({ data, setData }: { data: Account[], setData: Dispatch<SetStateAction<Account[]>> }) {
 
-    const { createFeedback, manageLoading, fetchData } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading, fetchAccounts } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState('');
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -42,7 +42,7 @@ export default function PaginaContas({ data, setData }: { data: Account[], setDa
 
     const fetch = async (): Promise<void> => {
         try {
-            fetchData("account")
+            fetchAccounts();
         } catch (e) {
             createFeedback(true, String(e))
         } finally {

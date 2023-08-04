@@ -7,6 +7,7 @@ import NumberInput from "../../components/numberInput.tsx/NumberInput";
 import TextInput from "../../components/inputs/TextInput";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 import Product from "../../interfaces/Product";
+import fetchService from "../../services/fetchService";
 
 export default function FormularioEditaProduto({ data, setData }: { data: Product[], setData: Dispatch<SetStateAction<Product[]>> }) {
 
@@ -51,24 +52,17 @@ export default function FormularioEditaProduto({ data, setData }: { data: Produc
                 let newName = name;
                 await invoke("edit_product_price", { id, newPrice });
                 await invoke("edit_product_name", { id, newName });
-                let newData = data;
-                const index = data.findIndex(p => p.id === id);
-                // Verifica se o 'id' foi encontrado no array
-                if (index !== -1) {
-                    // Fazer as alterações necessárias no objeto encontrado
-                    newData[index].price = newPrice;
-                    newData[index].name = newName;
-                }
-                setData(newData);
+                setData(await fetchService.fetchProducts());
                 history('/produtos');
                 createFeedback(false, "Produto editado.");
             } catch (e) {
                 manageLoading(false);
                 createFeedback(true, String(e));
+            } finally {
+                manageLoading(false);
             }
 
         } else {
-
             if (!validar_nome.success) {
                 setNameErr('Entrada inválida: Nome deve haver até, no máximo, 24 caractéres.');
             }
@@ -76,9 +70,7 @@ export default function FormularioEditaProduto({ data, setData }: { data: Produc
             if (!validar_preco.success) {
                 setPriceErr('Número inválido.');
             }
-
         }
-
     }
 
     const updatePrice = (n: number) => {

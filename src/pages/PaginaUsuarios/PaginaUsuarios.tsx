@@ -7,10 +7,11 @@ import { FeedbackContext } from "../../routes/appRouter";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
 import TableComponent from "../../components/table/tableComponent";
 import { useNavigate } from "react-router-dom";
+import fetchService from "../../services/fetchService";
 
 export default function PaginaUsuarios({ data, setData }: { data: User[], setData: Dispatch<SetStateAction<User[]>> }) {
 
-    const { createFeedback, manageLoading, fetchUsers } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState<User>();
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -43,14 +44,13 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
     }
 
     const fetchData = async (): Promise<void> => {
-        setData([])
-        fetchUsers().then(data => {
-            setData(data)
-        }).catch(e => {
+        try{
+            setData(await fetchService.fetchUsers());
+        } catch (e) {
             createFeedback(true, String(e))
-        }).finally(() => {
+        } finally {
             manageLoading(false)
-        })
+        }
     };
 
     useLayoutEffect(() => {
@@ -58,6 +58,7 @@ export default function PaginaUsuarios({ data, setData }: { data: User[], setDat
     }, [])
 
     useEffect(() => {
+        // useNavigate()(0)
         fetchData();
     }, []);
 
