@@ -93,9 +93,7 @@ export default function PaginaItems() {
         }
     }
 
-
     return (
-
         <>
             {modalExcluirAberto && <ConfirmModal
                 titulo="Tem certeza?"

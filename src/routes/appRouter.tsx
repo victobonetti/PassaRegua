@@ -51,27 +51,15 @@ export const FeedbackContext = createContext<{
 
 
 export default function AppRouter(): JSX.Element {
-  const [feedback, setFeedback] = useState(false);
-  const [feedbacks, setFeedbacks] = useState<FeedbackInterface[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [firstLoad, setFirstLoad] = useState(false);
 
   //global data
   const [users, setUsers] = useState<User[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
-  useEffect(() => {
-    const fetchFirstData = async () => {
-      setFirstLoad(true)
-      setAccounts(await fetchService.fetchAccounts())
-      setProducts(await fetchService.fetchProducts())
-      setUsers(await fetchService.fetchUsers())
-      setFirstLoad(false)
-    }
-    fetchFirstData()
-  }, [])
-
+  //feedback (pop-ups)
+  const [feedback, setFeedback] = useState(false);
+  const [feedbacks, setFeedbacks] = useState<FeedbackInterface[]>([]);
   const createFeedback = (isErr: boolean, text: string) => {
     let isThrottled = false;
 
@@ -92,7 +80,6 @@ export default function AppRouter(): JSX.Element {
       isThrottled = false;
     }, 1000); // Define o intervalo de 1 segundo (1000 milissegundos)
   };
-
   const close = (self: FeedbackInterface) => {
     setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => feedback.text !== self.text));
     if (feedbacks.length < 1) {
@@ -100,9 +87,23 @@ export default function AppRouter(): JSX.Element {
     }
   };
 
- const manageLoading = (active: boolean) => {
+  //loading
+  const [loading, setLoading] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(false);
+  const manageLoading = (active: boolean) => {
     setLoading(active);
   }
+
+  useEffect(() => {
+    const fetchFirstData = async () => {
+      setFirstLoad(true)
+      setAccounts(await fetchService.fetchAccounts())
+      setProducts(await fetchService.fetchProducts())
+      setUsers(await fetchService.fetchUsers())
+      setFirstLoad(false)
+    }
+    fetchFirstData()
+  }, [])
 
   return (
 
@@ -127,7 +128,7 @@ export default function AppRouter(): JSX.Element {
 
             <Route index element={<PaginaInicial data={accounts} setData={setAccounts} />} />
             <Route path='/usuarios' element={<PaginaUsuarios data={users} setData={setUsers} />} />
-            <Route path='/usuarios/novo' element={<FormularioCriaUsuario data={users} setData={setUsers}  />} />
+            <Route path='/usuarios/novo' element={<FormularioCriaUsuario data={users} setData={setUsers} />} />
             <Route
               path='/usuarios/editar/:id/:usernameParam/:cpfParam/:phoneParam'
               element={<FormularioEditaUsuario data={users} setData={setUsers} />}
@@ -143,7 +144,7 @@ export default function AppRouter(): JSX.Element {
             {/* /contas/items/price/${data.account_id}/${data.id}/${data.price}/${data.quantity}` */}
 
             <Route path='/produtos' element={<PaginaProdutos data={products} setData={setProducts} />} />
-            <Route path='produtos/novo' element={<FormularioCriaProduto />} />
+            <Route path='produtos/novo' element={<FormularioCriaProduto data={products} setData={setProducts} />} />
             <Route path='logs' element={<PaginaLogs />} />
             <Route
               path='produtos/editar/:id/:nameParam/:priceParam'

@@ -1,13 +1,15 @@
 import { invoke } from "@tauri-apps/api";
-import { useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FeedbackContext } from "../../routes/appRouter";
 import { validaNome, validaPreco } from "../../interfaces/ZodInputs";
 import NumberInput from "../../components/numberInput.tsx/NumberInput";
 import TextInput from "../../components/inputs/TextInput";
 import ButtonComponentLink from "../../components/buttons/ButtonComponentLink";
+import fetchService from "../../services/fetchService";
+import Product from "../../interfaces/Product";
 
-export default function FormularioCriaProduto() {
+export default function FormularioCriaProduto({ data, setData }: { data: Product[], setData: Dispatch<SetStateAction<Product[]>> }) {
 
     const { createFeedback, manageLoading } = useContext(FeedbackContext);
 
@@ -34,7 +36,8 @@ export default function FormularioCriaProduto() {
             let price = Number(getPrice)
             try {
                 await invoke("create_product", { name, price });
-                history('/');
+                setData(await fetchService.fetchProducts());
+                history('/produtos');
                 createFeedback(false, "Produto criado.");
             } catch (e) {
                 manageLoading(false);

@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import Account from "../../interfaces/Account";
 import ConfirmModal from "../../components/confirmModal/ConfirmModal";
 import { FeedbackContext } from "../../routes/appRouter";
+import fetchService from "../../services/fetchService";
 
 
 export default function PaginaContas({ data, setData }: { data: Account[], setData: Dispatch<SetStateAction<Account[]>> }) {
 
-    const { createFeedback, manageLoading, fetchAccounts } = useContext(FeedbackContext);
+    const { createFeedback, manageLoading } = useContext(FeedbackContext);
     const [toDelete, setToDelete] = useState('');
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
 
@@ -42,7 +43,7 @@ export default function PaginaContas({ data, setData }: { data: Account[], setDa
 
     const fetch = async (): Promise<void> => {
         try {
-            fetchAccounts();
+            setData(await fetchService.fetchAccounts())
         } catch (e) {
             createFeedback(true, String(e))
         } finally {
