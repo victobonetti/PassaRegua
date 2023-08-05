@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "passaregua",
-    "version": "1.0.5"
+    "version": "1.0.6"
   },
   "tauri": {
     "allowlist": {
@@ -48,8 +48,8 @@
         "title": "PassaRégua",
         "width": 1280,
         "height": 720,
-        "minWidth": 1280,
-        "minHeight": 720
+        "minWidth": 720,
+        "minHeight": 480
       }
     ]
   }
