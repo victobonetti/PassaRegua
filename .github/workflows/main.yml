@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies (ubuntu only)
+      - name: Instalação de dependências do sistema
         if: matrix.platform == 'ubuntu-20.04'
         # You can remove libayatana-appindicator3-dev if you don't use the system tray feature.
         run: |
@@ -40,11 +40,11 @@ jobs:
           node-version: 'lts/*'
           cache: 'npm' # Set this to npm, yarn or pnpm.
 
-      - name: Install frontend dependencies
+      - name:  Instalação de dependências front-end
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
         run: npm install # Change this to npm, yarn or pnpm.
 
-      - name: Build the app
+      - name: Build
         uses: tauri-apps/tauri-action@v0
 
         env:
@@ -54,6 +54,6 @@ jobs:
         with:
           tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
           releaseName: 'App Name v__VERSION__' # tauri-action replaces \_\_VERSION\_\_ with the app version.
-          releaseBody: 'See the assets to download and install this version.'
+          releaseBody: 'Acesse o GitGub para mais detalhes dessa versão.'
           releaseDraft: true
           prerelease: false
